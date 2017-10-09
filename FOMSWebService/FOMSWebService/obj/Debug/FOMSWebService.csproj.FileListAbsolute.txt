@@ -1,0 +1,7 @@
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\bin\FOMSWebService.dll.config
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\bin\FOMSWebService.dll
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\bin\FOMSWebService.pdb
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csprojResolveAssemblyReference.cache
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csproj.CoreCompileInputs.cache
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.dll
+C:\Users\User\Documents\Visual Studio 2017\Projects\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.pdb
