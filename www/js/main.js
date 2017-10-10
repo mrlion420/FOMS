@@ -56,10 +56,10 @@ function populateEventList(data) {
     $("#eventLog").html(htmlString);
 }
 
-async function getRecentPositionAndDistance() {
-    var method = "GetLatestVesselPositionAndDistance";
+async function getRecentDistance() {
+    var method = "GetVesselLatestDistance";
     try {
-        let data = await ajaxPost(method);
+        let data = await ajaxGet(method, parameters);
         populateRecentPositionAndDistance(data);
         
         // if(SELECTED_POSITION_QUERY === "0"){
@@ -108,7 +108,8 @@ function populateLastOperationMode(data) {
 
 async function getEngineTotalAndEstConsumption() {
     var method = "GetEngineTotalAndEstConsumption";
-    var parameters = { engineType : SELECTED_ENGINE_TYPE };
+    var parameters = PARAMETER_VESSELID;
+    parameters.engineType = SELECTED_ENGINE_TYPE;
     try {
         let data = await ajaxGet(method, parameters);
         populateEngineTotalAndEstConsumption(data);
@@ -129,7 +130,7 @@ function populateEngineTotalAndEstConsumption(data){
 async function getAllEngineTypes(){
     method = "GetAllEngineTypes";
     try{
-        let data = await ajaxPost(method);
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
         populateAllEngineTypesToSelect(data);
     }catch(ex){
         console.log(ex);
@@ -153,7 +154,8 @@ function populateAllEngineTypesToSelect(data){
 
 async function createEngineChartByEngineType(){
     var method = "GetEngineChartByEngineType";
-    var parameters = { engineType : SELECTED_ENGINE_TYPE};
+    var parameters = PARAMETER_VESSELID;
+    parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
         let data = await ajaxPostTest(method, parameters);
         createChart();
@@ -209,7 +211,9 @@ async function loadLiveChartPoint(chart){
     var maxLiveNumber = 30;
     var timeOfLastPoint = getTimeofLastPoint(chart.series[0].data);
     var method = "GetEngineLiveChartPoint";
-    var parameters = { timeOfLastPoint: timeOfLastPoint, engineType: SELECTED_ENGINE_TYPE };
+    var parameters = PARAMETER_VESSELID;
+    parameters.timeOfLastPoint = timeOfLastPoint;
+    parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
         let data = await ajaxGet(method, parameters);
         addLiveChartPointToChart(data, chart);
@@ -253,7 +257,6 @@ function addLiveChartPointToChart(data , chart){
     });
 }
 
-
 function getTimeofLastPoint(seriesArray){
     var length = seriesArray.length;
     var time = seriesArray[length - 1].x;
@@ -284,7 +287,6 @@ function tooltipFormatter(chart){
 }
 
 function addSeriesIntoChart(data){
-    
     $.each(data, function (indexInArray, valueOfElement) {
         var seriesArray = [];
         var seriesName = indexInArray;

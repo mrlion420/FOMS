@@ -8,8 +8,7 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
-    />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
 
     <!-- CSS Files import -->
     <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
@@ -42,12 +41,12 @@
 <body>
     <div class="header">
         <div>
-            <p id="lblHeader">Tugs Fuel Oil Monitoring System</p>
+            <p id="lblHeader">Fuel Oil Management Solutions</p>
             <!-- <i class="fa fa-ship fa-2x" aria-hidden="true"></i> -->
-            <img src="../img/tug.png"/>
+            <!-- <img src="../img/tug.png"/> -->
         </div>
         <div>
-            <h1>Vessel</h1>
+            <!-- <h1>Vessel</h1> -->
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
@@ -60,6 +59,32 @@
            
         </div>
         <div class="main-container main">
+            <div class="top-select-container">
+                <div>
+                    <p>Company : </p>
+                    <select>
+                        <option>Company 1</option>
+                        <option>Company 1</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Fleet : </p>
+                    <select>
+                        <option>Fleet 1</option>
+                        <option>Fleet 1</option>
+                    </select>
+                </div>
+                <div>
+                    <p>Vessel : </p>
+                    <select>
+                        <option>Vessel 1</option>
+                        <option>Vessel 1</option>
+                    </select>
+                </div>
+                <div>
+                    <button>Submit</button>
+                </div>                
+            </div>
             <div class="wrapper">
                 <div class="left-container">
                     <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>

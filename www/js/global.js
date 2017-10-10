@@ -5,7 +5,8 @@ $(document).ready(function(){
 // GLOBAL VARIABLES
 const WEBSERVICEHOST = "http://203.118.57.237:1702/TFOMSWebService.svc/";
 const MENU_ID = [
-	"itemDashboard",
+	"itemFleet",
+	"itemVessel",
 	"itemFuelCons",
 	"itemLoading",
 	"itemAnalog",
@@ -14,8 +15,10 @@ const MENU_ID = [
 	"itemEventBook",
 	"itemSettings"
 ];
+
 const MENU_PAGE = [
-	"main.html",
+	"fleetDashboard.html",
+	"vesselDashboard.html",
 	"fuelcons.html"
 ];
 
@@ -26,6 +29,14 @@ var FEATURE_GROUP = null;
 var MAP = null;
 // Map marker object
 var MAP_MARKER = null;
+// Timezone 
+var TIMEZONE = 8;
+var USERID = 3;
+var VESSELID = 0;
+
+var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
+var PARAMETER_VESSELID = { vesselId: VESSELID };
+var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
 
 function ajaxPost(methodName){
     var url = WEBSERVICEHOST + methodName;
@@ -34,19 +45,6 @@ function ajaxPost(methodName){
         url: url,
         dataType: "json"
     });
-}
-
-function ajaxPostTest(methodName, data){
-	var url = WEBSERVICEHOST + methodName;
-	data = {"engineType" : "1"};
-	data = JSON.stringify(data);
-	return $.ajax({
-		type: "POST",
-		url: url,
-		data: data,
-		contentType: "application/json; charset=utf-8",
-		dataType: "json"
-	});
 }
 
 function ajaxGet(methodName , data){
@@ -62,7 +60,7 @@ function ajaxGet(methodName , data){
             type: "GET",
             url: url,
             data: data,
-            dataType: "json",
+            dataType: "json"
         });
     }
 }
@@ -177,8 +175,8 @@ function setStartEndMarkerOnPopupMap(latlonArray, map){
 	var startLon = latlonArray[0].Longitude;
 
 	var icon = L.icon({
-	    iconUrl: '../img/start_vessel.png',
-	    iconSize: [34, 22] // size of the icon
+		iconUrl: '../img/start_vessel.png',
+		iconSize: [34, 22] // size of the icon
 	});
 
 	var startMapMarker = new  L.marker([startLat, startLon], { icon: icon });
@@ -189,8 +187,8 @@ function setStartEndMarkerOnPopupMap(latlonArray, map){
 	var endLon = latlonArray[latlonArray.length - 1].Longitude;
 
 	icon = L.icon({
-	    iconUrl: '../img/vessel.png',
-	    iconSize: [34, 22] // size of the icon
+		iconUrl: '../img/vessel.png',
+		iconSize: [34, 22] // size of the icon
 	});
 
 	endMapMarker = new  L.marker([endLat, endLon], { icon: icon });
@@ -202,7 +200,7 @@ function drawPolylineOnMap(latlonArray , map , isInFeatureGroup){
     var polylineGroup = [];
 	//  -1 the length of the array, since the drawing of polyline uses two index of the array
 	//  First index will be the starting point and the second one will be the ending point
-	for(var i =0; i < latlonArray.length -1 ; i++){
+	for(var i =0; i < latlonArray.length -1; i++){
         var startPointArray = latlonArray[i];
         var endPointArray = latlonArray[i + 1];
         var startPoint = new L.LatLng(startPointArray[0], startPointArray[1]);
@@ -249,13 +247,13 @@ function updateMapMarker(latitude , longitude, isCenter){
 		
 	}else{
 		//If the marker does not exist, create the marker with icon and add it to map
-	    var icon = L.icon({
-	        iconUrl: '../img/vessel.png',
-	        iconSize: [34, 22] // size of the icon
-	    });
+		var icon = L.icon({
+			iconUrl: '../img/vessel.png',
+			iconSize: [34, 22] // size of the icon
+		});
 
-	    MAP_MARKER = new  L.marker([latitude, longitude], { icon: icon });
-	    MAP_MARKER.addTo(MAP);
+		MAP_MARKER = new  L.marker([latitude, longitude], { icon: icon });
+		MAP_MARKER.addTo(MAP);
 
 	}
 

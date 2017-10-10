@@ -39,9 +39,8 @@ namespace FOMSWebService
         List<ResultData> GetAllEngineTypes(int vesselId);
 
         [OperationContract]
-        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Message GetEngineChartByEngineType(int vesselId, double timezone, string engineType);
-
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]

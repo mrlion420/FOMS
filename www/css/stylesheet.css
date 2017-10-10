@@ -151,6 +151,50 @@ p{
     display: flex;
 }
 
+.main-container .top-select-container{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 10px;
+}
+
+.main-container .top-select-container div{
+    display: flex;
+    align-items: center;
+}
+
+.main-container .top-select-container p{
+    margin-right: 20px;
+}
+
+.main-container .top-select-container select{
+    font-size: 22px;
+    background-color: #3282E4;
+    padding: 6px 10px;
+}
+
+.main-container .top-select-container select option{
+    background: white; 
+    color: black; 
+}
+
+.main-container .top-select-container button{
+    font-size: 22px;
+    /* border: 1.5px solid grey; */
+    border: 0px;
+    border-radius: 10px;
+    padding: 10px 25px;
+    font-weight: 500;
+    cursor: pointer;
+    background-color: #0A2444;
+    color: white;
+}
+
+.main-container .top-select-container button:hover{
+    background-color: #36A148;
+    color :white;
+}
+
+
 .main .wrapper .left-container{
     width: 50%;
     display: flex;
