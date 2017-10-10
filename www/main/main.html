@@ -1,0 +1,123 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
+    <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
+    /> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
+
+    <!-- CSS Files import -->
+    <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
+    <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
+    
+    <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
+
+    <!--- Localization Imports -->
+    <!-- <link rel="localizations" href="localizations/english.json" type="application/vnd.oftn.l10n+json" /> -->
+
+    <!-- Javasripts imports -->
+    <script type="text/javascript" src="../js/external/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
+    <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
+    <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="../js/external/moment.js"></script> 
+    <script type="text/javascript" src="../js/external/leaflet.js"></script>
+    <script type="text/javascript" src="../js/external/highcharts.js"></script>
+    <!-- <script type="text/javascript" src="js/themes/dark-unica.js"></script> -->
+    <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
+
+    <script type="text/javascript" src="../js/global.js"></script>
+    <script type="text/javascript" src="../js/main.js"></script> 
+
+    <title>Tugs FOMS</title>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <p id="lblHeader">Tugs Fuel Oil Monitoring System</p>
+            <!-- <i class="fa fa-ship fa-2x" aria-hidden="true"></i> -->
+            <img src="../img/tug.png"/>
+        </div>
+        <div>
+            <h1>Vessel</h1>
+        </div>
+        <div id="accountInfo">
+            <p id="lblMyAccount">My Account</p>
+            <img src="../img/logout.png" id="imgLogout"/>
+        </div>
+    </div>
+    
+    <div class="body-wrapper">
+        <div class="side-menu" id="sideMenu">
+           
+        </div>
+        <div class="main-container main">
+            <div class="wrapper">
+                <div class="left-container">
+                    <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>
+                    <div class="multiple-item">
+                        <p>Total Consumption (ℓ)</p>
+                        <p id="totalCons">1,408.45</p>
+                    </div>
+                    <div class="multiple-item">
+                        <p>Estimate Consumption (ℓ/hr)</p>
+                        <p id="estCons">65.59</p>
+                    </div>
+                    <div class="chart-header">
+                        <p id="chartTitle">Fuel Cons. Rate (ℓ/hr)</p>
+                        <select id="engineTypeSelect">
+                            <option>Main Engine</option>
+                            <option>Aux Engine</option>
+                            <option>Thruster Engine</option>
+                        </select>
+                    </div>
+                    <div class="chart-container" id="chart">
+
+                    </div>
+                </div>
+                <div class="right-container">
+                    <div id="lastOperationMode">OP Mode : DP Mode (12-Sept-2017 01:51 UTC +8)</div>
+                    <div class="single-item">
+                        <p id="latAndLon"></p>
+                    </div>
+                    <div class="single-item">
+                        <p id="sogAndCog">0 Knots 0 Deg</p>
+                    </div>
+                    <div class="map-container">
+                        <div class="select-container">
+                            <select id="queryTime">
+                                <option value="24" selected>Last 24 Hours</option>
+                                <option value="12">Last 12 Hours</option>
+                                <option value="6">Last 6 Hours</option>
+                                <option value="3">Last 3 Hours</option>
+                                <option value="1">Last 1 Hour</option>
+                                <option value="0.5">Last 30 Mins</option>
+                                <option value="0.25">Last 15 Mins</option>
+                                <option value="0">Live</option>
+                            </select>
+                        </div>
+                        <div id="map">
+                            
+                        </div>
+                    </div>
+                    <div class="multiple-item">
+                        <p>Total Distance (Nm) / Avg. Distance (ℓ/Nm)</p>
+                        <p id="totalAndAvgLitrePerNm">0.00 / 0.00</p>
+                    </div>
+                    <div class="event-container" id="eventLog">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
