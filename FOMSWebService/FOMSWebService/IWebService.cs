@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -28,6 +30,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        ResultData GetLastOperationMode(int vesselId, double timezone);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         EngineData GetEngineTotalAndEstConsumption(int vesselId, double timezone, string engineType);
 
         [OperationContract]
@@ -40,11 +46,11 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Message GetEngineChartByEngineType(int vesselId, double timezone, string engineType);
+        Stream GetEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Message GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType);
+        Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType);
 
     }
 

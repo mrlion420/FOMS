@@ -17,10 +17,13 @@ async function mainFunction() {
     generateStaticMapFromQueryTime();
     
     getRecentEventList();
-    setInterval(getRecentEventList, 1000 * 3);
+    setInterval(getRecentEventList, 1000 * 10);
 
-    getRecentPositionAndDistance();
-    setInterval(getRecentPositionAndDistance, 1000 * 3);
+    getRecentDistance();
+    setInterval(getRecentDistance, 1000 * 3);
+
+    getRecentPosition();
+    setInterval(getRecentPosition, 1000 * 3);
 
     getEngineTotalAndEstConsumption();
     setInterval(getEngineTotalAndEstConsumption, 1000 * 3);
@@ -30,7 +33,7 @@ async function mainFunction() {
 async function getRecentEventList() {
     var method = "GetRecentEventList";
     try {
-        let data = await ajaxPost(method);
+        let data = await ajaxGet(method , PARAMETER_COMBINED);
         populateEventList(data);
     } catch (ex) {
         console.log(ex);
@@ -59,18 +62,36 @@ function populateEventList(data) {
 async function getRecentDistance() {
     var method = "GetVesselLatestDistance";
     try {
-        let data = await ajaxGet(method, parameters);
-        populateRecentPositionAndDistance(data);
-        
-        // if(SELECTED_POSITION_QUERY === "0"){
-        //     generateLiveMap();
-        // }
+        let data = await ajaxGet(method, PARAMETER_COMBINED);
+        populateRecentDistance(data);
     } catch (ex) {
         console.log(ex);
     }
 }
 
-function populateRecentPositionAndDistance(data) {
+function populateRecentDistance(data) {
+    var totalDist = numberWithCommas(roundWithZero(parseFloat(data.TotalDistance), 2));
+    var avgLitrePerNm = numberWithCommas(roundWithZero(parseFloat(data.AvgLitrePerNm), 2));
+    var totalAndAvgLitrePerNm = totalDist + " / " + avgLitrePerNm;
+    $("#totalAndAvgLitrePerNm").html(totalAndAvgLitrePerNm);
+}
+
+async function getRecentPosition(){
+    var method = "GetVesselLatestPosition";
+    try{
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
+        populateRecentPosition(data);
+
+        // If the currently selected position query is for live
+        if(SELECTED_POSITION_QUERY === "0"){
+            updateMapMarker(data.Latitude, data.Longitude , true);
+        }
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateRecentPosition(data){
     var wgs84Lat = data.Wgs84Lat;
     var wgs84Lon = data.Wgs84Lon;
     var latAndLon = wgs84Lat + " " + wgs84Lon;
@@ -80,17 +101,12 @@ function populateRecentPositionAndDistance(data) {
     var cog = roundWithZero(parseFloat(data.Cog), 1);
     var sogAndCog = sog + " Knots " + cog + " Deg";
     $("#sogAndCog").html(sogAndCog);
-
-    var totalDist = numberWithCommas(roundWithZero(parseFloat(data.TotalDistance), 2));
-    var avgLitrePerNm = numberWithCommas(roundWithZero(parseFloat(data.AvgLitrePerNm), 2));
-    var totalAndAvgLitrePerNm = totalDist + " / " + avgLitrePerNm;
-    $("#totalAndAvgLitrePerNm").html(totalAndAvgLitrePerNm);
 }
 
 async function getLastOperationMode() {
     var method = "GetLastOperationMode";
     try {
-        let data = await ajaxPost(method);
+        let data = await ajaxGet(method, PARAMETER_COMBINED);
         populateLastOperationMode(data);
     } catch (ex) {
         console.log(ex);
@@ -154,10 +170,10 @@ function populateAllEngineTypesToSelect(data){
 
 async function createEngineChartByEngineType(){
     var method = "GetEngineChartByEngineType";
-    var parameters = PARAMETER_VESSELID;
+    var parameters = PARAMETER_COMBINED;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
-        let data = await ajaxPostTest(method, parameters);
+        let data = await ajaxGet(method, parameters);
         createChart();
         addSeriesIntoChart(data);
     }catch(ex){
@@ -211,7 +227,7 @@ async function loadLiveChartPoint(chart){
     var maxLiveNumber = 30;
     var timeOfLastPoint = getTimeofLastPoint(chart.series[0].data);
     var method = "GetEngineLiveChartPoint";
-    var parameters = PARAMETER_VESSELID;
+    var parameters = PARAMETER_COMBINED;
     parameters.timeOfLastPoint = timeOfLastPoint;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
@@ -314,7 +330,8 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType){
 
 async function generateStaticMapFromQueryTime(){
     var method = "GenerateMapFromQueryTime";
-    var parameters = { queryTime: SELECTED_POSITION_QUERY };
+    var parameters = PARAMETER_TIMEZONE;
+    parameters.queryTime = SELECTED_POSITION_QUERY;
     try{
         let data = await ajaxGet(method, parameters);
         await addPolylinesToMap(data);
@@ -337,10 +354,12 @@ function addPolylinesToMap(data){
     setStartEndMarkerOnPopupMap(data, MAP);
 }
 
+// Get the latest position to generate a live map
+// Subsequent position will be retrieved from getVessellatestPosition method
 async function generateLiveMap(){
     var method = "GetVesselLatestPosition";
     try{
-        let data = await ajaxPost(method);
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
         updateMapMarker(data.Latitude, data.Longitude , true);        
     }catch(ex){
         console.log(ex);
@@ -350,14 +369,11 @@ async function generateLiveMap(){
 function selectDropdownChangeEvent(){
     $("#queryTime").change(function(){
         SELECTED_POSITION_QUERY = $("#queryTime").val();
-        // Always clear out the old interval array
-        clearInterval(MAP_INTERVAL);
         initMap("map");
         switch(SELECTED_POSITION_QUERY){
             case "0":
             // Live 
             generateLiveMap();
-            MAP_INTERVAL = setInterval(generateLiveMap , 1000 * 3);
             break;
 
             default:

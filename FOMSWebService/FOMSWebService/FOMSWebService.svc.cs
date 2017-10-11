@@ -10,15 +10,98 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
+using System.ServiceModel.Activation;
 using System.Text;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace FOMSWebService
 {
-   
+    [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class FOMSWebService : IWebService
     {
         // Logger Initialization 
         Logger log = new Logger(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + @"\log.txt");
+        #region Common Methods
+        public List<ResultData> GetUserRelatedCompany(int userId)
+        {
+            List<ResultData> companyList = new List<ResultData>();
+            try
+            {
+                User currentUser = User.GetByUserId(userId);
+                // If User is admin
+                if(currentUser.UserRoleCode == 2)
+                {
+                    List<Company> allCompanyList = Company.GetAll();
+                    
+                    foreach(Company company in allCompanyList)
+                    {
+                        ResultData resultCompany = new ResultData();
+                        resultCompany.Result = company.CompanyName;
+                        resultCompany.Key = company.CompanyId.ToString();
+                        companyList.Add(resultCompany);
+                    }
+                }
+                // If User is not admin
+                else
+                {
+                    Company company = Company.GetByCompanyId(currentUser.CompanyId);
+                    ResultData resultCompany = new ResultData();
+                    resultCompany.Result = company.CompanyName;
+                    resultCompany.Key = company.CompanyId.ToString();
+                    companyList.Add(resultCompany);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return companyList;
+        }
+
+        public List<List<ResultData>> GetUserRelatedFleetsAndVessels(int userId)
+        {
+            List<List<ResultData>> fleetAndVesselsList = new List<List<ResultData>>(); 
+            try
+            {
+                List<FleetVessel> fleetVesselList = new List<FleetVessel>();
+                List<Fleet> fleetList = new List<Fleet>();
+                List<Vessel> vesselList = new List<Vessel>();
+                
+                User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
+                // Resulting fleet list 
+                List<ResultData> resultFleetList = new List<ResultData>();
+                foreach(Fleet fleet in fleetList)
+                {
+                    ResultData resultFleet = new ResultData();
+                    resultFleet.Result = fleet.FleetName;
+                    resultFleet.Key = fleet.FleetId.ToString();
+                    resultFleetList.Add(resultFleet);
+                }
+                // Resulting Vessel list
+                List<ResultData> resultVesselList = new List<ResultData>();
+                foreach(Vessel vessel in vesselList)
+                {
+                    ResultData resultVessel = new ResultData();
+                    resultVessel.Result = vessel.VesselName;
+                    resultVessel.Key = vessel.VesselId.ToString();
+                    resultVesselList.Add(resultVessel);
+                }
+
+                fleetAndVesselsList.Add(resultFleetList);
+                fleetAndVesselsList.Add(resultVesselList);
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return fleetAndVesselsList;
+        }
+
+        #endregion
 
         #region Main page methods
 
@@ -29,11 +112,12 @@ namespace FOMSWebService
             try
             {
                 //double timezone = getUserTimezone();
-                DateTime dateTimeStart = DateTime.Parse("01-Jan-2011");
+                //DateTime dateTimeStart = DateTime.Parse("01-Jan-2011");
+                DateTime datetimeStart = DateTime.UtcNow.AddDays(-14);
                 DateTime dateTimeEnd = DateTime.UtcNow;
 
                 DataTable eventListDataTable = new DataTable();
-                List<EventList> eventList = EventList.GetAll(vesselId, dateTimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All);
+                List<EventList> eventList = EventList.GetAll(vesselId, datetimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All);
                 //eventListDataTable = EventList.GetEventDisplayDetailByPeriod(dateTimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All, 20);
 
                 foreach(EventList eventItem in eventList)
@@ -67,10 +151,17 @@ namespace FOMSWebService
                 // Calculate the total Distance
                 double totalDistance = Position.GetTotalDistance(vesselId, startDatetime, endDatetime);
                 // Get all the possible engine enums that exist in the system
-                totalFlow += EngineReading.GetTotalFlowByEngineCode(vesselId, BLL_Enum._ENGINE.All, startDatetime, endDatetime);
-                totalFlow -= EngineReading.GetTotalFlowByEngineCode(vesselId, BLL_Enum._ENGINE.Bunker, startDatetime, endDatetime);
+                List<SystemCode> engineCodeList = SystemCode.GetSysCodeList(BLL_Enum._SYS_CODE_TYPE.ENGINE);
+                foreach(SystemCode systemCode in engineCodeList)
+                {
+                    BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), systemCode.SysCodeId);
+                    if(engineCodeEnum != BLL_Enum._ENGINE.Bunker)
+                    {
+                        totalFlow += EngineReading.GetTotalFlowByEngineCode(vesselId, engineCodeEnum, startDatetime, endDatetime);
+                    }
+                    
+                }
                 
-
                 if (totalDistance == 0)
                 {
                     totalDistance = 1;
@@ -101,11 +192,15 @@ namespace FOMSWebService
 
                 string longitude = positionItem.Longitude.ToString();
                 string wgs84Longitude = positionItem.Wgs84Longitude;
+                string cog = positionItem.Cog.ToString();
+                string sog = positionItem.Sog.ToString();
 
                 positionData.Latitude = latitude;
                 positionData.Longitude = longitude;
                 positionData.Wgs84Lat = wgs84Latitude;
                 positionData.Wgs84Lon = wgs84Longitude;
+                positionData.Cog = cog;
+                positionData.Sog = sog;
             }
             catch (Exception ex)
             {
@@ -218,16 +313,20 @@ namespace FOMSWebService
                 DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble);
                 DateTime today = DateTime.UtcNow;
                 //PositionList positionList = Position.GetByQueryPeriod(startTime, today, BLL_Enum._SORT_ORDER.ASC);
-                PositionList positionList = PositionList.GetByVesselIdPositionDatetime(vesselId, startTime);
-
-                foreach (Position position in positionList)
+                DataSet positionDS = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, BLL_Enum._VIEW_INTERVAL.Min_15, startTime, today);
+                foreach(DataTable positionTable in positionDS.Tables)
                 {
-                    PositionData positionData = new PositionData();
-                    latitude = position.Latitude;
-                    longitude = position.Longitude;
-                    positionData.Latitude = latitude.ToString();
-                    positionData.Longitude = longitude.ToString();
-                    positionDataList.Add(positionData);
+                    foreach(DataRow positionRow in positionTable.Rows)
+                    {
+                        PositionData positionData = new PositionData();
+                        //latitude = position.Latitude;
+                        //longitude = position.Longitude;
+                        //positionData.Latitude = latitude.ToString();
+                        //positionData.Longitude = longitude.ToString();
+                        positionData.Latitude = positionRow["LATITUDE"].ToString();
+                        positionData.Longitude = positionRow["LONGITUDE"].ToString();
+                        positionDataList.Add(positionData);
+                    }
                 }
             }
             catch (Exception ex)
@@ -242,9 +341,10 @@ namespace FOMSWebService
 
         #region Chart Related Methods
 
-        public Message GetEngineChartByEngineType(int vesselId, double timezone, string engineType)
+        public Stream GetEngineChartByEngineType(int vesselId, double timezone, string engineType)
         {
             string returnString = string.Empty;
+            HttpResponseMessage response = new HttpResponseMessage();
             try
             {
                 
@@ -282,13 +382,21 @@ namespace FOMSWebService
             {
                 log.write(ex.ToString());
             }
-            return WebOperationContext.Current.CreateTextResponse(returnString, "application/json;charset=utf-8", System.Text.Encoding.UTF8);
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+
+            //byte[] resultBytes = Encoding.UTF8.GetBytes(returnString);
+            //response.Content = new StreamContent(new MemoryStream(resultBytes));
+            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+            //return response;
 
         }
 
-        public Message GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType)
+        public Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType)
         {
             string returnString = string.Empty;
+            HttpResponseMessage response = new HttpResponseMessage();
             try
             {
                 DateTime startTime = DateTimeExtension.UnixTimeToDateTime(Convert.ToDouble(timeOfLastPoint));
@@ -306,7 +414,13 @@ namespace FOMSWebService
             {
                 log.write(ex.ToString());
             }
-            return WebOperationContext.Current.CreateTextResponse(returnString, "application/json;charset=utf-8", System.Text.Encoding.UTF8);
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+            //byte[] resultBytes = Encoding.UTF8.GetBytes(returnString);
+            //response.Content = new StreamContent(new MemoryStream(resultBytes));
+            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
+
+            //return response;
         }
 
         #endregion

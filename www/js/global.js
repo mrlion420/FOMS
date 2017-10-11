@@ -3,7 +3,7 @@ $(document).ready(function(){
 });
 
 // GLOBAL VARIABLES
-const WEBSERVICEHOST = "http://203.118.57.237:1702/TFOMSWebService.svc/";
+const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/";
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -32,7 +32,8 @@ var MAP_MARKER = null;
 // Timezone 
 var TIMEZONE = 8;
 var USERID = 3;
-var VESSELID = 0;
+var VESSELID = 1;
+const DELIMITER = ";";
 
 var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
 var PARAMETER_VESSELID = { vesselId: VESSELID };
