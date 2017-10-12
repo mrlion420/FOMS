@@ -15,6 +15,7 @@ using System.Text;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Globalization;
 
 namespace FOMSWebService
 {
@@ -24,6 +25,7 @@ namespace FOMSWebService
         // Logger Initialization 
         Logger log = new Logger(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + @"\log.txt");
         #region Common Methods
+
         public List<ResultData> GetUserRelatedCompany(int userId)
         {
             List<ResultData> companyList = new List<ResultData>();
@@ -99,6 +101,74 @@ namespace FOMSWebService
             }
 
             return fleetAndVesselsList;
+        }
+
+        public List<ResultData> GetUserRelatedFleets(int userId)
+        {
+            List<ResultData> fleetResultList = new List<ResultData>();
+            try
+            {
+                List<FleetVessel> fleetVesselList = new List<FleetVessel>();
+                List<Fleet> fleetList = new List<Fleet>();
+                List<Vessel> vesselList = new List<Vessel>();
+
+                bool isSuccessful = User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
+
+                var source = new Dictionary<string, string>();
+
+                if (fleetList.Count > 0 && isSuccessful)
+                {
+                    // Sort all the fleet in alphabetical order
+                    fleetList.Sort(delegate (Fleet fleetA, Fleet fleetB)
+                    {
+
+                        return string.Compare(fleetA.FleetName, fleetB.FleetName);
+                    });
+                   
+                    foreach (Fleet fleet in fleetList)
+                    {
+                        ResultData fleetItem = new ResultData();
+                        fleetItem.Key = fleet.FleetId.ToString();
+                        fleetItem.Result = fleet.FleetName;
+                        fleetResultList.Add(fleetItem);
+                    }
+
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return fleetResultList;
+        }
+
+        public List<ResultData> GetUserRelatedVessels(int userId, int fleetId)
+        {
+            List<ResultData> vesselResultList = new List<ResultData>();
+            try
+            {
+                List<FleetVessel> fleetVesselList = new List<FleetVessel>();
+                List<Fleet> fleetList = new List<Fleet>();
+                List<Vessel> vesselList = new List<Vessel>();
+
+                bool isSuccessful = User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
+
+                List<Vessel> vesselDataList = Vessel.GetByFleetId(fleetId);
+                foreach(Vessel vessel in vesselDataList)
+                {
+                    ResultData vesselItem = new ResultData();
+                    vesselItem.Key = vessel.VesselId.ToString();
+                    vesselItem.Result = vessel.VesselName;
+                    vesselResultList.Add(vesselItem);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return vesselResultList;
         }
 
         #endregion
@@ -300,20 +370,21 @@ namespace FOMSWebService
             return engineData;
         }
 
-        /* TO CHECK with alex */
         public List<PositionData> GenerateMapFromQueryTime(int vesselId, string queryTime)
         {
             List<PositionData> positionDataList = new List<PositionData>();
             try
             {
                 double querytimeDouble = Convert.ToDouble(queryTime);
-                decimal latitude = 0;
-                decimal longitude = 0;
+                DateTime start, end;
                 // Minus the requested querytime 
-                DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble);
+                DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble).AddDays(-3);
+                start = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour,0, 0);
                 DateTime today = DateTime.UtcNow;
+                end = new DateTime(today.Year, today.Month, today.Day, today.Hour, 0, 0);
                 //PositionList positionList = Position.GetByQueryPeriod(startTime, today, BLL_Enum._SORT_ORDER.ASC);
-                DataSet positionDS = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, BLL_Enum._VIEW_INTERVAL.Min_15, startTime, today);
+                DataSet positionDS = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, BLL_Enum._VIEW_INTERVAL.Live, start, end);
+                
                 foreach(DataTable positionTable in positionDS.Tables)
                 {
                     foreach(DataRow positionRow in positionTable.Rows)
@@ -341,23 +412,24 @@ namespace FOMSWebService
 
         #region Chart Related Methods
 
-        public Stream GetEngineChartByEngineType(int vesselId, double timezone, string engineType)
+        public Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType)
         {
             string returnString = string.Empty;
-            HttpResponseMessage response = new HttpResponseMessage();
+            
             try
             {
                 
                 string engineUnit = string.Empty;
-                int numOfPoint = 30;
+                int numOfPoint = 10; // Default to 10 for daily
+                int seconds = 86400; // 24 hours - Daily
 
                 BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
 
-                DateTime endTime = DateTime.UtcNow;
-                DateTime startTime = DateTime.UtcNow.AddSeconds(-30 * (numOfPoint - 2));
+                DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
                 // Query Interval - xx:xx:01 to xx:xx:00
-                DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Live, numOfPoint, startTime, false);
-                engineDS = EngineExtension.AddEngineChartDataToDataSet(engineDS, timezone);
+                DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                engineDS = EngineExtension.AddEngineChartDataToDataSet(engineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                 if (engineType.Equals("2"))
                 {
@@ -365,8 +437,8 @@ namespace FOMSWebService
                     engineType = "3";
                     engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                     // Query Interval - xx:xx:01 to xx:xx:00
-                    DataSet secondEngineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Live, numOfPoint, startTime, false);
-                    secondEngineDS = EngineExtension.AddEngineChartDataToDataSet(secondEngineDS, timezone);
+                    DataSet secondEngineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                    secondEngineDS = EngineExtension.AddEngineChartDataToDataSet(secondEngineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                     foreach (DataTable engineTable in secondEngineDS.Tables)
                     {
@@ -424,5 +496,7 @@ namespace FOMSWebService
         }
 
         #endregion
+
+        
     }
 }

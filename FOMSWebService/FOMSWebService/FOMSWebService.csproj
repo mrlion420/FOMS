@@ -51,7 +51,7 @@
     </Reference>
     <Reference Include="CommonHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\CommonHelper.dll</HintPath>
+      <HintPath>..\CommonHelper\bin\Debug\CommonHelper.dll</HintPath>
     </Reference>
     <Reference Include="Csla, Version=4.3.10.0, Culture=neutral, PublicKeyToken=93be5fdc093e4c30, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

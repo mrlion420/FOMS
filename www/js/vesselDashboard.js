@@ -9,9 +9,12 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
+    await getUserRelatedFleets();
+    await getUserRelatedVessels();
     await getAllEngineTypes();
     await initMap("map");
     selectDropdownChangeEvent();
+    submitBtnClickHandler();
     getLastOperationMode(); 
     createEngineChartByEngineType();
     generateStaticMapFromQueryTime();
@@ -28,6 +31,148 @@ async function mainFunction() {
     getEngineTotalAndEstConsumption();
     setInterval(getEngineTotalAndEstConsumption, 1000 * 3);
 
+}
+
+async function getUserRelatedCompany(){
+    var method = "GetUserRelatedCompany";
+    try{
+        //let data = await ajaxGet(method, PARAMETER_USERID);
+        //populateCompanySelectBox(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateCompanySelectBox(data){
+    var htmlString = "";
+    var isFirstItem = true;
+
+    $.each(data, function(index,valueInElement){
+        var key = data[index].Key;
+        var value = data[index].Result;
+        if(isFirstItem){
+            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
+            COMPANYID = key;
+            isFirstItem = false;
+        }else{
+            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        }
+        
+    });
+    $("#companySelect").html(htmlString);
+}
+
+async function getUserRelatedFleetsAndVessels(){
+    var method = "GetUserRelatedFleetsAndVessels";
+    try{
+        let data = await ajaxGet(method , PARAMETER_USERID);
+        populateFleetAndVesselSelectBox(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateFleetAndVesselSelectBox(data){
+    var fleetArray = data[0];
+    var vesselArray = data[1];
+    var isFirstItem = true;
+    var htmlString = "";
+
+    $.each(fleetArray, function(index,valueInElement){
+        var key = fleetArray[index].Key;
+        var value = fleetArray[index].Result;
+
+        if(isFirstItem){
+            htmlString += "<option value='" + key + "' selected>" + value +"</option>";
+            FLEETID = key;
+            isFirstItem = false;
+        }else{
+            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        }
+        
+    });
+    $("#fleetSelect").html(htmlString);
+    isFirstItem = true; // Reset the bool
+
+    $.each(vesselArray, function(index,valueInElement){
+        var key = vesselArray[index].Key;
+        var value = vesselArray[index].Result;
+
+        if(isFirstItem){
+            htmlString += "<option value='" + key + "' selected>" + value +"</option>";
+            VESSELID = key;
+            isFirstItem = false;
+        }else{
+            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        }
+        
+    });
+    $("#vesselSelect").html(htmlString);
+}
+
+async function getUserRelatedFleets(){
+    var method = "GetUserRelatedFleets";
+    try{
+        let data = await ajaxGet(method, PARAMETER_USERID);
+        populateFleetSelectBox(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateFleetSelectBox(data){
+    var isFirstItem = true;
+    var htmlString = "";
+    $.each(data, function(index,valueInElement){
+        var key = data[index].Key;
+        var value = data[index].Result;
+        if(isFirstItem){
+            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
+            FLEETID = key;
+            isFirstItem = false;
+        }else{
+            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        }
+        
+    });
+    $("#fleetSelect").html(htmlString);
+}
+
+async function getUserRelatedVessels(){
+    var method = "GetUserRelatedVessels";
+    var parameters = PARAMETER_USERID;
+    parameters.fleetId = FLEETID;
+    try{
+        let data = await ajaxGet(method, parameters);
+        populateVesselSelectBox(data);
+    }catch(ex){
+        console.log(ex);
+    }
+    resetConstArrays();
+}
+
+function populateVesselSelectBox(data){
+    var isFirstItem = true;
+    var htmlString = "";
+
+    $.each(data, function(index,valueInElement){
+        var key = data[index].Key;
+        var value = data[index].Result;
+        if(isFirstItem){
+            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
+            if(PAGELOAD){
+                VESSELID = key;
+                PAGELOAD = false;
+            }else{
+                TEMP_VESSELID = key;
+            }
+            isFirstItem = false;
+        }else{
+            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        }
+        
+    });
+    $("#vesselSelect").html(htmlString);
 }
 
 async function getRecentEventList() {
@@ -132,6 +277,7 @@ async function getEngineTotalAndEstConsumption() {
     } catch (ex) {
         console.log(ex);
     }
+    resetConstArrays();
 }
 
 function populateEngineTotalAndEstConsumption(data){
@@ -169,7 +315,7 @@ function populateAllEngineTypesToSelect(data){
 }
 
 async function createEngineChartByEngineType(){
-    var method = "GetEngineChartByEngineType";
+    var method = "GetDailyEngineChartByEngineType";
     var parameters = PARAMETER_COMBINED;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
@@ -179,6 +325,7 @@ async function createEngineChartByEngineType(){
     }catch(ex){
         console.log(ex);
     }
+    resetConstArrays();
 }
 
 function createChart(){
@@ -187,15 +334,6 @@ function createChart(){
             type: "line",
             style: {
                 'fontFamily': 'Tahoma'
-            },
-            events: {
-                load: function () {
-                    chart = this;
-                    clearInterval(CHART_INTERVAL);
-                    CHART_INTERVAL = setInterval(function () {
-                        loadLiveChartPoint(chart);
-                    }, 1000 * 10);
-                }
             }
         },
         title: {
@@ -236,6 +374,7 @@ async function loadLiveChartPoint(chart){
     }catch(ex){
         console.log(ex);
     }
+    resetConstArrays();
 }
 
 function addLiveChartPointToChart(data , chart){
@@ -288,7 +427,7 @@ function tooltipFormatter(chart){
     if (chartTitle !== "Fuel Cons. Rate (ℓ/hr)") {
         rateText = "Est. Flow Rate : "; // Bunker
     } else {
-        rateText = "Est. Consumption Rate (ℓ/hr)";
+        rateText = "Est. Consumption Rate (ℓ/hr) : ";
     }
 
     formatter = "<b>" + chart.series.name + "</b><br>" +
@@ -330,9 +469,11 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType){
 
 async function generateStaticMapFromQueryTime(){
     var method = "GenerateMapFromQueryTime";
-    var parameters = PARAMETER_TIMEZONE;
+    resetConstArrays();
+    var parameters = PARAMETER_VESSELID;
     parameters.queryTime = SELECTED_POSITION_QUERY;
     try{
+        await initMap("map");
         let data = await ajaxGet(method, parameters);
         await addPolylinesToMap(data);
         MAP.fitBounds(FEATURE_GROUP.getBounds());
@@ -340,6 +481,7 @@ async function generateStaticMapFromQueryTime(){
     }catch(ex){
         console.log(ex);
     }
+    resetConstArrays();
 }
 
 function addPolylinesToMap(data){
@@ -359,6 +501,7 @@ function addPolylinesToMap(data){
 async function generateLiveMap(){
     var method = "GetVesselLatestPosition";
     try{
+        await initMap("map");
         let data = await ajaxGet(method, PARAMETER_VESSELID);
         updateMapMarker(data.Latitude, data.Longitude , true);        
     }catch(ex){
@@ -367,9 +510,13 @@ async function generateLiveMap(){
 }
 
 function selectDropdownChangeEvent(){
+    $("#fleetSelect").change(function(){
+        FLEETID = $("#fleetSelect").val();
+        getUserRelatedVessels();
+    });
+
     $("#queryTime").change(function(){
         SELECTED_POSITION_QUERY = $("#queryTime").val();
-        initMap("map");
         switch(SELECTED_POSITION_QUERY){
             case "0":
             // Live 
@@ -397,5 +544,18 @@ function selectDropdownChangeEvent(){
         $("#chartTitle").html(htmlString);
         createEngineChartByEngineType();
         getEngineTotalAndEstConsumption();
+    });
+}
+
+function submitBtnClickHandler(){
+    $("#submitBtn").click(function(){
+        VESSELID = TEMP_VESSELID;
+        getLastOperationMode(); 
+        createEngineChartByEngineType();
+        getRecentEventList();
+        getRecentDistance();
+        getRecentPosition();
+        getEngineTotalAndEstConsumption();
+        generateStaticMapFromQueryTime();
     });
 }

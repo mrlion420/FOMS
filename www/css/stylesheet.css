@@ -170,6 +170,7 @@ p{
     font-size: 22px;
     background-color: #3282E4;
     padding: 6px 10px;
+    max-width: 300px;
 }
 
 .main-container .top-select-container select option{
@@ -370,7 +371,7 @@ p{
 }
 
 .main .wrapper .right-container .event-container p:nth-child(2){
-    width: 90px;
+    width: 100px;
 }
 
 

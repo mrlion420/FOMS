@@ -14,3 +14,5 @@ C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csprojReso
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csproj.CoreCompileInputs.cache
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.dll
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.pdb
+C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\CommonHelper.dll
+C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\CommonHelper.pdb

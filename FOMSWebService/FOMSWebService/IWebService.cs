@@ -15,6 +15,21 @@ namespace FOMSWebService
     [ServiceContract]
     public interface IWebService
     {
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetUserRelatedCompany(int userId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<List<ResultData>> GetUserRelatedFleetsAndVessels(int userId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetUserRelatedFleets(int userId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetUserRelatedVessels(int userId, int fleetId);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -46,7 +61,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Stream GetEngineChartByEngineType(int vesselId, double timezone, string engineType);
+        Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]

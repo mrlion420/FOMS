@@ -21,7 +21,7 @@ const MENU_PAGE = [
 	"vesselDashboard.html",
 	"fuelcons.html"
 ];
-
+var PAGELOAD = true;
 var INTERVAL_ARRAY = [];
 // Feature group that contains all the polylines
 var FEATURE_GROUP = null;
@@ -32,12 +32,23 @@ var MAP_MARKER = null;
 // Timezone 
 var TIMEZONE = 8;
 var USERID = 3;
-var VESSELID = 1;
+var COMPANYID = 0;
+var FLEETID = 0;
+var VESSELID = 0;
+var TEMP_VESSELID = 0;
 const DELIMITER = ";";
 
+var PARAMETER_USERID = { userId: USERID };
 var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
 var PARAMETER_VESSELID = { vesselId: VESSELID };
 var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+
+function resetConstArrays(){
+	PARAMETER_USERID = { userId: USERID };
+	PARAMETER_TIMEZONE = { timezone: TIMEZONE };
+	PARAMETER_VESSELID = { vesselId: VESSELID };
+	PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+}
 
 function ajaxPost(methodName){
     var url = WEBSERVICEHOST + methodName;
