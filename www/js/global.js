@@ -21,6 +21,8 @@ const MENU_PAGE = [
 	"vesselDashboard.html",
 	"fuelcons.html"
 ];
+
+var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
 var PAGELOAD = true;
 var INTERVAL_ARRAY = [];
 // Feature group that contains all the polylines
@@ -78,9 +80,30 @@ function ajaxGet(methodName , data){
 }
 
 function loadSideMenu(){
-	$("#sideMenu").load("/main/menu.html" , function(){
-		displaySelectedTab();
-		sideMenuClick();
+	if(getCurrentPage() === "Login.html"){
+		$("#sideMenu").load("/menu/LoginMenu.html" , function(){
+			loginMenuClick();
+		});
+	}else{
+		$("#sideMenu").load("/menu/MainMenu.html" , function(){
+			displaySelectedTab();
+			sideMenuClick();
+		});
+	}
+	
+}
+
+function loginMenuClick(){
+	$("#sideMenu .wrapper").on('click', 'div', function(){
+		var divId = this.id;
+		for(var i = 0; i < LOGINMENU.length; i++){
+			if(divId === LOGINMENU[i]){
+				$("#" + LOGINMENU[i]).addClass("selected");
+			}else{
+				$("#" + LOGINMENU[i]).removeClass("selected");
+			}
+		}
+		$("#" + divId + "Container").show();
 	});
 }
 

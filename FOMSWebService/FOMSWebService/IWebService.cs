@@ -67,6 +67,10 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        ResultData LoginUser(string userId, string password);
+
     }
 
 
@@ -230,6 +234,28 @@ namespace FOMSWebService
         {
             get { return totalCons; }
             set { totalCons = value; }
+        }
+
+    }
+
+    [DataContract]
+    public class UserData
+    {
+        private string userId;
+        private string username;
+
+        public string Username
+        {
+            get { return username; }
+            set { username = value; }
+        }
+
+
+        [DataMember]
+        public string UserId
+        {
+            get { return userId; }
+            set { userId = value; }
         }
 
     }

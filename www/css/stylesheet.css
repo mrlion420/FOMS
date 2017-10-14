@@ -146,10 +146,6 @@ p{
     margin-top: 70px;
 }
 
-.main-container .wrapper{
-    margin: 10px 0px 0px 15px;
-    display: flex;
-}
 
 .main-container .top-select-container{
     display: flex;
@@ -204,6 +200,11 @@ p{
 
 .main label{
     font-size: 20px;
+}
+
+.main .wrapper{
+    margin: 10px 0px 0px 15px;
+    display: flex;
 }
 
 .main .wrapper .left-container .multiple-item{
@@ -374,7 +375,41 @@ p{
     width: 100px;
 }
 
+/* ----------------- LOGIN SECTION ---------------- */
+.login .wrapper{
+    display: flex;
+    justify-content: center;
+}
 
+.login .wrapper .login-container{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+}
+
+.login .wrapper .login-container div{
+    display: flex;
+    align-items: center;
+}
+
+.login .wrapper .login-container div p{
+    width: 300px;
+}
+
+.login .wrapper .login-container div button{
+    padding: 10px;
+    background-color: #4395F3;
+    width: 100px;
+    border: 1.5px solid black;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.login .wrapper .login-container div button:hover{
+
+    background-color: #36A148;
+    color: white;
+}
 /* ----------------- GLOBAL SECTION ---------------- */
 ::-webkit-scrollbar-track
 {

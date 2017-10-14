@@ -16,6 +16,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Globalization;
+using System.Security.Cryptography;
 
 namespace FOMSWebService
 {
@@ -169,6 +170,50 @@ namespace FOMSWebService
             }
 
             return vesselResultList;
+        }
+
+        #endregion
+
+        #region Login Page Methods
+
+        public ResultData LoginUser(string userId, string password)
+        {
+            ResultData result = new ResultData();
+            //var passwordString = "abc";
+            //var salt = "ac6.tdJm#n/sr3xd#%m+EU3mHv<1s#[w--vg6B-u|,jl3V*UHM-L79fc2FyO%z)";
+            //var finalPassword = passwordString + salt;
+            //var data = Encoding.UTF8.GetBytes(finalPassword);
+
+            //using (SHA512 shaM = new SHA512Managed())
+            //{
+            //    var hash = shaM.ComputeHash(data);
+            //    var sb = new StringBuilder();
+            //    foreach (byte b in hash)
+            //    {
+            //        var hex = b.ToString("x2");
+            //        sb.Append(hex);
+            //    }
+            //    string hexString = sb.ToString();
+            //}
+            try
+            {
+                User currentUser = User.ValidateUser(userId, password);
+                if(currentUser == null)
+                {
+                    result.Result = false.ToString();
+                }
+                else
+                {
+                    
+                    result.Result = true.ToString();
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return result;
         }
 
         #endregion
