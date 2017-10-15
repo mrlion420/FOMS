@@ -492,21 +492,16 @@ namespace FOMSWebService
                         engineDS.Tables.Add(copyTable);
                     }
                 }
-                returnString = JsonConvert.SerializeObject(engineDS);
 
+                returnString = JsonConvert.SerializeObject(engineDS);
             }
             catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
+
             WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
-
-            //byte[] resultBytes = Encoding.UTF8.GetBytes(returnString);
-            //response.Content = new StreamContent(new MemoryStream(resultBytes));
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-
-            //return response;
 
         }
 
@@ -531,13 +526,10 @@ namespace FOMSWebService
             {
                 log.write(ex.ToString());
             }
+
             WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
-            //byte[] resultBytes = Encoding.UTF8.GetBytes(returnString);
-            //response.Content = new StreamContent(new MemoryStream(resultBytes));
-            //response.Content.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
-
-            //return response;
+            
         }
 
         #endregion
