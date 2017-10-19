@@ -4,6 +4,7 @@ $(document).ready(function(){
 
 // GLOBAL VARIABLES
 const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/";
+// const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -17,8 +18,8 @@ const MENU_ID = [
 ];
 
 const MENU_PAGE = [
-	"fleetDashboard.html",
-	"vesselDashboard.html",
+	"FleetDashboard.html",
+	"VesselDashboard.html",
 	"fuelcons.html"
 ];
 

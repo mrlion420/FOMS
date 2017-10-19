@@ -1,4 +1,5 @@
-﻿using Common;
+﻿using BLL.FMCC.BLL;
+using Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -51,6 +52,73 @@ namespace CommonHelper
                 }
             }
             return dsData;
+        }
+
+        public static DataSet CombineEngineChartDatatoOne(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel)
+        {
+            int tableCount = 0;
+            
+            foreach(DataTable table in dsData.Tables)
+            {
+                if(tableCount != 0)
+                {
+                    int rowCount = 0;
+                    foreach(DataRow row in table.Rows)
+                    {
+                        // Get the first table
+                        DataTable firstTable = dsData.Tables[0];
+                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+                        estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+
+                        DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
+                        string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
+                        string engineUnit = "ℓ/hr";
+
+                        firstTable.Rows[rowCount]["Unit"] = engineUnit;
+                        firstTable.Rows[rowCount]["Ticks"] = ticksStr;
+                        // Re-assign the first table the new added value
+                        firstTable.Rows[rowCount]["EST_FLOW_RATE"] = estFlowRate;
+                        rowCount++;
+                    }
+                }
+                else
+                {
+                    table.Columns.Add("Ticks", typeof(string));
+                    table.Columns.Add("Unit", typeof(string));
+                    tableCount++;
+                }
+            }
+
+            // If the vessel name already exists in dataset, combine the value inside
+            if (resultDS.Tables.Contains(vessel.VesselName))
+            {
+                foreach(DataTable table in resultDS.Tables)
+                {
+                    if (table.TableName.Equals(vessel.VesselName))
+                    {
+                        int rowCount = 0;
+                        foreach (DataRow row in table.Rows)
+                        {
+                            // Get the first table
+                            DataTable firstTable = dsData.Tables[0];
+                            double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+                            estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+                            // Re-assign the result Ds table the new added value
+                            row["EST_FLOW_RATE"] = estFlowRate;
+                            rowCount++;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Finally change the first table name to its vessel name
+                dsData.Tables[0].TableName = vessel.VesselName;
+                DataTable resultTable = dsData.Tables[0].Copy();
+                resultDS.Tables.Add(resultTable);
+            }
+
+            return resultDS;
         }
     }
 }

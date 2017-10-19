@@ -53,6 +53,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        EngineData GetEngineTotalAndEstConsumptionByFleet(int fleetId, double timezone, string engineType);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<PositionData> GenerateMapFromQueryTime(int vesselId, string queryTime);
 
         [OperationContract]
@@ -61,11 +65,31 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetAllEngineTypesByFleet(int fleetId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        BunkerData GetBunkeringByFleet(int fleetId, double timezone);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<EventData> GetLatestEventListByFleet(int fleetId, double timezone);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetDistanceAndAvgConsAndReportingVessels(int fleetId, double timezone);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetEngineChartByFleet(int fleetId, double timezone, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -104,6 +128,15 @@ namespace FOMSWebService
         private string datetime;
         private string eventType;
         private string eventDesc;
+        private string vesselName;
+
+        [DataMember]
+        public string VesselName
+        {
+            get { return vesselName; }
+            set { vesselName = value; }
+        }
+
 
         [DataMember]
         public string EventDesc
@@ -256,6 +289,29 @@ namespace FOMSWebService
         {
             get { return userId; }
             set { userId = value; }
+        }
+
+    }
+
+    [DataContract]
+    public class BunkerData
+    {
+        private string bunkerIn;
+        private string bunkerOut;
+
+        [DataMember]
+        public string BunkerOut
+        {
+            get { return bunkerOut; }
+            set { bunkerOut = value; }
+        }
+
+
+        [DataMember]
+        public string BunkerIn
+        {
+            get { return bunkerIn; }
+            set { bunkerIn = value; }
         }
 
     }
