@@ -753,6 +753,7 @@ namespace FOMSWebService
             WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
             
+<<<<<<< HEAD
         }
 
         public Stream GetEngineChartByFleet(int fleetId, double  timezone, string engineType)
@@ -795,6 +796,8 @@ namespace FOMSWebService
 
             WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+=======
+>>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
         }
 
         #endregion

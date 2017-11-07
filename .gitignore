@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 
 www/map_tiles/*
+FOMSWebService/.vs/FOMSWebService/v15/sqlite3/storage.ide
