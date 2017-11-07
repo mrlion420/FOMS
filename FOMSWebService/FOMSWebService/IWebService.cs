@@ -165,7 +165,7 @@ namespace FOMSWebService
 
     [DataContract]
     public class PositionData
-    {
+    { 
         private string wgs84Lat;
         private string wgs84Lon;
         private string totalDistance;
@@ -174,6 +174,14 @@ namespace FOMSWebService
         private string cog;
         private string latitude;
         private string longitude;
+        private string vesselName;
+
+        [DataMember]
+        public string VesselName
+        {
+            get { return vesselName; }
+            set { vesselName = value; }
+        }
 
         [DataMember]
         public string Longitude
