@@ -598,7 +598,7 @@ namespace FOMSWebService
                 log.write(ex.ToString());
             }
 
-            List<EventData> sortedList = eventDataList.OrderByDescending(x => DateTime.Parse(x.Datetime)).ToList();
+            List<EventData> sortedList = eventDataList.OrderByDescending(x => DateTime.ParseExact(x.Datetime, "dd-MMM HH:mm",CultureInfo.InvariantCulture)).ToList();
             return sortedList;
         }
 
@@ -618,7 +618,7 @@ namespace FOMSWebService
                 double totalFlow = 0;
                 foreach(Vessel vessel in vesselList)
                 {
-                    distance = Position.GetTotalDistance(vessel.VesselId, startDatetime, endDatetime);
+                    distance += Position.GetTotalDistance(vessel.VesselId, startDatetime, endDatetime);
                     List<SystemCode> engineCodeList = SystemCode.GetSysCodeList(BLL_Enum._SYS_CODE_TYPE.ENGINE);
                     foreach (SystemCode systemCode in engineCodeList)
                     {
