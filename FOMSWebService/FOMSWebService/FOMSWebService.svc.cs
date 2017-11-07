@@ -218,7 +218,7 @@ namespace FOMSWebService
 
         #endregion
 
-        #region Main page methods
+        #region Vessel Page Methods
 
         public List<EventData> GetRecentEventList(int vesselId, double timezone)
         {
@@ -455,6 +455,230 @@ namespace FOMSWebService
 
         #endregion
 
+        #region Fleet Page Methods
+
+        public EngineData GetEngineTotalAndEstConsumptionByFleet(int fleetId, double timezone, string engineType)
+        {
+            EngineData engineData = new EngineData();
+            try
+            {
+                BLL_Enum._ENGINE engineEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+                DateTime startDatetime = DateTimeExtension.CalculateUserTodayDateStartTime(timezone);
+                DateTime endDatetime = DateTime.UtcNow;
+                double totalFlow = 0;
+                double totalHour = 0;
+                double estCons = 0;
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach(Vessel vessel in vesselList)
+                {
+                    totalFlow += EngineReading.GetTotalFlowByEngineCode(vessel.VesselId, engineEnum, startDatetime, endDatetime);
+                    totalHour += (endDatetime - startDatetime).TotalHours; // Get the difference in hours
+                    estCons += Convert.ToDouble(totalFlow) / totalHour;
+                }
+                engineData.TotalCons = totalFlow.ToString();
+                engineData.EstCons = estCons.ToString();
+                engineData.UserStartDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
+
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return engineData;
+        }
+
+        public List<ResultData> GetAllEngineTypesByFleet(int fleetId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                HashSet<short> engineCodeHS = new HashSet<short>();
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach(Vessel vessel in vesselList)
+                {
+                    List<Engine> engineList = Engine.GetAll(vessel.VesselId);
+                    foreach (Engine engine in engineList)
+                    {
+                        short engineCode = engine.EngineCode.GetValueOrDefault();
+                        if (engineCode == 3)
+                        {
+                            engineCode = 2;
+                        }
+                        engineCodeHS.Add(engineCode);
+                    }
+                }
+                
+                foreach (short engineCode in engineCodeHS)
+                {
+                    ResultData result = new ResultData();
+                    string engineType = SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ENGINE), engineCode.ToString()).SysCodeDesc;
+                    if (engineCode != 2)
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = engineType;
+                    }
+                    else
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = "Thursters";
+                    }
+                    resultDataList.Add(result);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
+        }
+
+        public BunkerData GetBunkeringByFleet(int fleetId, double timezone)
+        {
+            BunkerData bunker = new BunkerData();
+            try
+            {
+                DateTime startTime = DateTimeExtension.CalculateUserTodayDateStartTime(timezone);
+                DateTime endTime = DateTime.UtcNow;
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                double totalBunkerIn = 0;
+                double totalBunkerOut = 0;
+
+                foreach(Vessel vessel in vesselList)
+                {
+                    totalBunkerIn += EventBunkering.GetTotalFlowByBunkeringCode(vessel.VesselId, BLL_Enum._BUNKERING.Bunker_In, startTime, endTime);
+                    totalBunkerOut += EventBunkering.GetTotalFlowByBunkeringCode(vessel.VesselId, BLL_Enum._BUNKERING.Bunker_Out_cons_machine, startTime, endTime);
+                    totalBunkerOut += EventBunkering.GetTotalFlowByBunkeringCode(vessel.VesselId, BLL_Enum._BUNKERING.Bunker_Out_day_tank, startTime, endTime);
+                    totalBunkerOut += EventBunkering.GetTotalFlowByBunkeringCode(vessel.VesselId, BLL_Enum._BUNKERING.Bunker_Out_other_vessel, startTime, endTime);
+                }
+
+                bunker.BunkerIn = totalBunkerIn.ToString();
+                bunker.BunkerOut = totalBunkerOut.ToString();
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return bunker;
+        }
+
+        public List<EventData> GetLatestEventListByFleet(int fleetId, double timezone)
+        {
+            List<EventData> eventDataList = new List<EventData>();
+
+            try
+            {
+                DateTime datetimeStart = DateTime.UtcNow.AddDays(-14);
+                DateTime dateTimeEnd = DateTime.UtcNow;
+
+                DataTable eventListDataTable = new DataTable();
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach(Vessel vessel in vesselList)
+                {
+                    List<EventList> eventList = EventList.GetAll(vessel.VesselId, datetimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All);
+                    foreach (EventList eventItem in eventList)
+                    {
+                        DateTime eventDateTime = Convert.ToDateTime(eventItem.EventDateTime).AddHours(timezone);
+
+                        EventData eventData = new EventData();
+                        eventData.Datetime = DateTimeExtension.DisplayDateWithoutYear(eventDateTime);
+                        eventData.EventType = eventItem.EventTypeDesc;
+                        eventData.EventDesc = eventItem.EventDescription;
+                        eventData.VesselName = vessel.VesselName;
+
+                        eventDataList.Add(eventData);
+                    }
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            List<EventData> sortedList = eventDataList.OrderByDescending(x => DateTime.ParseExact(x.Datetime, "dd-MMM HH:mm",CultureInfo.InvariantCulture)).ToList();
+            return sortedList;
+        }
+
+        public List<ResultData> GetDistanceAndAvgConsAndReportingVessels(int fleetId, double timezone)
+        {
+            List<ResultData> resultData = new List<ResultData>();
+            try
+            {
+                DateTime startDatetime = DateTimeExtension.CalculateUserTodayDateStartTime(timezone);
+                DateTime endDatetime = DateTime.UtcNow;
+
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                double distance = 0;
+                double avgCons = 0;
+                double reportingVessels = 0;
+                double nonReportingVessels = 0;
+                double totalFlow = 0;
+                foreach(Vessel vessel in vesselList)
+                {
+                    distance += Position.GetTotalDistance(vessel.VesselId, startDatetime, endDatetime);
+                    List<SystemCode> engineCodeList = SystemCode.GetSysCodeList(BLL_Enum._SYS_CODE_TYPE.ENGINE);
+                    foreach (SystemCode systemCode in engineCodeList)
+                    {
+                        BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), systemCode.SysCodeId);
+                        if (engineCodeEnum != BLL_Enum._ENGINE.Bunker)
+                        {
+                            totalFlow += EngineReading.GetTotalFlowByEngineCode(vessel.VesselId, engineCodeEnum, startDatetime, endDatetime);
+                        }
+                    }
+                    Position latestPosition = Position.GetLatest(vessel.VesselId);
+                    DateTime today = DateTime.UtcNow;
+                    TimeSpan time = today.Subtract(latestPosition.PositionDatetime);
+                    // If the difference is more than or equal to 2 hours
+                    if(time.TotalHours >= 2)
+                    {
+                        // Vessel is non-reporting
+                        nonReportingVessels++;
+                    }
+                    else
+                    {
+                        // Vessel is reporting
+                        reportingVessels++;
+                    }
+                }
+
+                if(distance == 0)
+                {
+                    distance = 1;
+                }
+
+                avgCons = totalFlow / distance;
+
+                ResultData result = new ResultData();
+                result.Result = distance.ToString();
+                result.Key = "totalDistance";
+                ResultData resultAvgCons = new ResultData();
+                resultAvgCons.Result = avgCons.ToString();
+                resultAvgCons.Key = "avgCons";
+                ResultData resultReporting = new ResultData();
+                resultReporting.Result = reportingVessels.ToString();
+                resultReporting.Key = "activeVessel";
+                ResultData resultNonReporting = new ResultData();
+                resultNonReporting.Result = nonReportingVessels.ToString();
+                resultNonReporting.Key = "notActiveVessel";
+
+                resultData.Add(result);
+                resultData.Add(resultAvgCons);
+                resultData.Add(resultReporting);
+                resultData.Add(resultNonReporting);
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultData;
+        }
+
+        #endregion
+
         #region Chart Related Methods
 
         public Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType)
@@ -508,7 +732,6 @@ namespace FOMSWebService
         public Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType)
         {
             string returnString = string.Empty;
-            HttpResponseMessage response = new HttpResponseMessage();
             try
             {
                 DateTime startTime = DateTimeExtension.UnixTimeToDateTime(Convert.ToDouble(timeOfLastPoint));
@@ -530,10 +753,55 @@ namespace FOMSWebService
             WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
             
+<<<<<<< HEAD
+        }
+
+        public Stream GetEngineChartByFleet(int fleetId, double  timezone, string engineType)
+        {
+            string returnString = string.Empty;
+            try
+            {
+                string engineUnit = string.Empty;
+                int numOfPoint = 10; // Default to 10 for daily
+                int seconds = 86400; // 24 hours - Daily
+                DataSet resultSet = new DataSet();
+
+                BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+
+                DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach(Vessel vessel in vesselList)
+                {
+                    // Query Interval - xx:xx:01 to xx:xx:00
+                    DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                    resultSet = EngineExtension.CombineEngineChartDatatoOne(engineDS, resultSet, timezone, vessel);
+
+                    if (engineType.Equals("2"))
+                    {
+                        // Calculate the dataset for another thruster engine
+                        engineType = "3";
+                        engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+                        // Query Interval - xx:xx:01 to xx:xx:00
+                        DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                        resultSet = EngineExtension.CombineEngineChartDatatoOne(engineDS, resultSet, timezone, vessel);
+                    }
+                }
+                returnString = JsonConvert.SerializeObject(resultSet);
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+=======
+>>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
         }
 
         #endregion
 
-        
+
     }
 }

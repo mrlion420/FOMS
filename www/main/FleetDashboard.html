@@ -34,7 +34,7 @@
     <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
 
     <script type="text/javascript" src="../js/global.js"></script>
-    <script type="text/javascript" src="../js/vesselDashboard.js"></script> 
+    <script type="text/javascript" src="../js/fleetDashboard.js"></script> 
 
     <title>FOMS</title>
 </head>
@@ -58,7 +58,7 @@
         <div class="side-menu" id="sideMenu">
            
         </div>
-        <div class="main-container main">
+        <div class="main-container main fleet">
             <div class="top-select-container">
                 <div>
                     <p>Company : </p>
@@ -109,11 +109,19 @@
                     </div>
                     <div class="multiple-item">
                         <p>Total Bunkering In (ℓ)</p>
-                        <p id="totalBunkerIn">50,000.00</p>
+<<<<<<< HEAD
+                        <p id="totalBunkerIn">25,500,000</p>
                     </div>
                     <div class="multiple-item">
                         <p>Total Bunkering Out (ℓ)</p>
-                        <p id="totalBunkerOut">1,500.00</p>
+                        <p id="totalBunkerOut">1,500</p>
+=======
+<p id="totalBunkerIn">25,500,000</p>
+</div>
+<div class="multiple-item">
+    <p>Total Bunkering Out (ℓ)</p>
+    <p id="totalBunkerOut">1,500</p>
+>>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
                     </div>
                 </div>
                 <div class="right-container">
@@ -138,6 +146,27 @@
                         </div>
                         <div id="map">
                             
+                        </div>
+                    </div>
+                    <div class="item-container">
+                        <div class="multiple-item">
+                            <p>Total Distance (Nm)</p>
+                            <p id="totalDistance">107.4</p>
+                        </div>
+                        <div class="multiple-item">
+                            <p>Avg. Cons (ℓ/Nm)</p>
+                            <p id="avgCons">131.54</p>
+                        </div>
+                        <div class="multiple-item">
+                            <div>
+                                <p>Total Vessel Active</p>
+                                <p>Not Reporting</p>
+                            </div>
+                            <div>
+                                <p id="activeVessel">4</p>
+                                <p id="notActiveVessel">1</p>
+                            </div>
+                            <p>(No report for the last 2 hours)</p>
                         </div>
                     </div>
                     <!-- <div class="multiple-item">

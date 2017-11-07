@@ -3,8 +3,13 @@ $(document).ready(function(){
 });
 
 // GLOBAL VARIABLES
+<<<<<<< HEAD
+const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/"; // For web service
+// const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
+=======
 // const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/";
 const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
+>>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -18,8 +23,8 @@ const MENU_ID = [
 ];
 
 const MENU_PAGE = [
-	"fleetDashboard.html",
-	"vesselDashboard.html",
+	"FleetDashboard.html",
+	"VesselDashboard.html",
 	"fuelcons.html"
 ];
 
