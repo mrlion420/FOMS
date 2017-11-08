@@ -687,7 +687,10 @@ namespace FOMSWebService
                 {
                     PositionData positionData = new PositionData();
                     Position latestPosition = Position.GetLatest(vessel.VesselId);
-                    
+                    positionData.Latitude = Convert.ToString(latestPosition.Latitude);
+                    positionData.Longitude = Convert.ToString(latestPosition.Longitude);
+                    positionData.VesselName = vessel.VesselName;
+                    positionDataList.Add(positionData);
                 }
             }
             catch(Exception ex)
