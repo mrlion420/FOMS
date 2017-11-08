@@ -81,6 +81,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<PositionData> GetFleetCurrentPosition(int fleetId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]
@@ -172,8 +176,8 @@ namespace FOMSWebService
         private string avgLitrePerNm;
         private string sog;
         private string cog;
-        private string latitude;
-        private string longitude;
+        private decimal latitude;
+        private decimal longitude;
         private string vesselName;
 
         [DataMember]
@@ -184,7 +188,7 @@ namespace FOMSWebService
         }
 
         [DataMember]
-        public string Longitude
+        public decimal Longitude
         {
             get { return longitude; }
             set { longitude = value; }
@@ -192,7 +196,7 @@ namespace FOMSWebService
 
 
         [DataMember]
-        public string Latitude
+        public decimal Latitude
         {
             get { return latitude; }
             set { latitude = value; }

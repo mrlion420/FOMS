@@ -302,10 +302,10 @@ namespace FOMSWebService
             {
                 Position positionItem = Position.GetLatest(vesselId);
 
-                string latitude = positionItem.Latitude.ToString();
+                decimal latitude = positionItem.Latitude;
                 string wgs84Latitude = positionItem.Wgs84Latitude;
 
-                string longitude = positionItem.Longitude.ToString();
+                decimal longitude = positionItem.Longitude;
                 string wgs84Longitude = positionItem.Wgs84Longitude;
                 string cog = positionItem.Cog.ToString();
                 string sog = positionItem.Sog.ToString();
@@ -439,8 +439,8 @@ namespace FOMSWebService
                         //longitude = position.Longitude;
                         //positionData.Latitude = latitude.ToString();
                         //positionData.Longitude = longitude.ToString();
-                        positionData.Latitude = positionRow["LATITUDE"].ToString();
-                        positionData.Longitude = positionRow["LONGITUDE"].ToString();
+                        positionData.Latitude = Convert.ToDecimal(positionRow["LATITUDE"].ToString());
+                        positionData.Longitude = Convert.ToDecimal(positionRow["LONGITUDE"].ToString());
                         positionDataList.Add(positionData);
                     }
                 }
@@ -687,8 +687,8 @@ namespace FOMSWebService
                 {
                     PositionData positionData = new PositionData();
                     Position latestPosition = Position.GetLatest(vessel.VesselId);
-                    positionData.Latitude = Convert.ToString(latestPosition.Latitude);
-                    positionData.Longitude = Convert.ToString(latestPosition.Longitude);
+                    positionData.Latitude = latestPosition.Latitude;
+                    positionData.Longitude = latestPosition.Longitude;
                     positionData.VesselName = vessel.VesselName;
                     positionDataList.Add(positionData);
                 }

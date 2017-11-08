@@ -32,6 +32,7 @@ var FEATURE_GROUP = null;
 var MAP = null;
 // Map marker object
 var MAP_MARKER = null;
+var INFO_WINDOW = new google.maps.InfoWindow();
 // Timezone 
 var TIMEZONE = 8;
 var USERID = 3;
@@ -305,7 +306,6 @@ function drawPolylineOnMap(latlonArray, map , isInFeatureGroup){
 		bounds.extend(latLng);
 	}
 	map.fitBounds(bounds);
-	
 }
 
 function initMap(mapName){
@@ -368,12 +368,55 @@ function insertMapMarkersLeaflet(data, map){
 		var startLat = data[i].Latitude;
 		var startLon = data[i].Longitude;
 		var vesselName = data[i].VesselName;
-
+		
 		var mapMarker = new  L.marker([startLat, startLon], { icon: icon });
 		mapMarker.addTo(map);
 		var popupText = "<b>" + vesselName + "</b>";
 		mapMarker.bindPopup(popupText);
 	}
+}
+
+function insertMapMarkers(data, map){
+	var bounds = new google.maps.LatLngBounds();
+	var icon = {
+		url: '../img/vessel.png'
+	};	
+
+	for(var i = 0; i < data.length; i++){
+		var lat = parseFloat(data[i].Latitude);
+		var lon = parseFloat(data[i].Longitude);
+		var vesselName = data[i].VesselName;
+		
+		var latLng = new google.maps.LatLng(lat, lon);
+
+		var popupText = "<b>" + vesselName + "</b>";
+		createMarker(latLng, map, popupText, icon);
+		
+		bounds.extend(latLng);
+	}
+	map.fitBounds(bounds);
+}
+
+function createMarker(latlon, map, iwContent, icon) {
+	var marker = new google.maps.Marker({
+		position: latlon,
+		map: map,
+		icon : icon
+	});
+
+	google.maps.event.addListener(marker, 'click', function () {
+		INFO_WINDOW.setContent(iwContent);
+		INFO_WINDOW.open(map, marker);
+	});
+
+	google.maps.event.addListener(marker, 'mouseover', function () {
+		INFO_WINDOW.setContent(iwContent);
+		INFO_WINDOW.open(map, marker);
+	});
+
+	google.maps.event.addListener(marker, 'mouseout', function () {
+		INFO_WINDOW.close();
+	});
 }
 
 var target = document.head;

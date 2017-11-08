@@ -13,11 +13,14 @@ async function mainFunction(){
     await getAllEngineTypesByFleet();
     getEngineTotalAndEstConsumptionByFleet();
     getBunkeringByFleet();
-    submitBtnClickHandler();
-    selectDropdownChangeEvent();
     createEngineChartByFleet();
     getLatestEventListByFleet();
     GetDistanceAndAvgConsAndReportingVessels();
+    GetFleetCurrentPosition();
+
+    // Handlers
+    submitBtnClickHandler();
+    selectDropdownChangeEvent();
 }
 
 async function getUserRelatedFleets(){
@@ -325,4 +328,5 @@ async function buttonClickFunctions(){
     getBunkeringByFleet();
     getLatestEventListByFleet();
     GetDistanceAndAvgConsAndReportingVessels();
+    GetFleetCurrentPosition();
 }
