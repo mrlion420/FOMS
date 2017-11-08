@@ -70,6 +70,7 @@ artifacts/
 *.svclog
 *.scc
 *.ide
+*.suo
 
 # Chutzpah Test files
 _Chutzpah*
@@ -264,3 +265,4 @@ __pycache__/
 www/map_tiles/*
 */storage.ide
 
+FOMSWebService/.vs/FOMSWebService/v15/.suo
