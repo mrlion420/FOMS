@@ -296,6 +296,22 @@ function populateDistanceAndAvgConsAndReportingVessels(data){
     }
 }
 
+async function GetFleetCurrentPosition(){
+    var method = "GetFleetCurrentPosition";
+    var parameters = { fleetId : FLEETID };
+    try{
+        let data = await ajaxGet(method, parameters);
+        await initMap("map");
+        populateFleetCurrentPositionOnMap(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateFleetCurrentPositionOnMap(data){
+    insertMapMarkers(data, MAP);
+}
+
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
         buttonClickFunctions();

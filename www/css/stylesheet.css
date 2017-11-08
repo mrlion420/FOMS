@@ -193,11 +193,7 @@ p{
 
 
 .main .wrapper .left-container{
-<<<<<<< HEAD
     width: 45%;
-=======
-    width: 40%;
->>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
     display: flex;
     flex-direction: column;
 }
@@ -279,11 +275,7 @@ p{
 }
 
 .main .right-container{
-<<<<<<< HEAD
     width: 55%;
-=======
-    width: 60%;
->>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
 }
 
 .main .right-container div:first-child{
@@ -429,7 +421,9 @@ p{
     overflow: auto;
     height: 25%;
     margin: 10px 0px 10px 0px;
+    
 }
+
 .main .wrapper .right-container .event-container div{
     width: 100%;
     display: flex;

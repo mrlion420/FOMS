@@ -3,18 +3,8 @@ $(document).ready(function(){
 });
 
 // GLOBAL VARIABLES
-<<<<<<< HEAD
-const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/";
-// const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
-=======
-<<<<<<< HEAD
 const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/"; // For web service
 // const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
-=======
-// const WEBSERVICEHOST = "http://203.118.57.237:1703/FOMSWebService.svc/";
-const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
->>>>>>> df3b42d635547a878819180208d5cb08cd895eb4
->>>>>>> a54d1867337d3917102d36c3f7cdfc9eafd391d3
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -216,7 +206,7 @@ function customAlert(title, message, redirect , redirectUrl){
 	}
 }
 
-function setStartEndMarkerOnPopupMap(latlonArray, map){
+function setStartEndMarkerOnPopupMapLeaflet(latlonArray, map){
 	var startLat = latlonArray[0].Latitude;
 	var startLon = latlonArray[0].Longitude;
 
@@ -242,7 +232,36 @@ function setStartEndMarkerOnPopupMap(latlonArray, map){
 
 }
 
-function drawPolylineOnMap(latlonArray , map , isInFeatureGroup){
+function setStartEndMarkerOnPopupMap(latlonArray, map){
+	var startLat = latlonArray[0].Latitude;
+	var startLon = latlonArray[0].Longitude;
+	var latLng = new google.maps.LatLng(startLat, startLon);
+
+	var startIcon = {
+        url: '../img/start_vessel.png'
+	};
+	
+	var startMarker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        icon: startIcon
+	});
+	
+	var endIcon = {
+		url: '../img/vessel.png'
+	};		
+
+	var endLat = latlonArray[latlonArray.length - 1].Latitude;
+	var endLon = latlonArray[latlonArray.length - 1].Longitude;
+	latLng = new google.maps.LatLng(endLat, endLon);
+	var endMarker = new google.maps.Marker({
+		position: latLng,
+        map: map,        
+        icon: endIcon
+	});
+}
+
+function drawPolylineOnMapLeaflet(latlonArray , map , isInFeatureGroup){
     var polylineGroup = [];
 	//  -1 the length of the array, since the drawing of polyline uses two index of the array
 	//  First index will be the starting point and the second one will be the ending point
@@ -269,18 +288,47 @@ function drawPolylineOnMap(latlonArray , map , isInFeatureGroup){
 	}
 }
 
+function drawPolylineOnMap(latlonArray, map , isInFeatureGroup){
+	var polyLine = new google.maps.Polyline({
+		geodesic: true,
+		strokeColor: '#FF0000',
+		strokeOpacity: 1.0,
+		strokeWeight: 2
+	});
+
+	var bounds = new google.maps.LatLngBounds();
+	polyLine.setMap(map);
+	for(var i=0; i < latlonArray.length - 1; i++){
+		var latLng = new google.maps.LatLng(latlonArray[i][0], latlonArray[i][1]);
+		var polyLineArray = polyLine.getPath();
+		polyLineArray.push(latLng);
+		bounds.extend(latLng);
+	}
+	map.fitBounds(bounds);
+	
+}
+
 function initMap(mapName){
 	if(MAP !== null){
-		MAP.remove();
+		//MAP.remove();
 		MAP = null;
 	}
     //Initialize the map
 	//The init center lat and long is not important, as the position table will have data
-	MAP = L.map(mapName).setView([5.3,-3.9], 14);
-    L.tileLayer('../map_tiles/OSMPublicTransport/{z}/{x}/{y}.png', {maxZoom: 16,minZoom:1}).addTo(MAP);
+	// MAP = L.map(mapName).setView([5.3,-3.9], 14);
+	// L.tileLayer('../map_tiles/OSMPublicTransport/{z}/{x}/{y}.png', {maxZoom: 16,minZoom:1}).addTo(MAP);
+	var myOptions = {
+        zoom: 1,
+        center: new google.maps.LatLng(0, 0),
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
+        maxZoom: 19
+	};
+	
+    MAP = new google.maps.Map(document.getElementById(mapName),
+        myOptions);
 }
 
-function updateMapMarker(latitude , longitude, isCenter){
+function updateMapMarkerLeaflet(latitude , longitude, isCenter){
     //Check if there is an existing marker on the map or not
 	//Map marker is a global variable
 	if(MAP_MARKER !== null){
@@ -309,3 +357,45 @@ function updateMapMarker(latitude , longitude, isCenter){
 	}	
 
 }
+
+function insertMapMarkersLeaflet(data, map){
+	var icon = L.icon({
+		iconUrl: '../img/start_vessel.png',
+		iconSize: [34, 22] // size of the icon
+	});
+
+	for(var i = 0; i < data.length; i++){
+		var startLat = data[i].Latitude;
+		var startLon = data[i].Longitude;
+		var vesselName = data[i].VesselName;
+
+		var mapMarker = new  L.marker([startLat, startLon], { icon: icon });
+		mapMarker.addTo(map);
+		var popupText = "<b>" + vesselName + "</b>";
+		mapMarker.bindPopup(popupText);
+	}
+}
+
+var target = document.head;
+var observer = new MutationObserver(function(mutations) {
+    for (var i = 0; mutations[i]; ++i) { // notify when script to hack is added in HTML head
+        if (mutations[i].addedNodes[0].nodeName == "SCRIPT" && mutations[i].addedNodes[0].src.match(/\/AuthenticationService.Authenticate?/g)) {
+            var str = mutations[i].addedNodes[0].src.match(/[?&]callback=.*[&$]/g);
+            if (str) {
+                if (str[0][str[0].length - 1] == '&') {
+                    str = str[0].substring(10, str[0].length - 1);
+                } else {
+                    str = str[0].substring(10);
+                }
+                var split = str.split(".");
+                var object = split[0];
+                var method = split[1];
+                window[object][method] = null; // remove censorship message function _xdc_._jmzdv6 (AJAX callback name "_jmzdv6" differs depending on URL)
+                //window[object] = {}; // when we removed the complete object _xdc_, Google Maps tiles did not load when we moved the map with the mouse (no problem with OpenStreetMap)
+            }
+            observer.disconnect();
+        }
+    }
+});
+var config = { attributes: true, childList: true, characterData: true }
+observer.observe(target, config);
