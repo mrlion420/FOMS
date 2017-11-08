@@ -265,4 +265,7 @@ __pycache__/
 www/map_tiles/*
 */storage.ide
 
+<<<<<<< HEAD
 FOMSWebService/.vs/FOMSWebService/v15/.suo
+=======
+>>>>>>> 00b8bd963cc386298461b8f3079adb9275df53d6
