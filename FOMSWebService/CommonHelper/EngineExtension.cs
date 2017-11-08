@@ -54,7 +54,7 @@ namespace CommonHelper
             return dsData;
         }
 
-        public static DataSet CombineEngineChartDatatoOne(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel)
+        public static DataSet CombineEngineChartDatatoSeparateVessels(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel)
         {
             int tableCount = 0;
             
@@ -114,6 +114,72 @@ namespace CommonHelper
             {
                 // Finally change the first table name to its vessel name
                 dsData.Tables[0].TableName = vessel.VesselName;
+                DataTable resultTable = dsData.Tables[0].Copy();
+                resultDS.Tables.Add(resultTable);
+            }
+
+            return resultDS;
+        }
+
+        public static DataSet CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel, int fleetId)
+        {
+            int tableCount = 0;
+
+            foreach (DataTable table in dsData.Tables)
+            {
+                if (tableCount != 0)
+                {
+                    int rowCount = 0;
+                    foreach (DataRow row in table.Rows)
+                    {
+                        // Get the first table
+                        DataTable firstTable = dsData.Tables[0];
+                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+                        estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+
+                        DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
+                        string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
+                        string engineUnit = "ℓ/hr";
+
+                        // Combine the second and later tables' data to first table
+                        firstTable.Rows[rowCount]["Unit"] = engineUnit;
+                        firstTable.Rows[rowCount]["Ticks"] = ticksStr;
+                        // Re-assign the first table the new added value
+                        firstTable.Rows[rowCount]["EST_FLOW_RATE"] = estFlowRate;
+                        rowCount++;
+                    }
+                }
+                else
+                {
+                    // Add two new columns to first table
+                    table.Columns.Add("Ticks", typeof(string));
+                    table.Columns.Add("Unit", typeof(string));
+                    tableCount++;
+                }
+            }
+
+            foreach (DataTable table in resultDS.Tables)
+            {
+                int rowCount = 0;
+                foreach (DataRow row in table.Rows)
+                {
+                    // Get the first table
+                    DataTable firstTable = dsData.Tables[0];
+                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+                    estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+                    // Re-assign the result Ds table the new added value
+                    row["EST_FLOW_RATE"] = estFlowRate;
+                    rowCount++;
+                }
+
+            }
+
+            // if the result dataset is empty, create the result table
+            if (resultDS.Tables.Count < 1)
+            {
+                // Name the result table the fleet name
+                Fleet currentFleet = Fleet.GetByFleetId(fleetId);
+                dsData.Tables[0].TableName = currentFleet.FleetName;
                 DataTable resultTable = dsData.Tables[0].Copy();
                 resultDS.Tables.Add(resultTable);
             }

@@ -93,7 +93,11 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Stream GetEngineChartByFleet(int fleetId, double timezone, string engineType);
+        Stream GetIndividualVesselEngineChartByFleet(int fleetId, double timezone, string engineType);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetTotalEngineChartByFleet(int fleetId, double timezone, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]

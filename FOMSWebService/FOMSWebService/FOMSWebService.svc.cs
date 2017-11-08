@@ -780,7 +780,7 @@ namespace FOMSWebService
             
         }
 
-        public Stream GetEngineChartByFleet(int fleetId, double  timezone, string engineType)
+        public Stream GetIndividualVesselEngineChartByFleet(int fleetId, double  timezone, string engineType)
         {
             string returnString = string.Empty;
             try
@@ -799,7 +799,7 @@ namespace FOMSWebService
                 {
                     // Query Interval - xx:xx:01 to xx:xx:00
                     DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
-                    resultSet = EngineExtension.CombineEngineChartDatatoOne(engineDS, resultSet, timezone, vessel);
+                    resultSet = EngineExtension.CombineEngineChartDatatoSeparateVessels(engineDS, resultSet, timezone, vessel);
 
                     if (engineType.Equals("2"))
                     {
@@ -808,7 +808,7 @@ namespace FOMSWebService
                         engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                         // Query Interval - xx:xx:01 to xx:xx:00
                         DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
-                        resultSet = EngineExtension.CombineEngineChartDatatoOne(engineDS, resultSet, timezone, vessel);
+                        resultSet = EngineExtension.CombineEngineChartDatatoSeparateVessels(engineDS, resultSet, timezone, vessel);
                     }
                 }
                 returnString = JsonConvert.SerializeObject(resultSet);
@@ -823,8 +823,50 @@ namespace FOMSWebService
 
         }
 
-        #endregion
+        public Stream GetTotalEngineChartByFleet(int fleetId, double timezone, string engineType)
+        {
+            string returnString = string.Empty;
+            try
+            {
 
+                string engineUnit = string.Empty;
+                int numOfPoint = 10; // Default to 10 for daily
+                int seconds = 86400; // 24 hours - Daily
+                DataSet resultSet = new DataSet();
+
+                BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+
+                DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach (Vessel vessel in vesselList)
+                {
+                    // Query Interval - xx:xx:01 to xx:xx:00
+                    DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                    resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel,fleetId);
+
+                    if (engineType.Equals("2"))
+                    {
+                        // Calculate the dataset for another thruster engine
+                        engineType = "3";
+                        engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+                        // Query Interval - xx:xx:01 to xx:xx:00
+                        DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                        resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId);
+                    }
+                }
+                returnString = JsonConvert.SerializeObject(resultSet);
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+        }
+
+        #endregion
 
     }
 }

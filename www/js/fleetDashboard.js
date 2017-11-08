@@ -100,7 +100,7 @@ function populateEngineTotalAndEstConsumption(data){
 }
 
 async function createEngineChartByFleet(){
-    var method = "GetEngineChartByFleet";
+    var method = "GetTotalEngineChartByFleet";
     var parameters = { fleetId: FLEETID , timezone : TIMEZONE };
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
