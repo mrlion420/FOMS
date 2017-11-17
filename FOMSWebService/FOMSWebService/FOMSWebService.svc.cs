@@ -704,6 +704,58 @@ namespace FOMSWebService
 
         #endregion
 
+        #region Fuel Cons Methods
+
+        public List<EngineData> GetCurrentEngineData(int vesselId)
+        {
+            List<EngineData> engineDataList = new List<EngineData>();
+            try
+            {
+                List<Engine> engineList = Engine.GetAll(vesselId);
+                foreach(Engine engine in engineList)
+                {
+                    EngineData engineData = new EngineData();
+                    engineData.EstCons = engine.LastEstFlowRate.ToString();
+                    engineData.RunningMins = engine.AccumlatedRunningMins.ToString();
+                    engineData.EngineName = engine.ShortDescription;
+                    engineData.EngineId = engine.EngineId.ToString();
+                    engineDataList.Add(engineData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return engineDataList;
+        }
+
+        public List<AnalogData> GetCurrentAnalogData(int vesselId)
+        {
+            List<AnalogData> analogDataList = new List<AnalogData>();
+            try
+            {
+                List<Analog> analogList = Analog.GetAll(vesselId);
+                foreach(Analog analog in analogList)
+                {
+                    AnalogData analogData = new AnalogData();
+                    analogData.AnalogName = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+                    analogData.AnalogValue = analog.LatestReading.ToString();
+                    analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                    analogData.RefEngineId = analog.RefEngineId.ToString();
+                    analogDataList.Add(analogData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return analogDataList;
+        }
+
+        #endregion
+
         #region Chart Related Methods
 
         public Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType)

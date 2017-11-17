@@ -261,6 +261,33 @@ namespace FOMSWebService
         private string totalCons;
         private string estCons;
         private string userStartDatetime;
+        private string runningMins;
+        private string engineName;
+        private string engineId;
+
+        [DataMember]
+        public string EngineId
+        {
+            get { return engineId; }
+            set { engineId = value; }
+        }
+
+
+        [DataMember]
+        public string EngineName
+        {
+            get { return engineName; }
+            set { engineName = value; }
+        }
+
+
+        [DataMember]
+        public string RunningMins
+        {
+            get { return runningMins; }
+            set { runningMins = value; }
+        }
+
 
         [DataMember]
         public string UserStartDatetime
@@ -283,6 +310,56 @@ namespace FOMSWebService
         {
             get { return totalCons; }
             set { totalCons = value; }
+        }
+
+    }
+
+    [DataContract]
+    public class AnalogData
+    {
+        private string analogName;
+        private string analogValue;
+        private string analogUnit;
+        private string analogId;
+        private string refEngineId;
+
+        [DataMember]
+        public string RefEngineId
+        {
+            get { return refEngineId; }
+            set { refEngineId = value; }
+        }
+
+
+        [DataMember]
+        public string AnalogId
+        {
+            get { return analogId; }
+            set { analogId = value; }
+        }
+
+
+        [DataMember]
+        public string AnalogUnit
+        {
+            get { return analogUnit; }
+            set { analogUnit = value; }
+        }
+
+
+        [DataMember]
+        public string AnalogValue
+        {
+            get { return analogValue; }
+            set { analogValue = value; }
+        }
+
+
+        [DataMember]
+        public string AnalogName
+        {
+            get { return analogName; }
+            set { analogName = value; }
         }
 
     }
