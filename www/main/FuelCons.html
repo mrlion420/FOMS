@@ -59,7 +59,7 @@
         <div class="side-menu" id="sideMenu">
            
         </div>
-        <div class="main-container main fleet">
+        <div class="main-container main">
             <div class="top-select-container">
                 <div>
                     <p>Fleet : </p>
@@ -79,7 +79,7 @@
                     <button id="submitBtn">Submit</button>
                 </div>                
             </div>
-            <div class="top-select-container">
+            <div class="top-select-container splitter-bottom">
                 <div>
                     <p>View Type : </p>
                     <select id="viewTypeSelect">
@@ -87,15 +87,55 @@
                         <option>Chart</option>
                     </select>
                 </div>
-                <div>
+                <div id="engineTypeSelectDiv">
                     <p>Engine : </p>
                     <select id="engineTypeSelect">
                         
                     </select>
                 </div>
             </div>
-            <div class="wrapper">
-               
+            <div class="wrapper fuel-cons">
+                <div class="engine-body splitter-bottom">
+                    <h1>Main Engine</h1>
+                    <div class="engine-item">
+                        <div class="engine-desc">
+                            <h2>ME Port</h2>
+                            <div class="engine-value">
+                                <p>Cons Rate.</p>
+                                <p>1,500.1</p>
+                            </div>
+                            <div class="engine-value">
+                                <p>Running Mins: </p>
+                                <p>60</p>
+                            </div>
+                        </div>
+                        <div class="engine-desc">
+                            <h2 class="hidden">Analog</h2>
+                            <div class="engine-value">
+                                <p>Cons Rate.</p>
+                                <p>1,500.1</p>
+                            </div>
+                            <div class="engine-value">
+                                <p>Running Mins: </p>
+                                <p>60</p>
+                            </div>
+                        </div>
+                        <div class="engine-desc">
+                                <h2 class="hidden">Analog</h2>
+                                <div class="engine-value">
+                                    <p>Cons Rate.</p>
+                                    <p>1,500.1</p>
+                                </div>
+                                <div class="engine-value">
+                                    <p>Running Mins: </p>
+                                    <p>60</p>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <div class="engine-body">
+                    <h1>Aux Engine</h1>
+                </div>
             </div>
         </div>
     </div>

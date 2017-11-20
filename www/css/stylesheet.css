@@ -39,6 +39,8 @@ html, body{
 h1{
     font-size: 22px;
     font-weight: 800;
+    margin: 0;
+    padding: 0px 0px 15px 0px;
 }
 
 p{
@@ -142,15 +144,18 @@ p{
 /* --------------------- MAIN CONTAINER SECTION -------------------- */
 .main-container{
     width: 84%;
-    margin-left: 15em;
+    margin-left: 15.5em;
     margin-top: 70px;
 }
 
+.main-container .splitter-bottom{
+    border-bottom: 1.5px solid #3282E4;
+}
 
 .main-container .top-select-container{
     display: flex;
     justify-content: space-around;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
 }
 
 .main-container .top-select-container div{
@@ -163,7 +168,7 @@ p{
 }
 
 .main-container .top-select-container select{
-    font-size: 22px;
+    font-size: 20px;
     background-color: #3282E4;
     padding: 6px 10px;
     max-width: 300px;
@@ -175,7 +180,7 @@ p{
 }
 
 .main-container .top-select-container button{
-    font-size: 22px;
+    font-size: 20px;
     /* border: 1.5px solid grey; */
     border: 0px;
     border-radius: 10px;
@@ -203,7 +208,7 @@ p{
 }
 
 .main .wrapper{
-    margin: 10px 0px 0px 15px;
+    margin: 10px 0px 0px 0px;
     display: flex;
 }
 
@@ -449,6 +454,59 @@ p{
 .fleet .wrapper .right-container .event-container p:nth-child(3){
     width: 100px;
 }
+
+/* ----------------- FUEL CONS SECTION -----------------*/
+.fuel-cons{
+    display: flex;
+    flex-direction: column;
+}
+
+.fuel-cons .engine-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.fuel-cons .engine-body h2{
+    font-size: 20px;
+    padding: 0px 0px 10px 0px;
+    margin : 0;
+    font-weight: 500;
+}
+
+.fuel-cons .engine-body .engine-item{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.fuel-cons .engine-body .engine-item .engine-desc{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    margin: 0px 15px 0px 0px;
+}
+
+.fuel-cons .engine-body .engine-item .engine-value{
+    display: flex;
+    justify-content: space-between;
+}
+
+.fuel-cons .engine-body .engine-item .engine-value p:nth-child(1){
+    width: 150px;
+    margin: 0;
+    padding: 10px 0px 10px 0px;
+}
+
+.fuel-cons .engine-body .engine-item .engine-value p:nth-child(2){
+    color : green;
+    margin: 0;
+    padding: 10px 10px 10px 0px;
+}
+
+.hidden{
+    opacity: 0;
+}
+
 /* ----------------- LOGIN SECTION ---------------- */
 .login .wrapper{
     display: flex;
@@ -512,4 +570,8 @@ p{
 
 .blue{
     color: #3282E4;
+}
+
+.green{
+    color: green;
 }
