@@ -55,6 +55,7 @@
     <Compile Include="ChartExtension.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="EngineExtension.cs" />
+    <Compile Include="KeyValueExtension.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

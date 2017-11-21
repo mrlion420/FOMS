@@ -85,6 +85,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<EngineData> GetCurrentEngineData(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]
@@ -264,6 +268,15 @@ namespace FOMSWebService
         private string runningMins;
         private string engineName;
         private string engineId;
+        private string engineType;
+
+        [DataMember]
+        public string EngineType
+        {
+            get { return engineType; }
+            set { engineType = value; }
+        }
+
 
         [DataMember]
         public string EngineId

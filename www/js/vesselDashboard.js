@@ -545,6 +545,10 @@ function selectDropdownChangeEvent(){
         createEngineChartByEngineType();
         getEngineTotalAndEstConsumption();
     });
+
+    $("#vesselSelect").change(function(){
+        TEMP_VESSELID = $("#vesselSelect").val();
+    });
 }
 
 function submitBtnClickHandler(){

@@ -40,7 +40,7 @@ h1{
     font-size: 22px;
     font-weight: 800;
     margin: 0;
-    padding: 0px 0px 15px 0px;
+    padding: 10px 0px 15px 20px;
 }
 
 p{
@@ -208,7 +208,6 @@ p{
 }
 
 .main .wrapper{
-    margin: 10px 0px 0px 0px;
     display: flex;
 }
 
@@ -461,6 +460,10 @@ p{
     flex-direction: column;
 }
 
+.fuel-cons canvas{
+    margin: 0px 0px 10px 0px;
+}
+
 .fuel-cons .engine-body{
     display: flex;
     flex-direction: column;
@@ -471,12 +474,13 @@ p{
     font-size: 20px;
     padding: 0px 0px 10px 0px;
     margin : 0;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .fuel-cons .engine-body .engine-item{
     display: flex;
     justify-content: flex-start;
+    align-items: center;
 }
 
 .fuel-cons .engine-body .engine-item .engine-desc{

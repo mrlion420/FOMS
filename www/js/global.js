@@ -168,6 +168,11 @@ function refreshPage(){
 	location.reload();
 }
 
+function removeSpace(str){
+	str = str.replace(/\s/g, '');
+	return str;
+}
+
 function customAlert(title, message, redirect , redirectUrl){
 	if(redirect){
 		$("#dialog").dialog({

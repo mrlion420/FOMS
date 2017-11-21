@@ -25,5 +25,25 @@ namespace CommonHelper
             analogDesc = SystemCode.GetBySysCodeTypeIdSysCodeId(systemAnalogCodeType, analogCode.ToString()).SysCodeShortDesc;
             return analogDesc;
         }
+
+        public static string GetEngineType(short? engineCode)
+        {
+            if (engineCode == 3)
+            {
+                engineCode = 2;
+            }
+
+            string engineType = SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ENGINE), engineCode.ToString()).SysCodeDesc;
+
+            if (engineCode == 2)
+            {
+                return "Thursters";
+            }
+            else
+            {
+                return engineType;
+            }
+            
+        }
     }
 }

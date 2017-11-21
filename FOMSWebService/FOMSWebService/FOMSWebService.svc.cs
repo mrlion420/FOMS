@@ -715,10 +715,13 @@ namespace FOMSWebService
                 foreach(Engine engine in engineList)
                 {
                     EngineData engineData = new EngineData();
-                    engineData.EstCons = engine.LastEstFlowRate.ToString();
-                    engineData.RunningMins = engine.AccumlatedRunningMins.ToString();
+                    EngineReading engineReading = EngineReading.GetLatest(vesselId, engine.EngineId);
+
+                    engineData.EstCons = engineReading.EstFlowRate.ToString();
+                    engineData.RunningMins = engineReading.RunningMins.ToString();
                     engineData.EngineName = engine.ShortDescription;
                     engineData.EngineId = engine.EngineId.ToString();
+                    engineData.EngineType = KeyValueExtension.GetEngineType(engine.EngineCode);
                     engineDataList.Add(engineData);
                 }
             }

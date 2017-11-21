@@ -28,10 +28,9 @@
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../js/external/moment.js"></script> 
-    <script type="text/javascript" src="../js/external/leaflet.js"></script>
     <script type="text/javascript" src="../js/external/highcharts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <!-- <script type="text/javascript" src="js/themes/dark-unica.js"></script> -->
+    <script type="text/javascript" src="../js/external/gauge.min.js"></script>
     <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
 
     <script type="text/javascript" src="../js/global.js"></script>
@@ -94,10 +93,11 @@
                     </select>
                 </div>
             </div>
-            <div class="wrapper fuel-cons">
-                <div class="engine-body splitter-bottom">
+            <div class="wrapper fuel-cons" id="wrapper">
+                <!-- <div class="engine-body splitter-bottom">
                     <h1>Main Engine</h1>
                     <div class="engine-item">
+                        <canvas data-type="radial-gauge" data-width="250" data-height="180"></canvas>
                         <div class="engine-desc">
                             <h2>ME Port</h2>
                             <div class="engine-value">
@@ -132,10 +132,82 @@
                                 </div>
                             </div>
                     </div>
+                    <div class="engine-item">
+                            <canvas data-type="radial-gauge" data-width="250" data-height="180"></canvas>
+                            <div class="engine-desc">
+                                <h2>ME Port</h2>
+                                <div class="engine-value">
+                                    <p>Cons Rate.</p>
+                                    <p>1,500.1</p>
+                                </div>
+                                <div class="engine-value">
+                                    <p>Running Mins: </p>
+                                    <p>60</p>
+                                </div>
+                            </div>
+                            <div class="engine-desc">
+                                <h2 class="hidden">Analog</h2>
+                                <div class="engine-value">
+                                    <p>Cons Rate.</p>
+                                    <p>1,500.1</p>
+                                </div>
+                                <div class="engine-value">
+                                    <p>Running Mins: </p>
+                                    <p>60</p>
+                                </div>
+                            </div>
+                            <div class="engine-desc">
+                                    <h2 class="hidden">Analog</h2>
+                                    <div class="engine-value">
+                                        <p>Cons Rate.</p>
+                                        <p>1,500.1</p>
+                                    </div>
+                                    <div class="engine-value">
+                                        <p>Running Mins: </p>
+                                        <p>60</p>
+                                    </div>
+                                </div>
+                        </div>
                 </div>
                 <div class="engine-body">
                     <h1>Aux Engine</h1>
-                </div>
+                    <div class="engine-item">
+                            <canvas data-type="radial-gauge" data-width="250" data-height="180"></canvas>
+                            <div class="engine-desc">
+                                <h2>ME Port</h2>
+                                <div class="engine-value">
+                                    <p>Cons Rate.</p>
+                                    <p>1,500.1</p>
+                                </div>
+                                <div class="engine-value">
+                                    <p>Running Mins: </p>
+                                    <p>60</p>
+                                </div>
+                            </div>
+                            <div class="engine-desc">
+                                <h2 class="hidden">Analog</h2>
+                                <div class="engine-value">
+                                    <p>Cons Rate.</p>
+                                    <p>1,500.1</p>
+                                </div>
+                                <div class="engine-value">
+                                    <p>Running Mins: </p>
+                                    <p>60</p>
+                                </div>
+                            </div>
+                            <div class="engine-desc">
+                                    <h2 class="hidden">Analog</h2>
+                                    <div class="engine-value">
+                                        <p>Cons Rate.</p>
+                                        <p>1,500.1</p>
+                                    </div>
+                                    <div class="engine-value">
+                                        <p>Running Mins: </p>
+                                        <p>60</p>
+                                    </div>
+                                </div>
+                        </div>
+                </div> -->
             </div>
         </div>
     </div>
