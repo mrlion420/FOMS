@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 // GLOBAL VARIABLES
 const WEBSERVICEHOST = "http://122.11.177.14:1703/FOMSWebService.svc/"; // For web service
-// const WEBSERVICEHOST = "http://localhost:8080/FOMSWebService.svc/";
+// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -35,7 +35,7 @@ var MAP_MARKER = null;
 var INFO_WINDOW = new google.maps.InfoWindow();
 // Timezone 
 var TIMEZONE = 8;
-var USERID = 3;
+var USERID = 59;
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;

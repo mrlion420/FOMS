@@ -8,6 +8,7 @@ async function mainFunction(){
     await getUserRelatedVessels();
     await getAllEngineTypes();
     await GetCurrentEngineData();
+    await GetCurrentAnalogData();
 
     selectDropdownChangeEvent();
     submitBtnClickHandler();
@@ -142,7 +143,7 @@ function populateCurrentEngineData(data){
             oldEngineType = result.EngineType;
             htmlString += "<h1>" + result.EngineType + "</h1>";
         }
-        htmlString += "<div class='engine-item'>";
+        htmlString += "<div class='engine-item' id='" + result.EngineId + "Item'>";
         htmlString += "<canvas id='" +  result.EngineId + "Canvas'></canvas>";
         htmlString += "<div class='engine-desc'>";
         htmlString += "<h2>" + result.EngineName + "</h2>";
@@ -181,6 +182,47 @@ function createRadialGauge(id, value){
     }).draw();
 }
 
+async function GetCurrentAnalogData(){
+    var method = "GetCurrentAnalogData";
+    resetConstArrays();
+    try{
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
+        console.log(data);
+        populateAnalogData(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateAnalogData(data){
+    for(var i = 0 ; i < data.length; i++){
+        var analogDataList = data[i];
+        var htmlString = "";
+        for(var j = 0; j < analogDataList.length; j++){
+            var result = analogDataList[j];
+            var refEngineId = result.RefEngineId;
+            htmlString = "<div class='engine-desc'>";
+            htmlString += "<h2 class='hidden'>Analog</h2>";
+            htmlString += "<div class='engine-value'>";
+            htmlString += "<p>" + result.AnalogName + "</p>";
+            htmlString += "<p>" + result.AnalogValue + "</p>";
+            htmlString += "</div>"; // End of engine value tag
+            j++;
+            if( j < analogDataList.length){
+                htmlString += "<div class='engine-value'>";
+                htmlString += "<p>" + result.AnalogName + "</p>";
+                htmlString += "<p>" + result.AnalogValue + "</p>";
+            }else{
+                htmlString += "<div class='engine-value'>";
+                htmlString += "<p class='hidden'>" + result.AnalogName + "</p>";
+                htmlString += "<p class='hidden'>" + result.AnalogValue + "</p>";
+            }
+            htmlString += "</div>"; // End of engine desc tag
+            $("#" + removeSpace(refEngineId) + "Item").append(htmlString);
+        }
+    }
+}
+
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
         VESSELID = TEMP_VESSELID;
@@ -191,6 +233,7 @@ function submitBtnClickHandler(){
 async function submitBtnFunctions(){
     await getAllEngineTypes();
     await GetCurrentEngineData();
+    await GetCurrentAnalogData();
 }
 
 function selectDropdownChangeEvent(){

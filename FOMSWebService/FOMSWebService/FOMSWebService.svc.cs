@@ -401,8 +401,9 @@ namespace FOMSWebService
                 DateTime endDatetime = DateTime.UtcNow;
 
                 double totalFlow = EngineReading.GetTotalFlowByEngineCode(vesselId, engineEnum, startDatetime, endDatetime);
-                double totalHour = (endDatetime - startDatetime).TotalHours; // Get the difference in hours
-                double estCons = Convert.ToDouble(totalFlow) / totalHour;
+                //double totalHour = (endDatetime - startDatetime).TotalHours; // Get the difference in hours
+                double runningMins = EngineReading.GetTotalRunningMinsByEngineCode(vesselId, engineEnum, startDatetime, endDatetime);
+                double estCons = Convert.ToDouble(totalFlow) / (runningMins / 60);
                 engineData.TotalCons = totalFlow.ToString();
                 engineData.EstCons = estCons.ToString();
                 engineData.UserStartDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
@@ -733,9 +734,12 @@ namespace FOMSWebService
             return engineDataList;
         }
 
-        public List<AnalogData> GetCurrentAnalogData(int vesselId)
+        public List<List<AnalogData>> GetCurrentAnalogData(int vesselId)
         {
+            List<List<AnalogData>> listOfAnalogDataList = new List<List<AnalogData>>();
             List<AnalogData> analogDataList = new List<AnalogData>();
+            Dictionary<int, List<AnalogData>> dict = new Dictionary<int, List<AnalogData>>();
+
             try
             {
                 List<Analog> analogList = Analog.GetAll(vesselId);
@@ -746,15 +750,30 @@ namespace FOMSWebService
                     analogData.AnalogValue = analog.LatestReading.ToString();
                     analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
                     analogData.RefEngineId = analog.RefEngineId.ToString();
-                    analogDataList.Add(analogData);
+                    if (dict.ContainsKey(analog.RefEngineId))
+                    {
+                        dict[analog.RefEngineId].Add(analogData);
+                    }
+                    else
+                    {
+                        List<AnalogData> holder = new List<AnalogData>();
+                        holder.Add(analogData);
+                        dict.Add(analog.RefEngineId, holder);
+                    }
+                    
+                }
+
+                foreach(var kvp in dict)
+                {
+                    listOfAnalogDataList.Add(kvp.Value);
                 }
             }
             catch(Exception ex)
             {
                 log.write(ex.ToString());
             }
-
-            return analogDataList;
+            
+            return listOfAnalogDataList;
         }
 
         #endregion
