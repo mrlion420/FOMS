@@ -35,7 +35,7 @@ var MAP_MARKER = null;
 var INFO_WINDOW = new google.maps.InfoWindow();
 // Timezone 
 var TIMEZONE = 8;
-var USERID = 59;
+var USERID = 53;
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;

@@ -776,9 +776,78 @@ namespace FOMSWebService
             return listOfAnalogDataList;
         }
 
+        public EngineData GetCurrentEngineData_ByEngineId(int vesselId, short engineId)
+        {
+            EngineData engineData = new EngineData();
+            
+            try
+            {
+                EngineReading engineReading = EngineReading.GetLatest(vesselId, engineId);
+                engineData.EstCons = engineReading.EstFlowRate.ToString();
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return engineData;
+        }
+
+        public List<AnalogData> GetCurrentAnalogData_ByEngineId(int vesselId, short engineId)
+        {
+            List<AnalogData> analogDataList = new List<AnalogData>();
+            try
+            {
+                List<Analog> analogList = Analog.GetAll(vesselId);
+                foreach(Analog analog in analogList)
+                {
+                    // Check if the ref engine id is the same
+                    if(analog.RefEngineId == engineId)
+                    {
+                        AnalogData analogData = new AnalogData();
+                        analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                        analogData.AnalogValue = analog.LatestReading.ToString();
+                        
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return analogDataList;
+        }
+
         #endregion
 
         #region Chart Related Methods
+
+        public Stream GetSynchornizedChartByEngineType(int vesselId, double timezone, string engineId)
+        {
+            string returnString = string.Empty;
+
+            try
+            {
+                int numOfPoint = 10; // Default to 10 for daily
+                int seconds = 86400; // 24 hours - Daily
+                //BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+
+                DateTime endDateTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                DateTime startDateTime = DateTimeExtension.CalculateStartDatetime(endDateTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
+                //DataSet engineDS = EngineReading.
+
+                // Get all analog from this engine 
+                //AnalogList analogList = Analog.GetAnalogListByRefEngineIDAnalogCode(engineIdShort, BLL_Enum._ANALOG.All);
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+        }
 
         public Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType)
         {
