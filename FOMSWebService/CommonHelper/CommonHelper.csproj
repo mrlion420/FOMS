@@ -52,9 +52,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AnalogExtension.cs" />
     <Compile Include="ChartExtension.cs" />
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="EngineExtension.cs" />
+    <Compile Include="EnumExtension.cs" />
     <Compile Include="KeyValueExtension.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
