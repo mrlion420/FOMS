@@ -204,17 +204,17 @@ function populateAnalogData(data){
             htmlString = "<div class='engine-desc'>";
             htmlString += "<h2 class='hidden'>Analog</h2>";
             htmlString += "<div class='engine-value'>";
-            htmlString += "<p>" + result.AnalogName + "</p>";
+            htmlString += "<p>" + result.AnalogType + "</p>";
             htmlString += "<p>" + result.AnalogValue + "</p>";
             htmlString += "</div>"; // End of engine value tag
             j++;
             if( j < analogDataList.length){
                 htmlString += "<div class='engine-value'>";
-                htmlString += "<p>" + result.AnalogName + "</p>";
+                htmlString += "<p>" + result.AnalogType + "</p>";
                 htmlString += "<p>" + result.AnalogValue + "</p>";
             }else{
                 htmlString += "<div class='engine-value'>";
-                htmlString += "<p class='hidden'>" + result.AnalogName + "</p>";
+                htmlString += "<p class='hidden'>" + result.AnalogType + "</p>";
                 htmlString += "<p class='hidden'>" + result.AnalogValue + "</p>";
             }
             htmlString += "</div>"; // End of engine desc tag

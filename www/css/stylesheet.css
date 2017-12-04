@@ -154,17 +154,18 @@ p{
 
 .main-container .top-select-container{
     display: flex;
-    justify-content: space-around;
+    justify-content: flex-start;
     margin-bottom: 0px;
 }
 
 .main-container .top-select-container div{
     display: flex;
     align-items: center;
+    width: 30%;
 }
 
 .main-container .top-select-container p{
-    margin-right: 20px;
+    min-width: 120px;
 }
 
 .main-container .top-select-container select{
@@ -574,6 +575,69 @@ p{
 
 .hidden{
     opacity: 0;
+}
+
+.show{
+    opacity: 100;
+}
+
+.display-none{
+    display: none !important;
+}
+
+.display-block{
+    display: block;
+}
+
+.display-flex{
+    display: flex;
+}
+
+.alarm{
+    color: red;
+}
+
+.no-alarm{
+    color: rgb(32, 141, 50);
+}
+
+/* ----------------- ANALOG READING SECTION ---------------- */
+.analog-reading{
+    display: flex;
+    flex-direction: column;
+}
+
+.analog-reading .analog-body{
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.analog-reading .analog-body .analog-item{
+    display: flex;
+    justify-content: flex-start;
+    margin: 0px 0px 15px 0px;
+}
+
+.analog-reading .analog-body .analog-item .analog-desc{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.analog-reading .analog-body .analog-item .analog-desc .analog-desc-item{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.analog-reading .analog-body .analog-item .analog-desc .analog-desc-item img{
+    width: 45px;
+    height: 45px;
+}
+
+.analog-reading .analog-body .analog-item .analog-desc .analog-desc-item p:nth-child(1),
+.analog-reading .analog-body .analog-item .analog-desc .analog-desc-item p:nth-child(2){
+    min-width: 170px;
 }
 
 /* ----------------- LOGIN SECTION ---------------- */

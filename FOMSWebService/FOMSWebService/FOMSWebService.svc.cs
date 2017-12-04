@@ -746,10 +746,14 @@ namespace FOMSWebService
                 foreach(Analog analog in analogList)
                 {
                     AnalogData analogData = new AnalogData();
-                    analogData.AnalogName = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+                    analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
                     analogData.AnalogValue = analog.LatestReading.ToString();
                     analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
                     analogData.RefEngineId = analog.RefEngineId.ToString();
+                    analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
+                    analogData.AnalogId = analog.AnalogId.ToString();
+                    analogData.AnalogName = analog.ShortDescription;
+
                     if (dict.ContainsKey(analog.RefEngineId))
                     {
                         dict[analog.RefEngineId].Add(analogData);

@@ -20,7 +20,9 @@ const MENU_ID = [
 const MENU_PAGE = [
 	"FleetDashboard.html",
 	"VesselDashboard.html",
-	"fuelcons.html"
+	"fuelcons.html",
+	"",
+	"AnalogReading.html"
 ];
 
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
@@ -39,7 +41,7 @@ var USERID = 53;
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;
-var TEMP_VESSELID = 0;
+var TEMP_VESSELID = 0; // Holder for drop down changes 
 const DELIMITER = ";";
 
 var PARAMETER_USERID = { userId: USERID };

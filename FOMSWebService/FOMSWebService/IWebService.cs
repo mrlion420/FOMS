@@ -339,6 +339,24 @@ namespace FOMSWebService
         private string analogUnit;
         private string analogId;
         private string refEngineId;
+        private string alarmStatus;
+        private string analogType;
+
+        [DataMember]
+        public string AnalogType
+        {
+            get { return analogType; }
+            set { analogType = value; }
+        }
+
+
+        [DataMember]
+        public string AlarmStatus
+        {
+            get { return alarmStatus; }
+            set { alarmStatus = value; }
+        }
+
 
         [DataMember]
         public string RefEngineId
