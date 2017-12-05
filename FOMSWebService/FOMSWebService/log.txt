@@ -1,47 +1,15 @@
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.Collections.Generic.KeyNotFoundException: The given key was not present in the dictionary.
-   at System.Collections.Generic.Dictionary`2.get_Item(TKey key)
-   at FOMSWebService.FOMSWebService.GetCurrentAnalogData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 753
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
-System.NullReferenceException: Object reference not set to an instance of an object.
-   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 721
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 177
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1045
+System.Data.DuplicateNameException: A column named 'Ticks' already belongs to this DataTable.
+   at System.Data.DataColumnCollection.RegisterColumnName(String name, DataColumn column)
+   at System.Data.DataColumnCollection.BaseAdd(DataColumn column)
+   at System.Data.DataColumnCollection.AddAt(Int32 index, DataColumn column)
+   at System.Data.DataColumnCollection.Add(String columnName, Type type)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 155
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1054
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 177
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1045

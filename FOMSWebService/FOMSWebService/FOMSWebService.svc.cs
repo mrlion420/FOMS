@@ -468,14 +468,16 @@ namespace FOMSWebService
                 DateTime endDatetime = DateTime.UtcNow;
                 double totalFlow = 0;
                 double totalHour = 0;
+                double runningMins = 0;
                 double estCons = 0;
                 List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
                 foreach(Vessel vessel in vesselList)
                 {
                     totalFlow += EngineReading.GetTotalFlowByEngineCode(vessel.VesselId, engineEnum, startDatetime, endDatetime);
-                    totalHour += (endDatetime - startDatetime).TotalHours; // Get the difference in hours
-                    estCons += Convert.ToDouble(totalFlow) / totalHour;
+                    runningMins += EngineReading.GetTotalRunningMinsByEngineCode(vessel.VesselId, engineEnum, startDatetime, endDatetime);
                 }
+
+                estCons = Convert.ToDouble(totalFlow) / (runningMins / 60);
                 engineData.TotalCons = totalFlow.ToString();
                 engineData.EstCons = estCons.ToString();
                 engineData.UserStartDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
@@ -825,12 +827,67 @@ namespace FOMSWebService
 
         #endregion
 
+        #region Analog Reading Methods
+
+        public List<AnalogData> GetAllAnalog(int vesselId)
+        {
+            List<AnalogData> analogDataList = new List<AnalogData>();
+            try
+            {
+                List<Analog> analogList = Analog.GetAll(vesselId);
+                foreach(Analog analog in analogList)
+                {
+                    AnalogData analogData = new AnalogData();
+                    analogData.AnalogName = analog.ShortDescription;
+                    analogData.AnalogId = analog.AnalogId.ToString();
+                    analogDataList.Add(analogData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return analogDataList;
+        }
+
+        #endregion
+
         #region Chart Related Methods
 
-        public Stream GetSynchornizedChartByEngineType(int vesselId, double timezone, string engineId)
+        public Stream GetSynchornizedChartByEngineType(int vesselId, double timezone, string engineId, bool includeRefSignal)
         {
             string returnString = string.Empty;
 
+            try
+            {
+                int numOfPoint = 10; // Default to 10 for daily
+                int seconds = 86400; // 24 hours - Daily
+                short engineIdShort = Convert.ToInt16(engineId);
+
+                DateTime endDateTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                DateTime startDateTime = DateTimeExtension.CalculateStartDatetime(endDateTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
+                DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startDateTime, false);
+
+                if (includeRefSignal)
+                {
+                    
+                }
+                // Get all analog from this engine 
+                //AnalogList analogList = Analog.GetAnalogListByRefEngineIDAnalogCode(engineIdShort, BLL_Enum._ANALOG.All);
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+        }
+
+        public Stream GetSynchornizedChartByAnalogId(int vesselId, double timezone, string analogId, bool includeRefSignal)
+        {
+            string returnString = string.Empty;
             try
             {
                 int numOfPoint = 10; // Default to 10 for daily
@@ -839,12 +896,9 @@ namespace FOMSWebService
 
                 DateTime endDateTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
                 DateTime startDateTime = DateTimeExtension.CalculateStartDatetime(endDateTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
-                //DataSet engineDS = EngineReading.
-
-                // Get all analog from this engine 
-                //AnalogList analogList = Analog.GetAnalogListByRefEngineIDAnalogCode(engineIdShort, BLL_Enum._ANALOG.All);
+                
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 log.write(ex.ToString());
             }
@@ -989,7 +1043,7 @@ namespace FOMSWebService
                 foreach (Vessel vessel in vesselList)
                 {
                     // Query Interval - xx:xx:01 to xx:xx:00
-                    DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                    DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false , false);
                     resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel,fleetId);
 
                     if (engineType.Equals("2"))
@@ -998,7 +1052,7 @@ namespace FOMSWebService
                         engineType = "3";
                         engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                         // Query Interval - xx:xx:01 to xx:xx:00
-                        DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                        DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
                         resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId);
                     }
                 }

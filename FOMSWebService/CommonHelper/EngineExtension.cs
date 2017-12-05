@@ -134,8 +134,8 @@ namespace CommonHelper
                     {
                         // Get the first table
                         DataTable firstTable = dsData.Tables[0];
-                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
-                        estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"]);
+                        estFlowRate += Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
 
                         DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
                         string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
@@ -145,7 +145,7 @@ namespace CommonHelper
                         firstTable.Rows[rowCount]["Unit"] = engineUnit;
                         firstTable.Rows[rowCount]["Ticks"] = ticksStr;
                         // Re-assign the first table the new added value
-                        firstTable.Rows[rowCount]["EST_FLOW_RATE"] = estFlowRate;
+                        firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"] = estFlowRate;
                         rowCount++;
                     }
                 }
@@ -154,6 +154,16 @@ namespace CommonHelper
                     // Add two new columns to first table
                     table.Columns.Add("Ticks", typeof(string));
                     table.Columns.Add("Unit", typeof(string));
+                    
+                    foreach (DataRow row in table.Rows)
+                    {
+                        DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
+                        string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
+                        string engineUnit = "ℓ/hr";
+                        row["Unit"] = engineUnit;
+                        row["Ticks"] = ticksStr;
+                    }
+
                     tableCount++;
                 }
             }
@@ -165,10 +175,10 @@ namespace CommonHelper
                 {
                     // Get the first table
                     DataTable firstTable = dsData.Tables[0];
-                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
-                    estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
+                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"]);
+                    estFlowRate += Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
                     // Re-assign the result Ds table the new added value
-                    row["EST_FLOW_RATE"] = estFlowRate;
+                    row["CALCULATED_TOTAL_FLOW"] = estFlowRate;
                     rowCount++;
                 }
 

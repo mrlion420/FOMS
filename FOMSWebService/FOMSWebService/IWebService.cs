@@ -69,6 +69,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<AnalogData> GetAllAnalog(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         BunkerData GetBunkeringByFleet(int fleetId, double timezone);
 
         [OperationContract]

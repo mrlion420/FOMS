@@ -142,6 +142,25 @@ function createRadialGauge(id, value){
    }).draw();
 }
 
+async function GetAllAnalog(){
+    var method = "GetAllAnalog";
+    try{
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
+        populateAllAnalogData(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateAllAnalogData(data){
+    var htmlString = "";
+    for(var i = 0; i < data.length; i++){
+        var result = data[i];
+        htmlString += "<option value='" + result.AnalogId + "'>" + result.AnalogName + "</option>";
+    }
+    $("#analogIdSelect").html(htmlString);
+}
+
 function selectDropdownChangeEvent(){
     $("#fleetSelect").change(function(){
         FLEETID = $("#fleetSelect").val();
@@ -151,6 +170,45 @@ function selectDropdownChangeEvent(){
     $("#vesselSelect").change(function(){
         TEMP_VESSELID = $("#vesselSelect").val();
     });
+
+    $("#viewTypeSelect").change(function(){
+        viewTypeSelectChangeFunction();
+    });
+
+    $("#checkboxInput").change(function(){
+        
+    });
+}
+
+async function viewTypeSelectChangeFunction(){
+    var viewType = $("#viewTypeSelect").val();
+    switch(viewType){
+        case "gauges":
+        hideChartRelatedViews();
+        await GetCurrentAnalogData();
+        break;
+
+        case "chart":
+        showChartRelatedViews();
+        await GetAllAnalog();
+        break;
+    }
+}
+
+function hideChartRelatedViews(){
+    $("#analogIdSelectDiv").addClass("hidden");
+    $("#checkboxDiv").addClass("hidden");
+
+    $("#analogIdSelectDiv").removeClass("show");
+    $("#checkboxDiv").removeClass("show");
+}
+
+function showChartRelatedViews(){
+    $("#analogIdSelectDiv").addClass("show");
+    $("#checkboxDiv").addClass("show");
+
+    $("#analogIdSelectDiv").removeClass("hidden");
+    $("#checkboxDiv").removeClass("hidden");
 }
 
 function submitBtnClickHandler(){
