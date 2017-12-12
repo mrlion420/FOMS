@@ -73,6 +73,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<EngineData> GetAllEngines(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         BunkerData GetBunkeringByFleet(int fleetId, double timezone);
 
         [OperationContract]
@@ -110,6 +114,10 @@ namespace FOMSWebService
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetTotalEngineChartByFleet(int fleetId, double timezone, string engineType);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetSynchornizedChartByEngineId(int vesselId, double timezone, int querytime, string engineId, bool includeRefSignal);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]

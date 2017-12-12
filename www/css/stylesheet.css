@@ -161,7 +161,7 @@ p{
 .main-container .top-select-container > div{
     display: flex;
     align-items: center;
-    width: 33%;
+    width: 350px;
 }
 
 .main-container .top-select-container p{
@@ -195,6 +195,11 @@ p{
 .main-container .top-select-container button:hover{
     background-color: #36A148;
     color :white;
+}
+
+#checkboxDiv{
+    max-width: 100%;
+    min-width: 33%;
 }
 
 .checkbox{
@@ -266,6 +271,7 @@ p{
 
 .main .wrapper{
     display: flex;
+    margin: 10px 0px 0px 0px;
 }
 
 .main .wrapper .left-container .multiple-item{

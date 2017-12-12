@@ -176,7 +176,7 @@ function addSeriesIntoChart(data){
         var singleObject = valueOfElement;
         for (var i = 0; i < singleObject.length; i++) {
             var result = singleObject[i];
-            var value = round(parseFloat(result.CALCULATED_TOTAL_FLOW), 2);
+            var value = round(parseFloat(result.EST_FLOW_RATE), 2);
             var ticks = parseFloat(result.Ticks);
             var additionalInfo = result.ADDITIONAL_INFO;
             var unit = result.Unit;

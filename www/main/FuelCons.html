@@ -74,6 +74,14 @@
                         <option>Vessel 1</option>
                     </select>
                 </div>
+                <div id="queryDiv">
+                    <p>Query</p>
+                    <select id="querySelect">
+                        <option value="24">Last 24 Hours</option>
+                        <option value="168">Last 7 Days</option>
+                        <option value="336">Last 14 Days</option>
+                    </select>
+                </div>
                 <div>
                     <button id="submitBtn">Submit</button>
                 </div>                
@@ -86,18 +94,20 @@
                         <option>Chart</option>
                     </select>
                 </div>
-                <div id="engineTypeSelectDiv">
-                    <p>Engine : </p>
-                    <select id="engineTypeSelect">
-                        
-                    </select>
-                </div>
                 <div id="engineIdSelectDiv">
                     <p>Engine Id : </p>
                     <select id="engineIdSelect"></select>
                         
                     </select>
                 </div>
+                <div id="checkboxDiv">
+                    <p>Reference Signal</p>
+                    <div class="checkbox">
+                        <input type="checkbox" value="1" id="checkboxInput" name="" />
+                        <label for="checkboxInput"></label>
+                    </div>
+                </div>
+                
             </div>
             <div class="wrapper fuel-cons" style="display:none" id="wrapper">
                 <!-- <div class="engine-body splitter-bottom">
@@ -216,7 +226,7 @@
                 </div> -->
             </div>
             <div class="wrapper fuel-cons-chart" id="wrapperChart">
-                <div class="chart-contianer">
+                <div class="chart-container" id="chartContainer">
 
                 </div>
                 <div class="chart-values">

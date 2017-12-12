@@ -3,12 +3,19 @@ $(document).ready(function () {
    
 });
 
+var syncChartArray = [];
+
 async function mainFunction(){
     await getUserRelatedFleets();
     await getUserRelatedVessels();
+    
+
     await getAllEngineTypes();
     await GetCurrentEngineData();
     await GetCurrentAnalogData();
+
+    await getAllEngines();
+    await GetSynchornizedChartByEngineId();
 
     selectDropdownChangeEvent();
     submitBtnClickHandler();
@@ -80,32 +87,36 @@ function populateVesselSelectBox(data){
     $("#vesselSelect").html(htmlString);
 }
 
+async function getAllEngines(){
+    var method = "GetAllEngines";
+    resetConstArrays();
+    try{    
+        let data = await ajaxGet(method, PARAMETER_VESSELID);
+        populateAllEngines(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateAllEngines(data){
+    var htmlString = "";
+    for(var i = 0; i < data.length; i++){
+        var result = data[i];
+        htmlString += "<option value='" + result.EngineId + "'>" + result.EngineName + "</option>";
+    }
+    $("#engineIdSelect").html(htmlString);
+}
+
 async function getAllEngineTypes(){
     var method = "GetAllEngineTypes";
     resetConstArrays();
     try{
         let data = await ajaxGet(method, PARAMETER_VESSELID);
-        populateAllEngineTypesToSelect(data);
         populateEngineBody(data);
     }catch(ex){
         console.log(ex);
     }
     
-}
-
-function populateAllEngineTypesToSelect(data){
-    var htmlString = "";
-    for(var i = 0; i < data.length; i++){
-        var result = data[i];
-        if(i === 0){
-            htmlString += "<option value='" + result.Key + "' selected>" + result.Result + "</option>";
-            SELECTED_ENGINE_TYPE = result.Key;
-        }else{
-            htmlString += "<option value='" + result.Key + "'>" + result.Result + "</option>";
-        }
-    }
-    
-    $("#engineTypeSelect").html(htmlString);
 }
 
 function populateEngineBody(data){
@@ -187,7 +198,7 @@ async function GetCurrentAnalogData(){
     resetConstArrays();
     try{
         let data = await ajaxGet(method, PARAMETER_VESSELID);
-        console.log(data);
+        
         populateAnalogData(data);
     }catch(ex){
         console.log(ex);
@@ -221,6 +232,175 @@ function populateAnalogData(data){
             $("#" + removeSpace(refEngineId) + "Item").append(htmlString);
         }
     }
+}
+
+async function GetSynchornizedChartByEngineId(){
+    var method = "GetSynchornizedChartByEngineId";
+    var parameters = PARAMETER_VESSELID;
+    parameters.timezone = TIMEZONE;
+    parameters.querytime = $("#querySelect").val();
+    parameters.engineId = $("#engineIdSelect").val();
+    // parameters.includeRefSignal = $('#checkboxInput').is(":checked");
+    parameters.includeRefSignal = "true";
+    resetConstArrays();
+    try{
+        let data = await ajaxGet(method, parameters);
+        populateChartData(data);
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function populateChartData(data){
+    var uniqueId = 0;
+    var chartType = "spline";
+    $.each(data, function (key, valueOfKey) { 
+         var series = valueOfKey;
+         var seriesArray = [];
+         var maxValue = 0;
+         var minValue = 0;
+         var averageValue = 0;
+         for(var i = 0; i < series.length; i++){
+            var result = series[i];
+            var value;
+            var ticks = parseFloat(result.Ticks);
+            if( uniqueId === 0){
+                // Engine chart
+                value = round(parseFloat(result.EST_FLOW_RATE), 2);
+            }else{
+                value = round(parseFloat(result.CONVERTED_VALUE), 2);
+            }
+            
+            var unit = result.Unit;
+
+            seriesArray.push({ x: ticks, y: value, unit: unit });
+         }
+
+         createChart(key , uniqueId);
+         addSingleSeriesIntoChart(seriesArray, key, chartType, uniqueId);
+         uniqueId++;
+         
+    });
+
+    $('#chartContainer').bind('mousemove touchmove touchstart', function (e) {
+        var chart,
+            point,
+            i,
+            event;
+
+        for (i = 0; i < syncChartArray.length; i = i + 1) {
+            chart = syncChartArray[i];
+            event = chart.pointer.normalize(e.originalEvent); // Find coordinates within the chart
+            point = chart.series[0].searchPoint(event, true); // Get the hovered point
+
+            if (point) {
+                point.select(e);
+            }
+        }
+    });
+    
+}
+
+function getMaxValue(maxValue, currentValue){
+    if(currentValue > maxValue){
+        return currentValue;
+    }else{
+        return maxValue;
+    }
+}
+
+function getMinValue(minValue, currentValue){
+    if(currentValue < minValue){
+        return currentValue;
+    }else{
+        return minValue;
+    }
+}
+
+function getAverageValue(totalValue, count){
+    return round(parseFloat(totalValue / count), 2 );
+}
+
+function createChart(chartTitle, uniqueId){
+    options = {
+        chart: {
+            type: "line",
+            style: {
+                'fontFamily': 'Tahoma'
+            }
+        },
+        title: {
+            text: chartTitle,
+            margin: 15,
+            align : "left",
+            x :30
+        },
+        legend : {
+            enabled: false
+        },
+        xAxis: {
+            type: "datetime"
+        },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+
+        },
+        tooltip: {
+            positioner: function () {
+                return {
+                    x: this.chart.chartWidth - this.label.width, // right aligned
+                    y: 10 // align to title
+                };
+            },
+            formatter: function () {
+                var formatter = tooltipFormatter(this);
+                return formatter;
+            }
+        }
+    };
+
+    $('<div class="chart" id="chart-' + uniqueId + '">').appendTo('#chartContainer').highcharts($.extend(true, {}, options));
+    var chart = $("#chart-" + uniqueId ).highcharts();
+    syncChartArray.push(chart);
+}
+
+function tooltipFormatter(chart){
+    var dateFormatHC = '%d-%b-%y %H:%M:%S';
+    var formatter = "";
+    var count = 0;
+    var rateText = "";
+    // Id == 0 means, if the chart is for engine.
+    // Engine chart series id will always be 0
+    if(chart.series.options.id === 0){
+        // Check if the unit is litres, which means that the daily interval is live
+        if(chart.point.unit === "ℓ"){
+            rateText = "Consumption : ";
+        }else{
+            rateText = "Est. Consumption Rate : ";
+        }
+        formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+            rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
+    }else{
+         formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+                Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
+    }
+
+    return formatter;
+}
+
+function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId){
+    var singleChart = syncChartArray[uniqueId];
+    singleChart.addSeries({
+        id : uniqueId,
+        type: chartType,
+        name: seriesName,
+        data: seriesArray
+    });
+
 }
 
 function submitBtnClickHandler(){
@@ -262,5 +442,34 @@ function selectDropdownChangeEvent(){
     //     createEngineChartByEngineType();
     //     getEngineTotalAndEstConsumption();
     // });
+}
+Highcharts.Pointer.prototype.reset = function () {
+    return undefined;
+};
+
+Highcharts.Point.prototype.select = function (event) {
+    this.onMouseOver();
+    this.series.chart.tooltip.refresh(this); // Show the tooltip
+    this.series.chart.xAxis[0].drawCrosshair(event, this); // Show the crosshair  
+};
+
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
+
+function syncExtremes(e) {
+    var thisChart = this.chart;
+
+    if (e.trigger !== 'syncExtremes') { // Prevent feedback loop
+        Highcharts.each(Highcharts.charts, function (chart) {
+            if (chart !== thisChart) {
+                if (chart.xAxis[0].setExtremes) { // It is null while updating
+                    chart.xAxis[0].setExtremes(e.min, e.max, undefined, false, { trigger: 'syncExtremes' });
+                }
+            }
+        });
+    }
 }
 

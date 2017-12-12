@@ -1,6 +1,7 @@
 ﻿using Common;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,17 @@ namespace CommonHelper
             }
 
             return numOfPoints;
+        }
+
+        public static DataSet CombineDataSets_IntoOne(DataSet resultDataset, DataSet secondDataset)
+        {
+            foreach(DataTable dtData in secondDataset.Tables)
+            {
+                DataTable holder = dtData.Copy();
+                resultDataset.Tables.Add(holder);
+            }
+            
+            return resultDataset;
         }
 
     }

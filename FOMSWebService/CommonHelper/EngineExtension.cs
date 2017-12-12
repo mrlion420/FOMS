@@ -11,7 +11,7 @@ namespace CommonHelper
 {
     public class EngineExtension
     {
-        public static DataSet AddEngineChartDataToDataSet(DataSet dsData, double timezone)
+        public static DataSet AddChartWithTicksAndUnit(DataSet dsData, double timezone)
         {
             foreach (DataTable engineTable in dsData.Tables)
             {
@@ -30,7 +30,7 @@ namespace CommonHelper
             return dsData;
         }
 
-        public static DataSet AddEngineChartDataToDataSet(DataSet dsData, double timezone, BLL_Enum._VIEW_INTERVAL viewIntervalEnum)
+        public static DataSet AddChartWithTicksAndUnit(DataSet dsData, double timezone, BLL_Enum._VIEW_INTERVAL viewIntervalEnum)
         {
             foreach (DataTable engineTable in dsData.Tables)
             {
@@ -134,8 +134,12 @@ namespace CommonHelper
                     {
                         // Get the first table
                         DataTable firstTable = dsData.Tables[0];
-                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"]);
-                        estFlowRate += Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
+                        double calculatedEstFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+
+                        //double totalFlow = Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
+                        //double runningMins = Convert.ToDouble(row["RUNNING_MINS"]);
+                        //calculatedEstFlowRate += (totalFlow / runningMins) * 60;
+                        calculatedEstFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
 
                         DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
                         string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
@@ -145,7 +149,7 @@ namespace CommonHelper
                         firstTable.Rows[rowCount]["Unit"] = engineUnit;
                         firstTable.Rows[rowCount]["Ticks"] = ticksStr;
                         // Re-assign the first table the new added value
-                        firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"] = estFlowRate;
+                        firstTable.Rows[rowCount]["EST_FLOW_RATE"] = calculatedEstFlowRate;
                         rowCount++;
                     }
                 }
@@ -154,14 +158,20 @@ namespace CommonHelper
                     // Add two new columns to first table
                     table.Columns.Add("Ticks", typeof(string));
                     table.Columns.Add("Unit", typeof(string));
-                    
+                    table.Columns.Add("CALCULATED_EST_FLOWRATE", typeof(string));
+
                     foreach (DataRow row in table.Rows)
                     {
                         DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
                         string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
                         string engineUnit = "ℓ/hr";
+                        double totalFlow = Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
+                        double runningMins = Convert.ToDouble(row["RUNNING_MINS"]);
+                        double calculatedEstFlowRate = (totalFlow / runningMins) * 60;
+
                         row["Unit"] = engineUnit;
                         row["Ticks"] = ticksStr;
+                        row["CALCULATED_EST_FLOWRATE"] = calculatedEstFlowRate;
                     }
 
                     tableCount++;
@@ -175,10 +185,10 @@ namespace CommonHelper
                 {
                     // Get the first table
                     DataTable firstTable = dsData.Tables[0];
-                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["CALCULATED_TOTAL_FLOW"]);
-                    estFlowRate += Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
+                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["EST_FLOW_RATE"]);
+                    estFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
                     // Re-assign the result Ds table the new added value
-                    row["CALCULATED_TOTAL_FLOW"] = estFlowRate;
+                    row["EST_FLOW_RATE"] = estFlowRate;
                     rowCount++;
                 }
 

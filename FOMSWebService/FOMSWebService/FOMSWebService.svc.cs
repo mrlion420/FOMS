@@ -467,7 +467,7 @@ namespace FOMSWebService
                 DateTime startDatetime = DateTimeExtension.CalculateUserTodayDateStartTime(timezone);
                 DateTime endDatetime = DateTime.UtcNow;
                 double totalFlow = 0;
-                double totalHour = 0;
+                
                 double runningMins = 0;
                 double estCons = 0;
                 List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
@@ -825,6 +825,28 @@ namespace FOMSWebService
             return analogDataList;
         }
 
+        public List<EngineData> GetAllEngines(int vesselId)
+        {
+            List<EngineData> engineDataList = new List<EngineData>();
+            try
+            {
+                List<Engine> engineList = Engine.GetAll(vesselId);
+                foreach(Engine engine in engineList)
+                {
+                    EngineData engineData = new EngineData();
+                    engineData.EngineId = engine.EngineId.ToString();
+                    engineData.EngineName = engine.ShortDescription;
+                    engineDataList.Add(engineData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return engineDataList;
+        }
+
         #endregion
 
         #region Analog Reading Methods
@@ -855,26 +877,48 @@ namespace FOMSWebService
 
         #region Chart Related Methods
 
-        public Stream GetSynchornizedChartByEngineType(int vesselId, double timezone, string engineId, bool includeRefSignal)
+        public Stream GetSynchornizedChartByEngineId(int vesselId, double timezone,int querytime, string engineId, bool includeRefSignal)
         {
             string returnString = string.Empty;
 
             try
             {
-                int numOfPoint = 10; // Default to 10 for daily
-                int seconds = 86400; // 24 hours - Daily
+                BLL_Enum._VIEW_INTERVAL viewIntervalEnum;
+                int numOfPoints;
                 short engineIdShort = Convert.ToInt16(engineId);
+                
+                DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
+                DateTime endDateTime = DateTime.UtcNow;
+                if(querytime != 24)
+                {
+                    // if the query time is not for last 24 hours
+                    viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Daily;
+                    numOfPoints = (int) (endDateTime - startDateTime).TotalDays;
+                }
+                else
+                {
+                    viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Hour_1;
+                    numOfPoints = 24;
+                }
 
-                DateTime endDateTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
-                DateTime startDateTime = DateTimeExtension.CalculateStartDatetime(endDateTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
-                DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startDateTime, false);
+                DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, viewIntervalEnum, numOfPoints, startDateTime, false, false);
+                DataSet resultDs = EngineExtension.AddChartWithTicksAndUnit(engineDs, timezone);
 
                 if (includeRefSignal)
                 {
-                    
+                    List<Analog> analogList = Analog.GetAll(vesselId);
+                    foreach(Analog analog in analogList)
+                    {
+                        if(analog.RefEngineId == engineIdShort)
+                        {
+                            DataSet analogDs = AnalogReading.GetViewByAnalogId(vesselId, analog.AnalogId, viewIntervalEnum, numOfPoints, startDateTime, false, false);
+                            analogDs = AnalogExtension.AddChartWithTicksAndUnit(analogDs, timezone, analog);
+                            resultDs = ChartExtension.CombineDataSets_IntoOne(resultDs, analogDs);
+                        }
+                    }
                 }
-                // Get all analog from this engine 
-                //AnalogList analogList = Analog.GetAnalogListByRefEngineIDAnalogCode(engineIdShort, BLL_Enum._ANALOG.All);
+
+                returnString = JsonConvert.SerializeObject(resultDs);
             }
             catch (Exception ex)
             {
@@ -924,7 +968,7 @@ namespace FOMSWebService
                 DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
                 // Query Interval - xx:xx:01 to xx:xx:00
                 DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
-                engineDS = EngineExtension.AddEngineChartDataToDataSet(engineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                 if (engineType.Equals("2"))
                 {
@@ -933,7 +977,7 @@ namespace FOMSWebService
                     engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                     // Query Interval - xx:xx:01 to xx:xx:00
                     DataSet secondEngineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
-                    secondEngineDS = EngineExtension.AddEngineChartDataToDataSet(secondEngineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
+                    secondEngineDS = EngineExtension.AddChartWithTicksAndUnit(secondEngineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                     foreach (DataTable engineTable in secondEngineDS.Tables)
                     {
@@ -967,7 +1011,7 @@ namespace FOMSWebService
                 int numOfPoints = 10; // Default value 
 
                 DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Live, numOfPoints, startTime, false);
-                engineDS = EngineExtension.AddEngineChartDataToDataSet(engineDS, timezone);
+                engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone);
 
                 returnString = JsonConvert.SerializeObject(engineDS);
             }

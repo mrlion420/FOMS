@@ -13,3 +13,15 @@ System.IndexOutOfRangeException: Cannot find table 0.
    at System.Data.DataTableCollection.get_Item(Int32 index)
    at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 177
    at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1045
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at System.Enum.Parse(Type enumType, String value)
+   at FOMSWebService.FOMSWebService.GetEngineTotalAndEstConsumptionByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 466
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at System.Enum.Parse(Type enumType, String value)
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1038
