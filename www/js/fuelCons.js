@@ -6,6 +6,7 @@ $(document).ready(function () {
 var syncChartArray = [];
 
 async function mainFunction(){
+	hideChartViews();
 	await getUserRelatedFleets();
 	await getUserRelatedVessels();
 	
@@ -13,9 +14,8 @@ async function mainFunction(){
 	await getAllEngineTypes();
 	await GetCurrentEngineData();
 	await GetCurrentAnalogData();
-
+	
 	await getAllEngines();
-	await GetSynchornizedChartByEngineId();
 
 	selectDropdownChangeEvent();
 	submitBtnClickHandler();
@@ -74,6 +74,7 @@ function populateVesselSelectBox(data){
 			htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
 			if(PAGELOAD){
 				VESSELID = key;
+				TEMP_VESSELID = key;
 				PAGELOAD = false;
 			}else{
 				TEMP_VESSELID = key;
@@ -89,7 +90,6 @@ function populateVesselSelectBox(data){
 
 async function getAllEngines(){
 	var method = "GetAllEngines";
-	resetConstArrays();
 	try{    
 		let data = await ajaxGet(method, PARAMETER_VESSELID);
 		populateAllEngines(data);
@@ -109,14 +109,12 @@ function populateAllEngines(data){
 
 async function getAllEngineTypes(){
 	var method = "GetAllEngineTypes";
-	resetConstArrays();
 	try{
 		let data = await ajaxGet(method, PARAMETER_VESSELID);
 		populateEngineBody(data);
 	}catch(ex){
 		console.log(ex);
 	}
-	
 }
 
 function populateEngineBody(data){
@@ -135,7 +133,6 @@ function populateEngineBody(data){
 
 async function GetCurrentEngineData(){
 	var method = "GetCurrentEngineData";
-	resetConstArrays();
 	try{
 		let data = await ajaxGet(method, PARAMETER_VESSELID);
 		populateCurrentEngineData(data);
@@ -195,7 +192,7 @@ function createRadialGauge(id, value){
 
 async function GetCurrentAnalogData(){
 	var method = "GetCurrentAnalogData";
-	resetConstArrays();
+	//resetConstArrays();
 	try{
 		let data = await ajaxGet(method, PARAMETER_VESSELID);
 		
@@ -240,15 +237,16 @@ async function GetSynchornizedChartByEngineId(){
 	parameters.timezone = TIMEZONE;
 	parameters.querytime = $("#querySelect").val();
 	parameters.engineId = $("#engineIdSelect").val();
-	// parameters.includeRefSignal = $('#checkboxInput').is(":checked");
-	parameters.includeRefSignal = "true";
-	resetConstArrays();
+	parameters.includeRefSignal = $('#checkboxInput').is(":checked");
+	// parameters.includeRefSignal = "true";
+	
 	try{
 		let data = await ajaxGet(method, parameters);
 		populateChartData(data);
 	}catch(ex){
 		console.log(ex);
 	}
+	resetConstArrays();
 }
 
 function populateChartData(data) {
@@ -433,18 +431,18 @@ function tooltipFormatter(chart){
 	var rateText = "";
 	// Id == 0 means, if the chart is for engine.
 	// Engine chart series id will always be 0
-	if(chart.series.options.id === 0){
+	if (chart.series.options.id === 0) {
 		// Check if the unit is litres, which means that the daily interval is live
-		if(chart.point.unit === "ℓ"){
+		if (chart.point.unit === "ℓ") {
 			rateText = "Consumption : ";
-		}else{
+		} else {
 			rateText = "Est. Consumption Rate : ";
 		}
 		formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
 			rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
-	}else{
-		 formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
-				Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
+	} else {
+		formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+			Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
 	}
 
 	return formatter;
@@ -464,7 +462,7 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId){
 function submitBtnClickHandler(){
 	$("#submitBtn").click(function(){
 		VESSELID = TEMP_VESSELID;
-		submitBtnFunctions();
+		viewTypeSelectChangeFunction();
 	});
 }
 
@@ -482,25 +480,72 @@ function selectDropdownChangeEvent(){
 
 	$("#vesselSelect").change(function(){
 		TEMP_VESSELID = $("#vesselSelect").val();
+		// Check if the engines needed to reloaded or not 
+		// By checking if the vessel Id haschanged
+		reloadAllEngines();
 	});
 
-	// $("#engineTypeSelect").change(function(){
-	//     SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
-	//     var htmlString = "";
-	//     switch (SELECTED_ENGINE_TYPE) {
-	//         case "4":
-	//             htmlString = "Est. Consumption Rate (ℓ/hr)";
-	//             break;
+	$("#viewTypeSelect").change(function(){
+		viewTypeSelectChangeFunction();
+	});
 
-	//         default:
-	//             htmlString = "Fuel Cons. Rate (ℓ/hr)";
-	//             break;
-	//     }
-	//     $("#chartTitle").html(htmlString);
-	//     createEngineChartByEngineType();
-	//     getEngineTotalAndEstConsumption();
-	// });
+	$("#engineIdSelect").change(function(){
+		GetSynchornizedChartByEngineId();
+	});
+
+	$("#checkboxInput").change(function(){
+		GetSynchornizedChartByEngineId();
+	});
 }
+async function reloadAllEngines(){
+	if(TEMP_VESSELID !== VESSELID){
+		await getAllEngines();
+	}
+}
+
+async function viewTypeSelectChangeFunction(){
+    var viewType = $("#viewTypeSelect").val();
+    switch(viewType){
+        case "gauges":
+        hideChartViews();
+        await submitBtnFunctions();
+        break;
+
+        case "chart":
+        showChartViews();
+		await GetSynchornizedChartByEngineId();
+        break;
+    }
+}
+
+function hideChartViews(){
+	$("#wrapperChart").addClass("display-none");
+	$("#wrapper").addClass("display-flex");
+    $("#engineIdSelectDiv").addClass("hidden");
+	$("#checkboxDiv").addClass("hidden");
+	$("#queryDiv").addClass("display-none");
+
+	$("#wrapperChart").removeClass("display-flex");
+	$("#wrapper").removeClass("display-none");
+    $("#engineIdSelectDiv").removeClass("show");
+	$("#checkboxDiv").removeClass("show");
+	$("#queryDiv").removeClass("display-flex");
+}
+
+function showChartViews(){
+	$("#wrapperChart").addClass("display-flex");
+	$("#wrapper").addClass("display-none");
+    $("#engineIdSelectDiv").addClass("show");
+	$("#checkboxDiv").addClass("show");
+	$("#queryDiv").addClass("display-flex");
+	
+	$("#wrapperChart").removeClass("display-none");
+	$("#wrapper").removeClass("display-flex");
+    $("#engineIdSelectDiv").removeClass("hidden");
+	$("#checkboxDiv").removeClass("hidden");
+	$("#queryDiv").removeClass("display-none");
+}
+
 Highcharts.Pointer.prototype.reset = function () {
 	return undefined;
 };

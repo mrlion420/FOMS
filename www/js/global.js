@@ -49,6 +49,7 @@ var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
 var PARAMETER_VESSELID = { vesselId: VESSELID };
 var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
 
+// To remove all the unnecessary paramters from the array that were added
 function resetConstArrays(){
 	PARAMETER_USERID = { userId: USERID };
 	PARAMETER_TIMEZONE = { timezone: TIMEZONE };

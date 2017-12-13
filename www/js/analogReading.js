@@ -184,18 +184,18 @@ async function viewTypeSelectChangeFunction(){
     var viewType = $("#viewTypeSelect").val();
     switch(viewType){
         case "gauges":
-        hideChartRelatedViews();
+        hideChartViews();
         await GetCurrentAnalogData();
         break;
 
         case "chart":
-        showChartRelatedViews();
+        showChartViews();
         await GetAllAnalog();
         break;
     }
 }
 
-function hideChartRelatedViews(){
+function hideChartViews(){
     $("#analogIdSelectDiv").addClass("hidden");
     $("#checkboxDiv").addClass("hidden");
 
@@ -203,7 +203,7 @@ function hideChartRelatedViews(){
     $("#checkboxDiv").removeClass("show");
 }
 
-function showChartRelatedViews(){
+function showChartViews(){
     $("#analogIdSelectDiv").addClass("show");
     $("#checkboxDiv").addClass("show");
 
