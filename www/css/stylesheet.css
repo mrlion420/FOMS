@@ -593,8 +593,8 @@ p{
 .fuel-cons-chart .chart-values .chart-item{
     display: flex;
     flex-direction: column;
-    height: 45%;
-    justify-content: space-around;
+    height: 35%;
+    justify-content: flex-start;
 }
 
 .fuel-cons-chart .chart-values .chart-item .main-value{
@@ -603,6 +603,7 @@ p{
     flex-direction: column;
     background-color: green;
     width: 90%;
+    margin: 0px 0px 30px 0px;
 }
 
 .fuel-cons-chart .chart-values .chart-item .main-value p:nth-child(1){
@@ -622,6 +623,7 @@ p{
     flex-direction: column;
     background-color: #4395F3;
     width: 90%;
+    margin: 0px 0px 10px 0px;
 }
 
 .fuel-cons-chart .chart-values .chart-item .normal-value p:nth-child(1){
