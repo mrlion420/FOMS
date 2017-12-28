@@ -121,6 +121,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetSynchornizedChartByAnalogId(int vesselId, double timezone, int querytime, string analogId, bool includeRefSignal);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         ResultData LoginUser(string userId, string password);
 
     }

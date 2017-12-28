@@ -171,13 +171,13 @@ function populateCurrentEngineData(data){
 }
 
 function createRadialGauge(id, value){
-	 var gauge = new RadialGauge({
+	var gauge = new RadialGauge({
 		renderTo: id,
-		width : 280,
+		width: 280,
 		height: 180,
-		minValue : 0,
-		maxValue : 200,
-		value : value,
+		minValue: 0,
+		maxValue: 200,
+		value: value,
 		units: "litres",
 		colorValueBoxShadow: false,
 		highlights: [
@@ -185,8 +185,8 @@ function createRadialGauge(id, value){
 			{ "from": 75, "to": 150, "color": "rgba(255,255,0,.15)" },
 			{ "from": 150, "to": 200, "color": "rgba(255,30,0,.25)" }
 		],
-		majorTicks : ["0","20","40","60","80","100","120","140","160","180","200"],
-		minorTicks : 5
+		majorTicks: ["0", "20", "40", "60", "80", "100", "120", "140", "160", "180", "200"],
+		minorTicks: 5
 	}).draw();
 }
 
