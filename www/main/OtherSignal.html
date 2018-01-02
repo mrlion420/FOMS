@@ -71,14 +71,6 @@
                         <option>Vessel 1</option>
                     </select>
                 </div>
-                <div id="queryDiv">
-                    <p>Query : </p>
-                    <select id="querySelect">
-                        <option value="24">Last 24 Hours</option>
-                        <option value="168">Last 7 Days</option>
-                        <option value="336">Last 14 Days</option>
-                    </select>
-                </div>
                 <div>
                     <button id="submitBtn">Submit</button>
                 </div>                
@@ -107,7 +99,9 @@
                 <div class="query-container">
                     <p>Query Period : </p>
                     <select id="querySelect">
-                        <option></option>
+                        <option value="24">Last 24 Hours</option>
+                        <option value="168">Last 7 Days</option>
+                        <option value="336">Last 14 Days</option>
                     </select>
                 </div>
                 <div class="table-container">
@@ -148,8 +142,41 @@
                                 <td>ME Port Clutch In</td>
                                 <td>01.17.47.S 106.18.20.E</td>
                             </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
                         </tbody>
                     </table>
+                </div>
+                <div class="table-pagination">
+                    <i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true"></i>
+                    <p>Page</p>
+                    <p id="currentTablePage">1</p>
+                    <p> of </p>
+                    <p id="maxTablePage">2</p>
+                    <i class="fa fa-arrow-circle-right fa-2x" aria-hidden="true"></i>
                 </div>
             </div>
         </div>

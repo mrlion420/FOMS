@@ -74,3 +74,9 @@ function populateVesselSelectBox(data){
 	});
 	$("#vesselSelect").html(htmlString);
 }
+
+function submitBtnClickHandler(){
+    $("#submitBtn").click(function(){
+        
+    });
+}

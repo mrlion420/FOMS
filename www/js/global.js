@@ -35,7 +35,7 @@ var FEATURE_GROUP = null;
 var MAP = null;
 // Map marker object
 var MAP_MARKER = null;
-var INFO_WINDOW = new google.maps.InfoWindow();
+var INFO_WINDOW = null;
 // Timezone 
 var TIMEZONE = 8;
 // var USERID = 53;
@@ -335,7 +335,8 @@ function initMap(mapName){
 	};
 	
     MAP = new google.maps.Map(document.getElementById(mapName),
-        myOptions);
+		myOptions);
+	INFO_WINDOW = new google.maps.InfoWindow();
 }
 
 function updateMapMarkerLeaflet(latitude , longitude, isCenter){
@@ -432,10 +433,10 @@ function createMarker(latlon, map, iwContent, icon) {
 var target = document.head;
 var observer = new MutationObserver(function(mutations) {
     for (var i = 0; mutations[i]; ++i) { // notify when script to hack is added in HTML head
-        if (mutations[i].addedNodes[0].nodeName == "SCRIPT" && mutations[i].addedNodes[0].src.match(/\/AuthenticationService.Authenticate?/g)) {
+        if (mutations[i].addedNodes[0].nodeName === "SCRIPT" && mutations[i].addedNodes[0].src.match(/\/AuthenticationService.Authenticate?/g)) {
             var str = mutations[i].addedNodes[0].src.match(/[?&]callback=.*[&$]/g);
             if (str) {
-                if (str[0][str[0].length - 1] == '&') {
+                if (str[0][str[0].length - 1] === '&') {
                     str = str[0].substring(10, str[0].length - 1);
                 } else {
                     str = str[0].substring(10);
