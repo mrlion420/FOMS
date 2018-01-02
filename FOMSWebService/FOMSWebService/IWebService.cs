@@ -416,6 +416,61 @@ namespace FOMSWebService
     }
 
     [DataContract]
+    public class IOAlarmData
+    {
+        private int alarmID;
+        private string description;
+        private bool alarmStatus;
+        private string alarmDateTime;
+        private string location;
+        private string alarmDescription;
+
+        [DataMember]
+        public string AlarmDescription
+        {
+            get { return alarmDescription; }
+            set { alarmDescription = value; }
+        }
+
+
+        [DataMember]
+        public string Location
+        {
+            get { return location; }
+            set { location = value; }
+        }
+
+        [DataMember]
+        public string AlarmDateTime
+        {
+            get { return alarmDateTime; }
+            set { alarmDateTime = value; }
+        }
+
+        [DataMember]
+        public bool AlarmStatus
+        {
+            get { return alarmStatus; }
+            set { alarmStatus = value; }
+        }
+
+        [DataMember]
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
+        }
+
+        [DataMember]
+        public int AlarmID
+        {
+            get { return alarmID; }
+            set { alarmID = value; }
+        }
+
+    }
+
+    [DataContract]
     public class UserData
     {
         private string userId;

@@ -877,7 +877,46 @@ namespace FOMSWebService
 
         #region Other Signals / IOAlarm Methods 
 
-        public 
+        public List<IOAlarmData> GetCurrentAlarmStatus(int vesselId, double timezone)
+        {
+            List<IOAlarmData> ioAlarmDataList = new List<IOAlarmData>();
+            List<IoAlarm> alarmList = IoAlarm.GetAll(vesselId);
+            foreach(IoAlarm alarm in alarmList)
+            {
+                IOAlarmData alarmData = new IOAlarmData();
+                alarmData.AlarmID = alarm.IoAlarmId;
+                alarmData.AlarmStatus = alarm.CurAlarmStatus;
+                if (alarm.CurAlarmStatus)
+                {
+                    //Alarm is on
+                    alarm.AlarmDescription = alarm.AlarmOnDesc;
+                    if(alarm.LastAlarmOnDatetime.Year != 9999)
+                    {
+                        alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(alarm.LastAlarmOnDatetime.AddHours(timezone));
+                    }
+                    else
+                    {
+                        alarmData.AlarmDateTime = string.Empty;
+                    }
+
+                }
+                else
+                {
+                    alarm.AlarmDescription = alarm.AlarmOffDesc;
+                    if(alarm.LastAlarmOffDatetime.Year != 9999)
+                    {
+                        alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(alarm.LastAlarmOffDatetime.AddHours(timezone));
+                    }
+                    else
+                    {
+                        alarmData.AlarmDateTime = string.Empty;
+                    }
+                }
+
+            }
+
+            return ioAlarmDataList;
+        }
 
         #endregion
 
