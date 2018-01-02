@@ -704,6 +704,101 @@ p{
     min-width: 170px;
 }
 
+/* ----------------- OTHER SIGNAL SECTION -----------------*/
+.other-signal{
+    display: flex;
+    flex-direction: column;
+}
+
+.other-signal .signal-status-container{
+    display: flex;
+    flex-direction: column;
+    height: 20%;
+    overflow: auto;
+    padding: 0px 10px 0px 0px;
+    border-bottom: 1.5px solid #4395F3;
+}
+
+.other-signal .signal-status-container i{
+    margin-right: 35px;
+}
+
+.other-signal .signal-status-container div{
+    display: flex;
+    align-items: center;
+    margin: 0px;
+    min-height: min-content;
+    height: 30px;
+}
+
+.other-signal .signal-status-container div p{
+    min-width: 200px;
+    margin-right: 35px;
+}
+
+.other-signal .signal-status-container div p:first-child{
+    font-weight: 900;
+}
+
+.other-signal .signal-status-container div p:nth-child(3){
+    margin-right: 90px;
+}
+
+.other-signal .query-container{
+    display: flex;
+    align-items: center;
+}
+
+.other-signal .query-container p{
+    width: 160px; 
+}
+
+.other-signal .query-container select{
+    font-size: 24px;
+    background: #3282E4;
+    margin : 0px 0px 0px 20px;
+    padding: 0px;
+}
+
+.other-signal .query-container select option{
+    background: white; 
+    color: black; 
+}
+
+.other-signal .table-container{
+    width: 100%;
+}
+
+.other-signal .table-container table{
+    width: 100%;
+    border-collapse: collapse;
+    border-left: 1.5px solid #3282E4;
+    border-right: 1.5px solid #3282E4;
+    border-bottom: 1.5px solid #3282E4;
+}
+
+.other-signal .table-container table th{
+    background-color: #3282E4;
+    color: white;
+    font-size: 22px;
+    border-right: 2.5px solid white;
+}
+
+.other-signal .table-container table th:last-child{
+    border-right: 0px;
+}
+
+.other-signal .table-container table td{
+    text-align: center;
+    font-size: 20px;
+    height: 45px;
+}
+
+.other-signal .table-container table tr:nth-child(odd){
+    background-color: rgb(195, 220, 250);
+}
+
+
 /* ----------------- LOGIN SECTION ---------------- */
 .login .wrapper{
     display: flex;

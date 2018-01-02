@@ -9,7 +9,6 @@ async function mainFunction(){
 	hideChartViews();
 	await getUserRelatedFleets();
 	await getUserRelatedVessels();
-	
 
 	await getAllEngineTypes();
 	await GetCurrentEngineData();

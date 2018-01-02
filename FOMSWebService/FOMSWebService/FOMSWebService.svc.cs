@@ -875,6 +875,12 @@ namespace FOMSWebService
 
         #endregion
 
+        #region Other Signals / IOAlarm Methods 
+
+        public 
+
+        #endregion
+
         #region Chart Related Methods
 
         public Stream GetSynchornizedChartByEngineId(int vesselId, double timezone,int querytime, string engineId, bool includeRefSignal)
@@ -1037,6 +1043,7 @@ namespace FOMSWebService
         public Stream GetEngineLiveChartPoint(int vesselId, double timezone, string timeOfLastPoint, string engineType)
         {
             string returnString = string.Empty;
+            
             try
             {
                 DateTime startTime = DateTimeExtension.UnixTimeToDateTime(Convert.ToDouble(timeOfLastPoint));

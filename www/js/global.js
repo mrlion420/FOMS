@@ -22,7 +22,8 @@ const MENU_PAGE = [
 	"VesselDashboard.html",
 	"fuelcons.html",
 	"",
-	"AnalogReading.html"
+	"AnalogReading.html",
+	"OtherSignal.html"
 ];
 
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
@@ -37,7 +38,8 @@ var MAP_MARKER = null;
 var INFO_WINDOW = new google.maps.InfoWindow();
 // Timezone 
 var TIMEZONE = 8;
-var USERID = 53;
+// var USERID = 53;
+var USERID = 38;
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;

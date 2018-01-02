@@ -28,13 +28,10 @@
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../js/external/moment.js"></script> 
-    <script type="text/javascript" src="../js/external/highcharts.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script type="text/javascript" src="../js/external/gauge.min.js"></script>
     <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
 
     <script type="text/javascript" src="../js/global.js"></script>
-    <script type="text/javascript" src="../js/analogReading.js"></script> 
+    <script type="text/javascript" src="../js/otherSignal.js"></script> 
 
     <title>FOMS</title>
 </head>
@@ -59,7 +56,7 @@
            
         </div>
         <div class="main-container main">
-            <div class="top-select-container">
+            <div class="top-select-container splitter-bottom">
                 <div>
                     <p>Fleet : </p>
                     <select id="fleetSelect">
@@ -86,59 +83,73 @@
                     <button id="submitBtn">Submit</button>
                 </div>                
             </div>
-            <div class="top-select-container splitter-bottom">
-                <div>
-                    <p>View Type : </p>
-                    <select id="viewTypeSelect">
-                        <option value="gauges">Gauges</option>
-                        <option value="chart">Chart</option>
-                    </select>
-                </div>
-                <div id="analogIdSelectDiv" class="hidden">
-                    <p>Analog : </p>
-                    <select id="analogIdSelect">
-                        
-                    </select>
-                </div>
-                <div id="checkboxDiv" class="hidden">
-                    <p>Include Reference Signal</p>
-                    <div class="checkbox">
-                        <input type="checkbox" value="1" id="checkboxInput" name="" />
-                        <label for="checkboxInput"></label>
+            <div class="wrapper other-signal" id="wrapper">
+                <div class="signal-status-container">
+                    <div>
+                        <p>ME Port Clutch Status </p>
+                        <i class="fa fa-toggle-off fa-2x alarm" aria-hidden="true"></i>
+                        <p>ME Port Clutch In</p>
+                        <p>11 Sept 17 11:35:21 AM</p>
+                    </div>
+                    <div>
+                        <p>ME Stbd Clutch Status</p>
+                        <i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>
+                        <p>ME Port Clutch In</p>
+                        <p>11 Sept 17 11:35:21 AM</p>
+                    </div>
+                    <div>
+                        <p>ME Stbd Clutch Status</p>
+                        <i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>
+                        <p>ME Port Clutch In</p>
+                        <p>11 Sept 17 11:35:21 AM</p>
                     </div>
                 </div>
-            </div>
-            <div class="wrapper analog-reading" id="wrapper">
-                <h1>Analog Reading</h1>
-                <div class="analog-body" id="analogBody">
-                   
+                <div class="query-container">
+                    <p>Query Period : </p>
+                    <select id="querySelect">
+                        <option></option>
+                    </select>
                 </div>
-            </div>
-            <div class="wrapper fuel-cons-chart" id="wrapperChart">
-                <div class="chart-container" id="chartContainer">
-
-                </div>
-                <div class="chart-values" id="chartValues">
-                    <!-- <div class="chart-item">
-                        <div class="main-value">
-                            <p>Est. Consumption Rate </p>
-                            <p>105.4</p>
-                        </div>
-                    </div>
-                    <div class="chart-item">
-                        <div class="main-value">
-                            <p>Est. Consumption Rate </p>
-                            <p>105.4</p>
-                        </div>
-                        <div class="normal-value">
-                            <p>Supply / Return Flow Rate</p>
-                            <p>1,180.0  1,024.0</p>
-                        </div>
-                        <div class="normal-value">
-                            <p>Supply / Return Flow Rate</p>
-                            <p>1,180.0  1,024.0</p>
-                        </div>
-                    </div> -->
+                <div class="table-container">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>DateTime</th>
+                                <th>Event</th>
+                                <th>Location</th>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                            <tr>
+                                <td>11 Sept 2017 11:99PM</td>
+                                <td>ME Port Clutch In</td>
+                                <td>01.17.47.S 106.18.20.E</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
