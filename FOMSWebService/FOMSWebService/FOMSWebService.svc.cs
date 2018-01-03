@@ -23,6 +23,9 @@ namespace FOMSWebService
     [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
     public class FOMSWebService : IWebService
     {
+        // Global Variables
+        public const string NOT_APPLICABLE = "N/A";
+
         // Logger Initialization 
         Logger log = new Logger(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + @"\log.txt");
         #region Common Methods
@@ -886,33 +889,61 @@ namespace FOMSWebService
                 IOAlarmData alarmData = new IOAlarmData();
                 alarmData.AlarmID = alarm.IoAlarmId;
                 alarmData.AlarmStatus = alarm.CurAlarmStatus;
+                alarmData.Description = alarm.AlarmDescription;
+
                 if (alarm.CurAlarmStatus)
                 {
                     //Alarm is on
-                    alarm.AlarmDescription = alarm.AlarmOnDesc;
+                    alarmData.AlarmDescription = alarm.AlarmOnDesc;
                     if(alarm.LastAlarmOnDatetime.Year != 9999)
                     {
                         alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(alarm.LastAlarmOnDatetime.AddHours(timezone));
                     }
                     else
                     {
-                        alarmData.AlarmDateTime = string.Empty;
+                        alarmData.AlarmDateTime = NOT_APPLICABLE;
                     }
 
                 }
                 else
                 {
-                    alarm.AlarmDescription = alarm.AlarmOffDesc;
+                    alarmData.AlarmDescription = alarm.AlarmOffDesc;
                     if(alarm.LastAlarmOffDatetime.Year != 9999)
                     {
                         alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(alarm.LastAlarmOffDatetime.AddHours(timezone));
                     }
                     else
                     {
-                        alarmData.AlarmDateTime = string.Empty;
+                        alarmData.AlarmDateTime = NOT_APPLICABLE;
                     }
                 }
+                ioAlarmDataList.Add(alarmData);
+            }
 
+            return ioAlarmDataList;
+        }
+
+        public List<IOAlarmData> GetIOAlarmByQuery(int vesselId, double timezone, int querytime)
+        {
+            List<IOAlarmData> ioAlarmDataList = new List<IOAlarmData>();
+            try
+            {
+                DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
+                DateTime endDateTime = DateTime.UtcNow;
+                List<EventAlarm> eventAlarmList = EventAlarm.GetAllByPeriod(vesselId, startDateTime, endDateTime);
+                foreach(EventAlarm singleEvent in eventAlarmList)
+                {
+                    IOAlarmData alarmData = new IOAlarmData();
+                    alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(singleEvent.Datetime.AddHours(timezone));
+                    alarmData.Description = singleEvent.Description;
+                    Position position = Position.GetByPositionId(singleEvent.PositionId);
+                    alarmData.Location = position.Wgs84Latitude + " " + position.Wgs84Longitude;
+                    ioAlarmDataList.Add(alarmData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
             }
 
             return ioAlarmDataList;

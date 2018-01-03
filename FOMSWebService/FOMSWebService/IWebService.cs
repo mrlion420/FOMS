@@ -99,6 +99,25 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<List<AnalogData>> GetCurrentAnalogData(int vesselId);
 
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetSynchornizedChartByAnalogId(int vesselId, double timezone, int querytime, string analogId, bool includeRefSignal);
+
+        #region Other Signal / IOAlarm Methods
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<IOAlarmData> GetCurrentAlarmStatus(int vesselId, double timezone);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<IOAlarmData> GetIOAlarmByQuery(int vesselId, double timezone, int querytime);
+
+        #endregion
+
+        #region Chart Related Methods
+
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
@@ -119,9 +138,7 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetSynchornizedChartByEngineId(int vesselId, double timezone, int querytime, string engineId, bool includeRefSignal);
 
-        [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Stream GetSynchornizedChartByAnalogId(int vesselId, double timezone, int querytime, string analogId, bool includeRefSignal);
+        #endregion
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -423,6 +440,7 @@ namespace FOMSWebService
         private bool alarmStatus;
         private string alarmDateTime;
         private string location;
+
         private string alarmDescription;
 
         [DataMember]

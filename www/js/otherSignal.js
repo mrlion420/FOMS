@@ -5,7 +5,8 @@ $(document).ready(function () {
 
 async function mainfunction(){
     await getUserRelatedFleets();
-    await getUserRelatedVessels();
+	await getUserRelatedVessels();
+	await GetCurrentAlarmStatus();
 }
 
 async function getUserRelatedFleets(){
@@ -79,4 +80,33 @@ function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
         
     });
+}
+
+async function GetCurrentAlarmStatus(){
+	var method = "GetCurrentAlarmStatus";
+	var parameters = PARAMETER_COMBINED;
+	try{
+		let data = await ajaxGet(method, parameters);
+		populateCurrentAlarmStatus(data);
+	}catch(ex){
+		console.log(ex);
+	}
+}
+
+function populateCurrentAlarmStatus(data){
+	$("#signalStatusContainer").html("");
+	for(var i = 0; i < data.length; i++){
+		var result = data[i];
+		var htmlString = "<div>";
+		htmlString += "<p>" + result.Description + "</p>";
+		if(result.AlarmStatus){
+			htmlString += '<i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>';
+		}else{
+			htmlString += '<i class="fa fa-toggle-off fa-2x alarm" aria-hidden="true"></i>';
+		}
+		htmlString += "<p>" + result.AlarmDescription  + "</p>";
+		htmlString += "<p>" + result.AlarmDateTime  + "</p>";
+		htmlString += "</div>";
+		$("#signalStatusContainer").append(htmlString);
+	}
 }

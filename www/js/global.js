@@ -38,8 +38,8 @@ var MAP_MARKER = null;
 var INFO_WINDOW = null;
 // Timezone 
 var TIMEZONE = 8;
-// var USERID = 53;
-var USERID = 38;
+var USERID = 53;
+// var USERID = 38;
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;
