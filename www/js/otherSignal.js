@@ -3,10 +3,17 @@ $(document).ready(function () {
 
 });
 
+var maxTableRows = 8;
+
 async function mainfunction(){
+	tablePaginationClickHandler(maxTableRows);
+	selectDropdownChangeEvent();
+	submitBtnClickHandler();
+
     await getUserRelatedFleets();
 	await getUserRelatedVessels();
 	await GetCurrentAlarmStatus();
+	await GetIOAlarmByQuery();
 }
 
 async function getUserRelatedFleets(){
@@ -78,8 +85,16 @@ function populateVesselSelectBox(data){
 
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
-        
-    });
+		GetCurrentAlarmStatus();
+		GetIOAlarmByQuery();
+	});
+	
+}
+
+function selectDropdownChangeEvent(){
+	$("#querySelect").change(function(){
+		GetIOAlarmByQuery();
+	});
 }
 
 async function GetCurrentAlarmStatus(){
@@ -109,4 +124,56 @@ function populateCurrentAlarmStatus(data){
 		htmlString += "</div>";
 		$("#signalStatusContainer").append(htmlString);
 	}
+}
+
+async function GetIOAlarmByQuery(){
+	var method = "GetIOAlarmByQuery";
+	var parameters = PARAMETER_COMBINED;
+	parameters.querytime = $("#querySelect").val();
+	// parameters.querytime = 990;
+	try{
+		let data = await ajaxGet(method, parameters);
+		populateIOAlarmTable(data);
+	}catch(ex){
+		console.log(ex);
+	}
+}
+
+function populateIOAlarmTable(data){
+	var htmlString = "<table>";
+	htmlString += "<tr>";
+	htmlString += "<th>DateTime</th>";
+	htmlString += "<th>Description</th>";
+	htmlString += "<th>Location</th>";
+	htmlString += "</tr>";
+	var currentRowCount = 1;
+	var pageCount = 1;
+	for(var i = 0; i < data.length; i++){
+		if(currentRowCount > maxTableRows){
+			pageCount++;
+			currentRowCount = 1;
+		}
+		if(i < maxTableRows){
+			htmlString += "<tr id='table-" + i + "'>";	
+		}else{
+			htmlString += "<tr id='table-" + i + "' style='display:none;'>";	
+		}
+
+		var result = data[i];
+		htmlString += "<td>";
+		htmlString += result.AlarmDateTime;
+		htmlString += "</td>";
+		htmlString += "<td>";
+		htmlString += result.AlarmDescription;
+		htmlString += "</td>";
+		htmlString += "<td>";
+		htmlString += result.Location;
+		htmlString += "</td>";
+		htmlString += "</tr>";
+		currentRowCount++;
+	}
+	htmlString += "</table>";
+	$("#totalTablePage").text(pageCount);
+	$("#tableContainer").html(htmlString);
+	paginationTable(maxTableRows);
 }

@@ -217,6 +217,45 @@ function customAlert(title, message, redirect , redirectUrl){
 	}
 }
 
+function paginationTable(maxTableRows){
+	var currentPage = parseInt($("#currentTablePage").text());
+	var maxCurrentItem = maxTableRows * currentPage;
+	var counter = 0;
+	//Calculate the counter 
+	if(currentPage !== 1){
+		counter = (maxTableRows * (currentPage - 1)) + 1;
+	}
+	var maxPage = parseInt($("#totalTablePage").text());
+	
+	// $("#" + tableName + "tbody tr").hide();
+	for(var i = 0; i < maxPage * maxTableRows; i++){
+		$("#table-"+ i).hide();
+	}
+
+	for(i = counter - 1; i < maxCurrentItem; i++ ){
+		$("#table-"+ i).show();
+	}
+}
+
+function tablePaginationClickHandler(maxTableRows){
+	$("#forwardPagination").click(function(){
+		var maxPage = parseInt($("#totalTablePage").text());
+		var currentPage = parseInt($("#currentTablePage").text());
+		if(currentPage !== maxPage){
+			$("#currentTablePage").text(currentPage + 1);
+		}
+		paginationTable(maxTableRows);
+	});
+
+	$("#backPagination").click(function(){
+		var currentPage = parseInt($("#currentTablePage").text());
+		if(currentPage !== 1){
+			$("#currentTablePage").text(currentPage - 1);
+		}
+		paginationTable(maxTableRows);
+	});
+}
+
 function setStartEndMarkerOnPopupMapLeaflet(latlonArray, map){
 	var startLat = latlonArray[0].Latitude;
 	var startLon = latlonArray[0].Longitude;

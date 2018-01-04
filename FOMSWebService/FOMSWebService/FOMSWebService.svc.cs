@@ -935,7 +935,7 @@ namespace FOMSWebService
                 {
                     IOAlarmData alarmData = new IOAlarmData();
                     alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(singleEvent.Datetime.AddHours(timezone));
-                    alarmData.Description = singleEvent.Description;
+                    alarmData.AlarmDescription = singleEvent.Description;
                     Position position = Position.GetByPositionId(singleEvent.PositionId);
                     alarmData.Location = position.Wgs84Latitude + " " + position.Wgs84Longitude;
                     ioAlarmDataList.Add(alarmData);

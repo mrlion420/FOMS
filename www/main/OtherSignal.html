@@ -77,24 +77,12 @@
             </div>
             <div class="wrapper other-signal" id="wrapper">
                 <div class="signal-status-container" id="signalStatusContainer">
-                    <div>
+                    <!-- <div>
                         <p>ME Port Clutch Status </p>
                         <i class="fa fa-toggle-off fa-2x alarm" aria-hidden="true"></i>
                         <p>ME Port Clutch In</p>
                         <p>11 Sept 17 11:35:21 AM</p>
-                    </div>
-                    <div>
-                        <p>ME Stbd Clutch Status</p>
-                        <i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>
-                        <p>ME Port Clutch In</p>
-                        <p>11 Sept 17 11:35:21 AM</p>
-                    </div>
-                    <div>
-                        <p>ME Stbd Clutch Status</p>
-                        <i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>
-                        <p>ME Port Clutch In</p>
-                        <p>11 Sept 17 11:35:21 AM</p>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="query-container">
                     <p>Query Period : </p>
@@ -104,7 +92,7 @@
                         <option value="336">Last 14 Days</option>
                     </select>
                 </div>
-                <div class="table-container">
+                <div class="table-container" id="tableContainer">
                     <table>
                         <tbody>
                             <tr>
@@ -171,12 +159,12 @@
                     </table>
                 </div>
                 <div class="table-pagination">
-                    <i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true"></i>
+                    <i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true" id="backPagination"></i>
                     <p>Page</p>
                     <p id="currentTablePage">1</p>
                     <p> of </p>
-                    <p id="maxTablePage">2</p>
-                    <i class="fa fa-arrow-circle-right fa-2x" aria-hidden="true"></i>
+                    <p id="totalTablePage">2</p>
+                    <i class="fa fa-arrow-circle-right fa-2x" aria-hidden="true" id="forwardPagination"></i>
                 </div>
             </div>
         </div>
