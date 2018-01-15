@@ -141,7 +141,7 @@ namespace FOMSWebService
         #endregion
 
         [OperationContract]
-        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
         ResultData LoginUser(string userId, string password);
 
     }
@@ -489,20 +489,20 @@ namespace FOMSWebService
     }
 
     [DataContract]
-    public class UserData
+    public class GlobalData
     {
-        private string userId;
-        private string username;
+        private int userId;
+        private double timezone;
 
-        public string Username
+        public double Timezone
         {
-            get { return username; }
-            set { username = value; }
+            get { return timezone; }
+            set { timezone = value; }
         }
 
 
         [DataMember]
-        public string UserId
+        public int UserId
         {
             get { return userId; }
             set { userId = value; }

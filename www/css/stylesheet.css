@@ -50,11 +50,14 @@ p{
 /* --------------------- HEADER SECTION -------------------- */
 .header{
     position: fixed;
-    background-color: #3282E4;
+    background-color: #d5d5d5;
     display: flex;
     justify-content: center;
     height: 70px;
     width: 100%;
+    color: black;
+    border-bottom: 1.5px solid black;
+    z-index: 10;
 }
 
 .header img{
@@ -96,7 +99,7 @@ p{
 
 /* --------------------- SIDE MENU SECTION -------------------- */
 .side-menu{
-    margin-top: 70px;
+    margin-top: 72px;
     position: fixed;
     width: 15em;
     /* height: calc(100% - 70px); */
@@ -128,7 +131,7 @@ p{
 }
 
 .side-menu .wrapper .selected{
-    background-color: #36A148;
+    background-color: #3282E4;
 }
 
 .side-menu .wrapper img{
@@ -338,9 +341,7 @@ p{
 }
 
 .main .wrapper .left-container .chart-container{
-    display: flex;
     width: 95%;
-    height: 40%;
 }
 
 .main .wrapper .left-container .chart-container .chart{
@@ -349,6 +350,8 @@ p{
 
 .main .right-container{
     width: 55%;
+    display: flex;
+    flex-direction: column;
 }
 
 .main .right-container div:first-child{
@@ -379,9 +382,10 @@ p{
 }
 
 .main .wrapper .right-container .map-container{
-    height: 50%;
+    height: 450px;
     width: 100%;
     position: relative;
+    margin: 0px 0px 10px 0px;
 }
 
 .main .wrapper .right-container .map-container #map{
@@ -492,7 +496,7 @@ p{
     width: 100%;
     background-color: #4395F3;
     overflow: auto;
-    height: 25%;
+    height: 320px;
     margin: 10px 0px 10px 0px;
     
 }
@@ -813,9 +817,15 @@ p{
 
 
 /* ----------------- LOGIN SECTION ---------------- */
+.login{
+    width: 100%;
+    margin: 70px 0px 0px 0px;
+}
+
 .login .wrapper{
     display: flex;
     justify-content: center;
+    width: 100%;
 }
 
 .login .wrapper .login-container{
@@ -846,6 +856,10 @@ p{
 
     background-color: #36A148;
     color: white;
+}
+
+#imgLogout{
+    cursor: pointer;
 }
 /* ----------------- GLOBAL SECTION ---------------- */
 ::-webkit-scrollbar-track

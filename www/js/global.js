@@ -1,10 +1,13 @@
 $(document).ready(function(){
 	loadSideMenu();
+	logoutBtnClickHandler();
 });
 
 // GLOBAL VARIABLES
-const WEBSERVICEHOST = "http://122.11.177.14:1703/FOMSWebService.svc/"; // For web service
+// const WEBSERVICEHOST = "http://122.11.177.14:1703/FOMSWebService.svc/"; // For web service
 // const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
+
 const MENU_ID = [
 	"itemFleet",
 	"itemVessel",
@@ -13,7 +16,6 @@ const MENU_ID = [
 	"itemAnalog",
 	"itemOtherSignal",
 	"itemReports",
-	"itemEventBook",
 	"itemSettings"
 ];
 
@@ -23,7 +25,8 @@ const MENU_PAGE = [
 	"fuelcons.html",
 	"",
 	"AnalogReading.html",
-	"OtherSignal.html"
+	"OtherSignal.html",
+	"Report.html"
 ];
 
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
@@ -44,7 +47,10 @@ var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;
 var TEMP_VESSELID = 0; // Holder for drop down changes 
+
 const DELIMITER = ";";
+const TRUE = "True";
+const FALSE = "False";
 
 var PARAMETER_USERID = { userId: USERID };
 var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
@@ -59,12 +65,14 @@ function resetConstArrays(){
 	PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
 }
 
-function ajaxPost(methodName){
+function ajaxPost(methodName, data){
     var url = WEBSERVICEHOST + methodName;
     return $.ajax({
         type: "POST",
         url: url,
-        dataType: "json"
+		dataType: "json",
+		contentType: "application/json;charset=utf-8",
+		data : JSON.stringify(data)
     });
 }
 
@@ -134,6 +142,51 @@ function getCurrentPage(){
 	var lastIndex = currentUrl.lastIndexOf("/");
 	var currentPage = currentUrl.substring(lastIndex + 1);
 	return currentPage;
+}
+
+function logoutBtnClickHandler(){
+	$("#imgLogout").click(function(){
+		redirectPageWithReturn("/main/Login.html");
+	});
+}
+
+function customAlert(title, message, redirect , redirectUrl){
+	if(redirect){
+		$("#dialog").dialog({
+		width: 400,
+			modal: true,
+			title: title,
+			open:function(){
+				$(this).html(message);
+			},
+			buttons:[
+				{
+				text: "Ok",
+				click:function(){
+					window.location.replace(redirectUrl);
+					$(this).dialog("close");
+				}
+			}
+		]
+	});
+	}else{
+		$("#dialog").dialog({
+			width: 400,
+			modal: true,
+			title: title,
+			open:function(){
+				$(this).html(message);
+			},
+			buttons:[
+				{
+					text: "Ok",
+					click:function(){
+						$(this).dialog("close");
+					}
+				}
+			]
+		});
+	}
 }
 
 function redirectPageWithoutReturn(url){
