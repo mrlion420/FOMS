@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
@@ -8,16 +9,15 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
 
     <!-- CSS Files import -->
-    <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.css">
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
-    
-    <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../css/jquery.datetimepicker.min.css" />
 
     <!--- Localization Imports -->
     <!-- <link rel="localizations" href="localizations/english.json" type="application/vnd.oftn.l10n+json" /> -->
@@ -27,14 +27,15 @@
     <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../js/external/moment.js"></script> 
-    <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
+    <script type="text/javascript" src="../js/external/moment.js"></script>
+    <script type="text/javascript" src="../js/external/jquery.datetimepicker.full.min.js"></script>
 
     <script type="text/javascript" src="../js/global.js"></script>
-    <script type="text/javascript" src="../js/otherSignal.js"></script> 
+    <script type="text/javascript" src="../js/report.js"></script>
 
     <title>FOMS</title>
 </head>
+
 <body>
     <div class="header">
         <div>
@@ -47,16 +48,16 @@
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
-            <img src="../img/logout.png" id="imgLogout"/>
+            <img src="../img/logout.png" id="imgLogout" />
         </div>
     </div>
-    
+
     <div class="body-wrapper">
         <div class="side-menu" id="sideMenu">
-           
+
         </div>
         <div class="main-container main">
-            <div class="top-select-container splitter-bottom">
+            <div class="top-select-container">
                 <div>
                     <p>Fleet : </p>
                     <select id="fleetSelect">
@@ -73,12 +74,27 @@
                 </div>
                 <div>
                     <button id="submitBtn">Submit</button>
-                </div>                
+                </div>
+
+            </div>
+            <div class="top-select-container splitter-bottom">
+                <div>
+                    <p>Report Type : </p>
+                    <select id="selectReportType">
+                        <option value="FuelCons_Report">Fuel Cons</option>
+                        <option value="Analog_Report">Analog Reading</option>
+                        <option value="Position_Report">Position</option>
+                        <option value="Event_Report">Events</option>
+                    </select>
+                </div>
             </div>
             <div class="wrapper report" id="wrapper">
-                
+                <div id="selectMainContainer">
+                   
+                </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

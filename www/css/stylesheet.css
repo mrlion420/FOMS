@@ -146,7 +146,8 @@ p{
 
 /* --------------------- MAIN CONTAINER SECTION -------------------- */
 .main-container{
-    width: 84%;
+    /* width: 84%; */
+    width: calc(100% - 15.5em);
     margin-left: 15.5em;
     margin-top: 70px;
 }
@@ -164,18 +165,40 @@ p{
 .main-container .top-select-container > div{
     display: flex;
     align-items: center;
+    width: 450px;
+    margin: 10px 0px 10px 0px;
+}
+
+.main-container .top-select-container > div:nth-child(3){
+    display: flex;
+    align-items: center;
     width: 350px;
 }
 
+.main-container .top-select-container > div:nth-child(4){
+    display: flex;
+    align-items: center;
+    width: 150px;
+}
+
 .main-container .top-select-container p{
-    min-width: 120px;
+    min-width: 150px;
+    margin: 0px;
 }
 
 .main-container .top-select-container select{
-    font-size: 20px;
+    font-size: 18px;
     background-color: #3282E4;
     padding: 6px 10px;
-    max-width: 300px;
+    max-width: 400px;
+    min-width: 250px;
+}
+
+.main-container .top-select-container div:nth-child(3) select{
+    font-size: 18px;
+    background-color: #3282E4;
+    padding: 6px 10px;
+    min-width: 150px;
 }
 
 .main-container .top-select-container select option{
@@ -184,20 +207,30 @@ p{
 }
 
 .main-container .top-select-container button{
-    font-size: 20px;
+    font-size: 18px;
     /* border: 1.5px solid grey; */
     border: 0px;
     border-radius: 10px;
-    padding: 10px 25px;
+    padding: 8px 25px;
     font-weight: 500;
     cursor: pointer;
     background-color: #0A2444;
     color: white;
+    margin: 0px 10px 0px 0px;
 }
 
 .main-container .top-select-container button:hover{
     background-color: #36A148;
     color :white;
+}
+
+.main-container .top-select-container input{
+    
+    min-width: 238px;
+    background-color: #3282E4;
+    color: white;
+    border: 1px solid black;
+    padding: 6px 5px;
 }
 
 #checkboxDiv{
@@ -815,6 +848,12 @@ p{
     background-color: rgb(195, 220, 250);
 }
 
+/* ----------------- REPORT SECTION ---------------- */
+.report{
+    display: flex;
+    flex-direction: column;
+}
+
 
 /* ----------------- LOGIN SECTION ---------------- */
 .login{
@@ -871,7 +910,8 @@ p{
 
 ::-webkit-scrollbar
 {
-	width: 8px;
+    width: 8px;
+    height: 5px;
 	background-color: #F5F5F5;
 }
 
@@ -894,6 +934,18 @@ p{
 
 .table-pagination p{
     margin-right: 20px;
+}
+
+select{
+    font-size: 20px;
+    background-color: #3282E4;
+    padding: 6px 10px;
+    max-width: 300px;
+}
+
+select option{
+    background: white; 
+    color: black; 
 }
 
 /* ----------------- COLOR SECTION ---------------- */

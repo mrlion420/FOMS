@@ -26,7 +26,8 @@ const MENU_PAGE = [
 	"",
 	"AnalogReading.html",
 	"OtherSignal.html",
-	"Report.html"
+	"Report.html",
+	""
 ];
 
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
@@ -229,45 +230,6 @@ function refreshPage(){
 function removeSpace(str){
 	str = str.replace(/\s/g, '');
 	return str;
-}
-
-function customAlert(title, message, redirect , redirectUrl){
-	if(redirect){
-		$("#dialog").dialog({
-		width: 400,
-			modal: true,
-			title: title,
-			open:function(){
-				$(this).html(message);
-			},
-			buttons:[
-				{
-				text: "Ok",
-				click:function(){
-					window.location.replace(redirectUrl);
-					$(this).dialog("close");
-				}
-			}
-		]
-	});
-	}else{
-		$("#dialog").dialog({
-			width: 400,
-			modal: true,
-			title: title,
-			open:function(){
-				$(this).html(message);
-			},
-			buttons:[
-				{
-					text: "Ok",
-					click:function(){
-						$(this).dialog("close");
-					}
-				}
-			]
-		});
-	}
 }
 
 function paginationTable(maxTableRows){
