@@ -175,6 +175,23 @@ namespace FOMSWebService
             return vesselResultList;
         }
 
+        public DateTimeData GetCurrentDatetime(int userId, double timezone)
+        {
+            DateTimeData datetimeData = new DateTimeData();
+            try
+            {
+                DateTime today = DateTime.UtcNow.AddHours(timezone);
+                datetimeData.StartDatetime = DateTimeExtension.DisplayDateWithYear(today);
+                datetimeData.EndDatetime = DateTimeExtension.DisplayDateWithYear(today.AddDays(1));
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return datetimeData;
+        }
+
         #endregion
 
         #region Login Page Methods

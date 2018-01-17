@@ -15,6 +15,9 @@ namespace FOMSWebService
     [ServiceContract]
     public interface IWebService
     {
+
+        #region Common Methods
+
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<ResultData> GetUserRelatedCompany(int userId);
@@ -31,6 +34,12 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<ResultData> GetUserRelatedVessels(int userId, int fleetId);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        DateTimeData GetCurrentDatetime(int userId, double timezone);
+
+        #endregion
+        
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<EventData> GetRecentEventList(int vesselId, double timezone);
@@ -148,6 +157,28 @@ namespace FOMSWebService
 
 
     // Use a data contract as illustrated in the sample below to add composite types to service operations.
+    [DataContract]
+    public class DateTimeData
+    {
+        private string startDatetime;
+        private string endDatetime;
+
+        [DataMember]
+        public string EndDatetime
+        {
+            get { return endDatetime; }
+            set { endDatetime = value; }
+        }
+
+        [DataMember]
+        public string StartDatetime
+        {
+            get { return startDatetime; }
+            set { startDatetime = value; }
+        }
+
+    }
+
     [DataContract]
     public class ResultData
     {
