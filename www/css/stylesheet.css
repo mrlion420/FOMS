@@ -105,6 +105,7 @@ p{
     /* height: calc(100% - 70px); */
     background-color: #0A2444;
     height: 100%;
+    z-index: 9;
 }
 
 .side-menu .wrapper{
@@ -192,6 +193,8 @@ p{
     padding: 6px 10px;
     max-width: 400px;
     min-width: 250px;
+    border: 1px solid black;
+    color: white;
 }
 
 .main-container .top-select-container div:nth-child(3) select{
@@ -852,6 +855,10 @@ p{
 .report{
     display: flex;
     flex-direction: column;
+}
+
+.report .checkbox{
+    margin: 0px;
 }
 
 

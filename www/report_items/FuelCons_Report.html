@@ -1,22 +1,24 @@
 <div class="top-select-container">
     <div>
         <p>Engine Type : </p>
-        <select id="engineType">
-            <option>Main Engine</option>
+        <select id="selectMainType">
+            
         </select>
     </div>
     <div>
         <p>Interval : </p>
         <select id="selectInterval">
-            <option>Hourly</option>
-            <option>Daily</option>
+            <option value="0.25">15 Mins</option>
+            <option value="0.5">30 Mins</option>
+            <option value="1">Hourly</option>
+            <option value="24" selected>Daily</option>
         </select>
     </div>
     <div>
         <p>Chart Type : </p>
         <select id="selectChartType">
-            <option>Line Chart</option>
-            <option>Column Chart</option>
+            <option value="line">Line Chart</option>
+            <option value="column">Column Chart</option>
         </select>
     </div>
 </div>
