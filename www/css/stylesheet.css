@@ -861,6 +861,58 @@ p{
     margin: 0px;
 }
 
+.report .chart{
+    width: 100%;
+    height: 450px;
+}
+
+.report .chart-item{
+    display: flex;
+    flex: 1;
+    margin: 10px 0px 10px 0px; 
+}
+
+.report .chart-item .chart-summary{
+    width: 50%;
+}
+
+.report .chart-item .chart-summary table{
+    width: 100%;
+    border-collapse: collapse;
+    border-left: 1.5px solid #3282E4;
+    border-right: 1.5px solid #3282E4;
+    border-bottom: 1.5px solid #3282E4;
+    
+}
+
+.report .chart-item .chart-summary table th{
+    background-color: #3282E4;
+    color: white;
+    font-size: 20px;
+    border-right: 2.5px solid white;
+    padding: 8px 0px;
+}
+
+.report .chart-item .chart-summary table th:last-child{
+    border-right: 0;
+}
+
+.report .chart-item .chart-summary table td{
+    text-align: center;
+    font-size: 18px;
+    height: 35px;
+}
+
+.report .chart-item .event-container{
+    margin: 0px 0px 0px 10px;
+    width: 49%;
+}
+
+.report .chart-item .event-container p{
+    margin: 0px 0px 5px 0px;
+    padding: 0;
+}
+
 
 /* ----------------- LOGIN SECTION ---------------- */
 .login{

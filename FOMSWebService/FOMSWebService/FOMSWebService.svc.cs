@@ -970,6 +970,59 @@ namespace FOMSWebService
 
         #endregion
 
+
+        #region Report Methods
+
+        public List<ResultData> GetAllAnalogTypes(int vesselId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                List<Analog> analogList = Analog.GetAll(vesselId);
+                foreach(Analog analog in analogList)
+                {
+                    ResultData resultData = new ResultData();
+                    resultData.Key = analog.AnalogCode.ToString();
+                    resultData.Result = analog.ShortDescription;
+                    resultDataList.Add(resultData);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
+        }
+
+        public List<ResultData> GetAllEventTypes(int vesselId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                List<SystemCode> eventCodeList = SystemCode.GetSysCodeList(BLL_Enum._SYS_CODE_TYPE.EVENT_TYPE, false, false);
+                foreach(SystemCode singleEvent in eventCodeList)
+                {
+                    ResultData resultData = new ResultData();
+                    if (!singleEvent.SysCodeDesc.Equals("None"))
+                    {
+                        resultData.Key = singleEvent.SysCodeId.ToString();
+                        resultData.Result = singleEvent.SysCodeDesc.ToString();
+                        resultDataList.Add(resultData);
+                    }
+                }
+                resultDataList.Sort((a,b) => b.Key.CompareTo(a.Key));
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
+        }
+
+        #endregion
+
         #region Chart Related Methods
 
         public Stream GetSynchornizedChartByEngineId(int vesselId, double timezone,int querytime, string engineId, bool includeRefSignal)

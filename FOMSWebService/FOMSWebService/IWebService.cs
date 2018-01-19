@@ -125,6 +125,17 @@ namespace FOMSWebService
 
         #endregion
 
+        #region Report Methods
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetAllAnalogTypes(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetAllEventTypes(int vesselId);
+        #endregion
+
         #region Chart Related Methods
 
         [OperationContract]

@@ -140,7 +140,7 @@ function populateFleetSelectBox(data){
 
 async function getUserRelatedVessels(){
     var method = "GetUserRelatedVessels";
-    var parameters = PARAMETER_USERID;
+    let parameters = PARAMETER_USERID;
     parameters.fleetId = FLEETID;
     try{
         let data = await ajaxGet(method, parameters);
@@ -269,7 +269,7 @@ function populateLastOperationMode(data) {
 
 async function getEngineTotalAndEstConsumption() {
     var method = "GetEngineTotalAndEstConsumption";
-    var parameters = PARAMETER_VESSELID;
+    let parameters = PARAMETER_VESSELID;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try {
         let data = await ajaxGet(method, parameters);
@@ -277,7 +277,7 @@ async function getEngineTotalAndEstConsumption() {
     } catch (ex) {
         console.log(ex);
     }
-    resetConstArrays();
+    //resetConstArrays();
 }
 
 function populateEngineTotalAndEstConsumption(data){
@@ -316,7 +316,7 @@ function populateAllEngineTypesToSelect(data){
 
 async function createEngineChartByEngineType(){
     var method = "GetDailyEngineChartByEngineType";
-    var parameters = PARAMETER_COMBINED;
+    let parameters = PARAMETER_COMBINED;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
         let data = await ajaxGet(method, parameters);
@@ -325,7 +325,7 @@ async function createEngineChartByEngineType(){
     }catch(ex){
         console.log(ex);
     }
-    resetConstArrays();
+    //resetConstArrays();
 }
 
 function createChart(){
@@ -365,7 +365,7 @@ async function loadLiveChartPoint(chart){
     var maxLiveNumber = 30;
     var timeOfLastPoint = getTimeofLastPoint(chart.series[0].data);
     var method = "GetEngineLiveChartPoint";
-    var parameters = PARAMETER_COMBINED;
+    let parameters = PARAMETER_COMBINED;
     parameters.timeOfLastPoint = timeOfLastPoint;
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try{
@@ -374,7 +374,7 @@ async function loadLiveChartPoint(chart){
     }catch(ex){
         console.log(ex);
     }
-    resetConstArrays();
+    //resetConstArrays();
 }
 
 function addLiveChartPointToChart(data , chart){
@@ -469,8 +469,8 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType){
 
 async function generateStaticMapFromQueryTime(){
     var method = "GenerateMapFromQueryTime";
-    resetConstArrays();
-    var parameters = PARAMETER_VESSELID;
+    //resetConstArrays();
+    let parameters = PARAMETER_VESSELID;
     parameters.queryTime = SELECTED_POSITION_QUERY;
     try{
         await initMap("map");
@@ -481,7 +481,7 @@ async function generateStaticMapFromQueryTime(){
     }catch(ex){
         console.log(ex);
     }
-    resetConstArrays();
+    //resetConstArrays();
 }
 
 function addPolylinesToMap(data){
@@ -554,6 +554,8 @@ function selectDropdownChangeEvent(){
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
         VESSELID = TEMP_VESSELID;
+        resetConstArrays();
+
         getLastOperationMode(); 
         createEngineChartByEngineType();
         getRecentEventList();
