@@ -11,7 +11,7 @@ namespace CommonHelper
 {
     public class EngineExtension
     {
-        public static DataSet AddChartWithTicksAndUnit(DataSet dsData, double timezone)
+        public static DataSet AddChartWithTicksAndUnit(DataSet dsData, double timezone, string unit)
         {
             foreach (DataTable engineTable in dsData.Tables)
             {
@@ -21,9 +21,8 @@ namespace CommonHelper
                 foreach (DataRow row in engineTable.Rows)
                 {
                     DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString()).AddHours(timezone);
-                    string engineUnit = "ℓ/hr";
                     string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
-                    row["Unit"] = engineUnit;
+                    row["Unit"] = unit;
                     row["Ticks"] = ticksStr;
                 }
             }

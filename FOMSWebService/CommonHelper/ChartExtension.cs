@@ -33,17 +33,30 @@ namespace CommonHelper
 
         public static DataSet CombineDataSets_IntoOne(DataSet resultDataset, DataSet secondDataset)
         {
-            foreach(DataTable dtData in secondDataset.Tables)
+            foreach (DataTable dtData in secondDataset.Tables)
             {
                 DataTable holder = dtData.Copy();
                 resultDataset.Tables.Add(holder);
             }
-            
+
             return resultDataset;
+        }
+
+        public static int GetNumOfPointsByPeriod(int querytime, DateTime startDatetime, DateTime endDatetime)
+        {
+            int numOfPoints = 0;
+
+            while (startDatetime < endDatetime)
+            {
+                startDatetime = startDatetime.AddSeconds(querytime); 
+                numOfPoints++;
+            }
+
+            return numOfPoints;
         }
 
     }
 
-       
-    
+
+
 }

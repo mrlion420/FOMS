@@ -134,9 +134,18 @@ namespace FOMSWebService
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<ResultData> GetAllEventTypes(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<EventData> GetAllEventsByQuery(int vesselId, double timezone, string startDatetimeStr, string endDatetimeStr);
+
         #endregion
 
         #region Chart Related Methods
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetEngineChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string engineType);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]

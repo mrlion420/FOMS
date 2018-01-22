@@ -1021,11 +1021,79 @@ namespace FOMSWebService
             return resultDataList;
         }
 
+        public List<EventData> GetAllEventsByQuery(int vesselId, double timezone, string startDatetimeStr, string endDatetimeStr)
+        {
+
+            List<EventData> eventDataList = new List<EventData>();
+            try
+            {
+                DateTime startDatetime = DateTime.Parse(startDatetimeStr).AddHours(-timezone);
+                DateTime endDatetime = DateTime.Parse(endDatetimeStr).AddHours(-timezone);
+                List<EventList> eventList = EventList.GetAll(vesselId, startDatetime, endDatetime, BLL_Enum._EVENT_TYPE.All, BLL_Enum._SORT_ORDER.DESC);
+                foreach(EventList singleEvent in eventList)
+                {
+                    EventData singleEventData = new EventData();
+                    singleEventData.Datetime = DateTimeExtension.DisplayDateWithYear(singleEvent.EventDateTime);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return eventDataList;
+        }
+
         #endregion
 
         #region Chart Related Methods
 
-        public Stream GetSynchornizedChartByEngineId(int vesselId, double timezone,int querytime, string engineId, bool includeRefSignal)
+        public Stream GetEngineChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string engineType)
+        {
+            string returnString = string.Empty;
+            try
+            {
+                int noOfPoints = 0;
+                string unit = "ℓ";
+
+                querytime = querytime * 3600; // Change hours querytime to seconds
+                BLL_Enum._VIEW_INTERVAL viewIntervalEnum = Helper.ViewIntervalMapping(querytime);
+                BLL_Enum._ENGINE engineTypeEnum = EnumExtension.GetEngineEnum_FromEngineType(engineType);
+
+                DateTime startDatetime = DateTime.Parse(startDatetimeStr).AddHours(-timezone);
+                DateTime endDatetime = DateTime.Parse(endDatetimeStr).AddHours(-timezone);
+                noOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
+                DataSet resultDs = new DataSet();
+
+                if (!engineType.Equals("99"))
+                {
+                    resultDs = EngineReading.GetView(vesselId, engineTypeEnum, viewIntervalEnum, noOfPoints, startDatetime, false, false);
+                    resultDs = EngineExtension.AddChartWithTicksAndUnit(resultDs, timezone, unit);
+                }
+                else
+                {
+                    List<Engine> engineList = Engine.GetAll(vesselId);
+                    foreach(Engine engine in engineList)
+                    {
+                        DataSet holderDs = EngineReading.GetView(vesselId, engineTypeEnum, viewIntervalEnum, noOfPoints, startDatetime, false, false);
+                        holderDs = EngineExtension.AddChartWithTicksAndUnit(holderDs, timezone, unit);
+                        resultDs = ChartExtension.CombineDataSets_IntoOne(resultDs, holderDs);
+                    }
+                }
+
+                returnString = JsonConvert.SerializeObject(resultDs);
+
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+        }
+
+        public Stream GetSynchornizedChartByEngineId(int vesselId, double timezone, int querytime, string engineId, bool includeRefSignal)
         {
             string returnString = string.Empty;
 
@@ -1034,7 +1102,8 @@ namespace FOMSWebService
                 BLL_Enum._VIEW_INTERVAL viewIntervalEnum;
                 int numOfPoints;
                 short engineIdShort = Convert.ToInt16(engineId);
-                
+                string unit = "ℓ/hr";
+
                 DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
                 DateTime endDateTime = DateTime.UtcNow;
                 if(querytime != 24)
@@ -1050,7 +1119,7 @@ namespace FOMSWebService
                 }
 
                 DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, viewIntervalEnum, numOfPoints, startDateTime, false, false);
-                DataSet resultDs = EngineExtension.AddChartWithTicksAndUnit(engineDs, timezone);
+                DataSet resultDs = EngineExtension.AddChartWithTicksAndUnit(engineDs, timezone, unit);
 
                 if (includeRefSignal)
                 {
@@ -1190,12 +1259,13 @@ namespace FOMSWebService
             {
                 DateTime startTime = DateTimeExtension.UnixTimeToDateTime(Convert.ToDouble(timeOfLastPoint));
                 startTime = startTime.AddHours(timezone * -1); // Convert to UTC - 0
+                string unit = "ℓ/hr";
 
                 BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                 int numOfPoints = 10; // Default value 
 
                 DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Live, numOfPoints, startTime, false);
-                engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone);
+                engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone, unit);
 
                 returnString = JsonConvert.SerializeObject(engineDS);
             }

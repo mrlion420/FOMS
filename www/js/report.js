@@ -1,78 +1,80 @@
 $(document).ready(function () {
     mainFunction();
-    
+
 });
 
-async function mainFunction(){
+async function mainFunction() {
     await getUserRelatedFleets();
     await getUserRelatedVessels();
 
     loadSelectMainContainer();
     selectChangeEventHandler();
+    buttonClickHandler();
 }
 
-async function getUserRelatedFleets(){
+async function getUserRelatedFleets() {
     var method = "GetUserRelatedFleets";
-    try{
+    try {
         let data = await ajaxGet(method, PARAMETER_USERID);
         populateFleetSelectBox(data);
-    }catch(ex){
+    } catch (ex) {
         console.log(ex);
     }
 }
 
-function populateFleetSelectBox(data){
+function populateFleetSelectBox(data) {
     var isFirstItem = true;
     var htmlString = "";
-    $.each(data, function(index,valueInElement){
+    $.each(data, function (index, valueInElement) {
         var key = data[index].Key;
         var value = data[index].Result;
-        if(isFirstItem){
-            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
+        if (isFirstItem) {
+            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
             FLEETID = key;
             isFirstItem = false;
-        }else{
-            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        } else {
+            htmlString += "<option value='" + key + "'>" + value + "</option>";
         }
-        
+
     });
     $("#fleetSelect").html(htmlString);
 }
 
-async function getUserRelatedVessels(){
+async function getUserRelatedVessels() {
     var method = "GetUserRelatedVessels";
     var parameters = PARAMETER_USERID;
     parameters.fleetId = FLEETID;
-    try{
+    try {
         let data = await ajaxGet(method, parameters);
         populateVesselSelectBox(data);
-    }catch(ex){
+    } catch (ex) {
         console.log(ex);
     }
     //resetConstArrays();
 }
 
-function populateVesselSelectBox(data){
+function populateVesselSelectBox(data) {
     var isFirstItem = true;
     var htmlString = "";
 
-    $.each(data, function(index,valueInElement){
+    $.each(data, function (index, valueInElement) {
         var key = data[index].Key;
         var value = data[index].Result;
-        if(isFirstItem){
-            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-            if(PAGELOAD){
+        if (isFirstItem) {
+            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+            if (PAGELOAD) {
                 VESSELID = key;
                 PAGELOAD = false;
-            }else{
+            } else {
                 TEMP_VESSELID = key;
             }
             isFirstItem = false;
-        }else{
-            htmlString += "<option value='" + key + "'>" + value +"</option>";
+        } else {
+            htmlString += "<option value='" + key + "'>" + value + "</option>";
         }
-        
+
     });
+    resetConstArrays();
     $("#vesselSelect").html(htmlString);
 }
 
@@ -88,12 +90,12 @@ function loadSelectMainContainer() {
 }
 
 function selectChangeEventHandler() {
-    $("#fleetSelect").change(function(){
+    $("#fleetSelect").change(function () {
         FLEETID = $("#fleetSelect").val();
         getUserRelatedVessels();
     });
 
-    $("#vesselSelect").change(function(){
+    $("#vesselSelect").change(function () {
         VESSELID = $("#vesselSelect").val();
     });
 
@@ -105,11 +107,10 @@ function selectChangeEventHandler() {
         changeDatetimeFormat();
     });
 
-    
 }
 
 async function loadDatetimePickers() {
-    
+
     var method = "GetCurrentDatetime";
     var parameters = PARAMETER_USERID;
     parameters.timezone = TIMEZONE;
@@ -124,10 +125,10 @@ async function loadDatetimePickers() {
 }
 
 function insertDatetime(data) {
-    
+
     var startDateString = data.StartDatetime;
     var endDateString = data.EndDatetime;
-    var format = "d-M-y H:i";
+    var format = "d-M-y";
 
     $("#startDatetime").datetimepicker({
         value: startDateString,
@@ -161,7 +162,7 @@ function changeDatetimeFormat() {
 }
 
 async function loadMainSelectType() {
-    var data, method;
+    let data, method;
     var reportType = $("#selectReportType").val();
     switch (reportType) {
         case "FuelCons_Report":
@@ -185,19 +186,214 @@ async function loadMainSelectType() {
             break;
     }
 
-    
     if (method !== undefined) {
         data = await ajaxGet(method, PARAMETER_VESSELID);
         $("#selectMainType").html("");
-        for(let i = 0; i < data.length; i++){
+        for (let i = 0; i < data.length; i++) {
             let htmlString = "<option value='" + data[i].Key + "'>" + data[i].Result + "</option>";
             $("#selectMainType").append(htmlString);
         }
-    } 
+    }
 
 }
 
-function removeDatetimePickers(){
+function removeDatetimePickers() {
     $("#startDatetime").datetimepicker('destroy');
     $("#endDatetime").datetimepicker('destroy');
+}
+
+function buttonClickHandler() {
+    $("#selectMainContainer").on("click", "#btnChart", function () {
+        var reportType = $("#selectReportType").val();
+        switch (reportType) {
+            case "FuelCons_Report":
+                btnChart_FuelCons();
+                break;
+
+            case "Loading_Report":
+                method = "GetAllEngineTypes";
+                break;
+
+            case "Analog_Report":
+                method = "GetAllAnalogTypes";
+                break;
+
+            case "Event_Report":
+                method = "GetAllEventTypes";
+                break;
+
+            default:
+                method = undefined;
+                break;
+        }
+    });
+}
+
+async function btnChart_FuelCons() {
+    generateChartReportView();
+
+    method = "GetEngineChartByQueryTime";
+    let parameters = PARAMETER_COMBINED;
+    parameters.querytime = $("#selectInterval").val();
+    parameters.startDatetimeStr = $("#startDatetime").val();
+    parameters.endDatetimeStr = $("#endDatetime").val();
+    parameters.engineType = $("#selectMainType").val();
+    try {
+        let chartTitle = "Fuel Consumption " + $("#selectInterval option:selected").text();
+        let htmlString = createTableHeaders("Engine");
+        createChart("Engine", "Fuel Consumption ");
+        let data = await ajaxGet(method, parameters);
+        let finalTotalCons = 0;
+        let finalRunningTime = 0;
+        let finalAvgConsRate = 0;
+
+        let chartLineType = $("#selectChartType").val();
+        $.each(data, function (key, value) {
+            let seriesArray = [];
+            let series = value;
+            let seriesName = key;
+            let totalCons = 0;
+            let runningTime = 0;
+            let avgConsRate = 0;
+
+            for (let i = 0; i < series.length; i++) {
+                let result = series[i];
+                let value = round(parseFloat(result.CALCULATED_TOTAL_FLOW), 2);
+                let ticks = parseFloat(result.Ticks);
+                let unit = result.Unit;
+                let additionalInfo = result.ADDITIONAL_INFO;
+
+                // For table value
+                totalCons += value;
+                runningTime += result.RUNNING_MINS;
+
+                seriesArray.push({ x: ticks, y: value, unit: unit, additionalInfo: additionalInfo });
+            }
+
+            addSingleSeriesIntoChart(seriesArray, seriesName, chartLineType);
+            finalTotalCons += totalCons;
+            finalRunningTime += runningTime;
+
+            let hours = Math.floor(runningTime / 60);
+            let minutes = runningTime % 60;
+            avgConsRate = round(parseFloat(totalCons / parseFloat(runningTime / 60)), 2);
+
+            htmlString += "<tr>";
+            htmlString += "<td>" + key + "</td>";
+            htmlString += "<td>" + totalCons + "</td>";
+            htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
+            htmlString += "<td>" + avgConsRate + "</td>";
+            htmlString += "</tr>";
+        });
+
+        let hours = Math.floor(finalRunningTime / 60);
+        let minutes = finalRunningTime % 60;
+        
+        htmlString += "<tr>";
+        htmlString += "<td>All Engine(s)</td>";
+        htmlString += "<td>" + finalTotalCons + "</td>";
+        htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
+        htmlString += "<td>" + round(parseFloat(finalTotalCons / parseFloat(finalRunningTime / 60)), 2) + "</td>";
+        htmlString += "</tr>";
+        htmlString += "</table>";
+
+        $("#chartSummary").html(htmlString);
+
+    } catch (ex) {
+        console.log(ex);
+    }
+
+}
+
+function createTableHeaders(type) {
+    let htmlString = "<table><tr>";
+    if (type === "Engine") {
+        htmlString += "<th>Engine</th>";
+        htmlString += "<th>Total Cons. (ℓ)</th>";
+        htmlString += "<th>Running Time</th>";
+        htmlString += "<th>Est. Cons Rate (ℓ/hr)</th>";
+    } else if (type === "Bunker") {
+        htmlString += "";
+    } else if (type === "Analog") {
+        htmlString += "";
+    }
+    htmlString += "</tr>";
+
+    return htmlString;
+}
+
+
+function btnChart_Analog() {
+
+}
+
+function createChart(chartType, chartTitle) {
+    options = {
+        chart: {
+            type: "line",
+            style: {
+                'fontFamily': 'Tahoma'
+            }
+        },
+        title: {
+            text: chartTitle
+        },
+        xAxis: {
+            type: "datetime"
+        },
+        plotOptions: {
+            column: {
+                dataLabels: {
+                    enabled: true
+                }
+            }
+
+        },
+        tooltip: {
+            formatter: function () {
+                var formatter = tooltipFormatter(this, chartType);
+                return formatter;
+            }
+        }
+    };
+
+    $("#chart").highcharts($.extend(true, {}, options));
+}
+
+function addSingleSeriesIntoChart(seriesArray, seriesName, chartType) {
+    $("#chart").highcharts().addSeries({
+        type: chartType,
+        name: seriesName,
+        data: seriesArray
+    });
+}
+
+function tooltipFormatter(chart, chartType) {
+    var dateFormatHC = '%d-%b-%y %H:%M:%S';
+    var rateText = "";
+    var formatter = "";
+    rateText = "Total Consumption : ";
+
+    formatter = "<b>" + chart.series.name + "</b><br>" +
+        Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+        rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + "<br>"
+        + chart.point.additionalInfo;
+
+    // if (chartTitle === "Fuel Cons. Rate (ℓ/hr)") {
+    //     formatter += "<br>" + chart.point.additionalInfo;
+    // }
+
+    return formatter;
+}
+
+function generateChartReportView() {
+    let htmlString = "";
+    htmlString += "<div id='chart' class='chart'></div>";
+    htmlString += "<div class='chart-item'>";
+    htmlString += "<div class='chart-summary' id='chartSummary'>";
+    htmlString += "</div>";
+    htmlString += "<div class='event-container' id='eventContainer'></div>";
+    htmlString += "</div>";
+
+    $("#resultContainer").html(htmlString);
 }

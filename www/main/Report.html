@@ -29,6 +29,7 @@
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
     <script type="text/javascript" src="../js/external/moment.js"></script>
     <script type="text/javascript" src="../js/external/jquery.datetimepicker.full.min.js"></script>
+    <script type="text/javascript" src="../js/external/highcharts.js"></script>
 
     <script type="text/javascript" src="../js/global.js"></script>
     <script type="text/javascript" src="../js/report.js"></script>
@@ -88,12 +89,12 @@
                 <div id="selectMainContainer">
                    
                 </div>
-                <div id="result-container">
+                <div id="result-container" id="resultContainer">
                     <div id="chart" class="chart">
 
                     </div>
                     <div class="chart-item">
-                        <div class="chart-summary">
+                        <div class="chart-summary" id="chartSummary">
                             <table>
                                 <tbody>
                                     <tr>
@@ -117,7 +118,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="event-container">
+                        <div class="event-container" id="eventContainer">
                             <p>Event Value</p>
                             <p>Event Value</p>
                             <p>Event Value</p>

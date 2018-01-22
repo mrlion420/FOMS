@@ -888,8 +888,8 @@ p{
 .report .chart-item .chart-summary table th{
     background-color: #3282E4;
     color: white;
-    font-size: 20px;
-    border-right: 2.5px solid white;
+    font-size: 18px;
+    /* border-right: 2.5px solid white; */
     padding: 8px 0px;
 }
 
@@ -897,8 +897,13 @@ p{
     border-right: 0;
 }
 
+.report .chart-item .chart-summary table td:first-child{
+    text-align: left;
+}
+
 .report .chart-item .chart-summary table td{
-    text-align: center;
+    padding : 0px 5px;
+    text-align: right;
     font-size: 18px;
     height: 35px;
 }

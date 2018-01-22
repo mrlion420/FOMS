@@ -14,5 +14,10 @@ namespace CommonHelper
             return (BLL_Enum._ANALOG)Enum.Parse(typeof(BLL_Enum._ANALOG), analogType);
 
         }
+
+        public static BLL_Enum._ENGINE GetEngineEnum_FromEngineType(string engineType)
+        {
+            return (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+        }
     }
 }
