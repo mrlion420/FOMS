@@ -149,6 +149,10 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetAnalogChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string analogType);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetDailyEngineChartByEngineType(int vesselId, double timezone, string engineType);
 
         [OperationContract]

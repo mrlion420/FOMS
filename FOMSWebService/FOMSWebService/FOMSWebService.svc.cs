@@ -391,7 +391,7 @@ namespace FOMSWebService
                 foreach (short engineCode in engineCodeHS)
                 {
                     ResultData result = new ResultData();
-                    string engineType = SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ENGINE), engineCode.ToString()).SysCodeDesc;
+                    string engineType = KeyValueExtension.GetEngineDescFromEngineCode(engineCode);
                     if (engineCode != 2)
                     {
                         result.Key = engineCode.ToString();
@@ -978,14 +978,23 @@ namespace FOMSWebService
             List<ResultData> resultDataList = new List<ResultData>();
             try
             {
+                HashSet<short> analogCodeHS = new HashSet<short>();
                 List<Analog> analogList = Analog.GetAll(vesselId);
-                foreach(Analog analog in analogList)
+                
+                foreach (Analog analog in analogList)
                 {
-                    ResultData resultData = new ResultData();
-                    resultData.Key = analog.AnalogCode.ToString();
-                    resultData.Result = analog.ShortDescription;
-                    resultDataList.Add(resultData);
+                    short analogCode = analog.AnalogCode;
+                    analogCodeHS.Add(analogCode);
                 }
+                foreach(short analogCode in analogCodeHS)
+                {
+                    ResultData result = new ResultData();
+                    string analogType = KeyValueExtension.GetAnalogDescFromAnalogCode(analogCode);
+                    result.Key = analogCode.ToString();
+                    result.Result = analogType;
+                    resultDataList.Add(result);
+                }
+               
             }
             catch (Exception ex)
             {
@@ -1034,6 +1043,9 @@ namespace FOMSWebService
                 {
                     EventData singleEventData = new EventData();
                     singleEventData.Datetime = DateTimeExtension.DisplayDateWithYear(singleEvent.EventDateTime);
+                    singleEventData.EventDesc = singleEvent.EventDescription;
+                    singleEventData.EventType = singleEvent.EventTypeDesc;
+                    eventDataList.Add(singleEventData);
                 }
             }
             catch (Exception ex)
@@ -1047,6 +1059,43 @@ namespace FOMSWebService
         #endregion
 
         #region Chart Related Methods
+
+        public Stream GetAnalogChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string analogType)
+        {
+            string returnString = string.Empty;
+
+            try
+            {
+                int noOfPoints = 0;
+                string unit = "ℓ";
+
+                querytime = querytime * 3600; // Change hours querytime to seconds
+                BLL_Enum._VIEW_INTERVAL viewIntervalEnum = Helper.ViewIntervalMapping(querytime);
+                BLL_Enum._ANALOG analogTypeEnum = EnumExtension.GetAnalogEnum_FromAnalogType(analogType);
+
+                DateTime startDatetime = DateTime.Parse(startDatetimeStr).AddHours(-timezone);
+                DateTime endDatetime = DateTime.Parse(endDatetimeStr).AddHours(-timezone);
+                noOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
+
+                DataSet resultDs = AnalogReading.GetView(vesselId, analogTypeEnum, viewIntervalEnum, noOfPoints, startDatetime, false, false);
+                List<Analog> analogList = Analog.GetByAnalogCode(vesselId, analogTypeEnum);
+                
+                if(analogList.Count > 0)
+                {
+                    Analog analog = analogList[0];
+                    resultDs = AnalogExtension.AddChartWithTicksAndUnit(resultDs, timezone, analog);
+                }
+                    
+                returnString = JsonConvert.SerializeObject(resultDs);
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
+            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+        }
 
         public Stream GetEngineChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string engineType)
         {

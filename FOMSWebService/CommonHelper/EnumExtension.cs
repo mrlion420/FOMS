@@ -19,5 +19,10 @@ namespace CommonHelper
         {
             return (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
         }
+
+        public static BLL_Enum._EVENT_TYPE GetEventEnum_FromEventType(string eventType)
+        {
+            return (BLL_Enum._EVENT_TYPE)Enum.Parse(typeof(BLL_Enum._EVENT_TYPE), eventType);
+        }
     }
 }

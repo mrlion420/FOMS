@@ -33,7 +33,7 @@ const MENU_PAGE = [
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
 var PAGELOAD = true;
 var INTERVAL_ARRAY = [];
-// Feature group that contains all the polylines
+// Feature group that contains all the polylines 
 var FEATURE_GROUP = null;
 // Map object 
 var MAP = null;
@@ -43,7 +43,7 @@ var INFO_WINDOW = null;
 // Timezone 
 var TIMEZONE = 8;
 var USERID = 53;
-// var USERID = 38;
+// var USERID = 38; 
 var COMPANYID = 0;
 var FLEETID = 0;
 var VESSELID = 0;
@@ -484,6 +484,14 @@ function createMarker(latlon, map, iwContent, icon) {
 	});
 }
 
+// Set high chart thousand separator in global
+Highcharts.setOptions({
+    lang: {
+        thousandsSep: ','
+    }
+});
+
+// Google Map bypass
 var target = document.head;
 var observer = new MutationObserver(function(mutations) {
     for (var i = 0; mutations[i]; ++i) { // notify when script to hack is added in HTML head

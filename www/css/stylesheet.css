@@ -911,11 +911,25 @@ p{
 .report .chart-item .event-container{
     margin: 0px 0px 0px 10px;
     width: 49%;
+    height:200px;
+    overflow: auto;
 }
 
-.report .chart-item .event-container p{
+.report .chart-item .event-container div{
+    display: flex;
+}
+
+.report .chart-item .event-container div p{
     margin: 0px 0px 5px 0px;
     padding: 0;
+}
+
+.report .chart-item .event-container div p:first-child{
+    width: 180px;
+}
+
+.report .chart-item .event-container div p:nth-child(2){
+    width: 120px;
 }
 
 

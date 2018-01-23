@@ -215,7 +215,7 @@ function buttonClickHandler() {
                 break;
 
             case "Analog_Report":
-                method = "GetAllAnalogTypes";
+                btnChart_Analog();
                 break;
 
             case "Event_Report":
@@ -239,9 +239,20 @@ async function btnChart_FuelCons() {
     parameters.endDatetimeStr = $("#endDatetime").val();
     parameters.engineType = $("#selectMainType").val();
     try {
-        let chartTitle = "Fuel Consumption " + $("#selectInterval option:selected").text();
-        let htmlString = createTableHeaders("Engine");
-        createChart("Engine", "Fuel Consumption ");
+        let engineType = $("#selectMainType").val();
+        let chartTitle = "";
+        let htmlString = "";
+
+        if (engineType === "4") {
+            // Bunker
+            chartTitle = "Fuel Flow ";
+            htmlString = createTableHeaders("Bunker");
+        } else {
+            chartTitle = "Fuel Consumption (" + $("#selectInterval option:selected").text() + ")";
+            htmlString = createTableHeaders("Engine");
+        }
+
+        createChart("Engine", chartTitle);
         let data = await ajaxGet(method, parameters);
         let finalTotalCons = 0;
         let finalRunningTime = 0;
@@ -280,24 +291,27 @@ async function btnChart_FuelCons() {
 
             htmlString += "<tr>";
             htmlString += "<td>" + key + "</td>";
-            htmlString += "<td>" + totalCons + "</td>";
+            htmlString += "<td>" + numberWithCommas(round(totalCons, 2)) + "</td>";
             htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
-            htmlString += "<td>" + avgConsRate + "</td>";
+            htmlString += "<td>" + numberWithCommas(avgConsRate) + "</td>";
             htmlString += "</tr>";
         });
 
         let hours = Math.floor(finalRunningTime / 60);
         let minutes = finalRunningTime % 60;
-        
+        finalAvgConsRate = round(parseFloat(finalTotalCons / parseFloat(finalRunningTime / 60)), 2);
+
         htmlString += "<tr>";
         htmlString += "<td>All Engine(s)</td>";
-        htmlString += "<td>" + finalTotalCons + "</td>";
+        htmlString += "<td>" + numberWithCommas(round(finalTotalCons, 2)) + "</td>";
         htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
-        htmlString += "<td>" + round(parseFloat(finalTotalCons / parseFloat(finalRunningTime / 60)), 2) + "</td>";
+        htmlString += "<td>" + numberWithCommas(finalAvgConsRate) + "</td>";
         htmlString += "</tr>";
         htmlString += "</table>";
 
         $("#chartSummary").html(htmlString);
+
+        GetEventLog();
 
     } catch (ex) {
         console.log(ex);
@@ -305,7 +319,99 @@ async function btnChart_FuelCons() {
 
 }
 
-function createTableHeaders(type) {
+async function btnChart_Analog() {
+    generateChartReportView();
+
+    method = "GetAnalogChartByQueryTime";
+    let parameters = PARAMETER_COMBINED;
+    parameters.querytime = $("#selectInterval").val();
+    parameters.startDatetimeStr = $("#startDatetime").val();
+    parameters.endDatetimeStr = $("#endDatetime").val();
+    parameters.analogType = $("#selectMainType").val();
+    try {
+
+        let chartTitle = $("#selectMainType option:selected").text() + " (" + $("#selectInterval option:selected").text() + ")";
+        createChart("Analog", chartTitle);
+        let data = await ajaxGet(method, parameters);
+        let chartLineType = $("#selectChartType").val();
+        let firstKey;
+        for(let key in data){
+            firstKey = key;
+            break;
+        }
+        let htmlString = createTableHeaders("Analog" , data[firstKey][0].Unit);
+
+        $.each(data, function (key, value) {
+            let seriesArray = [];
+            let series = value;
+            let seriesName = key;
+            let totalValue = 0;
+            let lastValue = 0;
+            let avgValue = 0;
+
+            for (let i = 0; i < series.length; i++) {
+                let result = series[i];
+                let value = round(parseFloat(result.CONVERTED_VALUE), 2);
+                let ticks = parseFloat(result.Ticks);
+                let unit = result.Unit;
+
+                totalValue += value;
+                seriesArray.push({ x: ticks, y: value, unit: unit });
+
+                if (i === series.length - 1) {
+                    lastValue = value;
+                }
+            }
+
+            addSingleSeriesIntoChart(seriesArray, seriesName, chartLineType);
+            totalValue = round(totalValue, 2);
+            avgValue = round(parseFloat(totalValue / series.length), 2);
+
+            htmlString += "<tr>";
+            htmlString += "<td>" + key + "</td>";
+            htmlString += "<td>" + numberWithCommas(totalValue) + "</td>";
+            htmlString += "<td>" + numberWithCommas(avgValue) + "</td>";
+            htmlString += "<td>" + numberWithCommas(lastValue) + "</td>";
+            htmlString += "</tr>";
+        });
+
+        htmlString += "</table>";
+
+        $("#chartSummary").html(htmlString);
+
+        GetEventLog();
+
+    } catch (ex) {
+        console.log(ex);
+    }
+
+}
+
+async function GetEventLog() {
+    let method = "GetAllEventsByQuery";
+    let parameters = PARAMETER_COMBINED;
+    parameters.startDatetimeStr = $("#startDatetime").val();
+    parameters.endDatetimeStr = $("#endDatetime").val();
+    try {
+        let data = await ajaxGet(method, parameters);
+        let htmlString = "";
+        for (let i = 0; i < data.length; i++) {
+            let result = data[i];
+            htmlString += "<div>";
+            htmlString += "<p>" + result.Datetime + "</p>";
+            htmlString += "<p>" + result.EventType + "</p>";
+            htmlString += "<p>" + result.EventDesc + "</p>";
+            htmlString += "</div>";
+        }
+
+        $("#eventContainer").html(htmlString);
+
+    } catch (ex) {
+        console.log(ex);
+    }
+}
+
+function createTableHeaders(type, unit) {
     let htmlString = "<table><tr>";
     if (type === "Engine") {
         htmlString += "<th>Engine</th>";
@@ -313,49 +419,87 @@ function createTableHeaders(type) {
         htmlString += "<th>Running Time</th>";
         htmlString += "<th>Est. Cons Rate (ℓ/hr)</th>";
     } else if (type === "Bunker") {
-        htmlString += "";
+        htmlString += "<th>Engine</th>";
+        htmlString += "<th>Total Flow (ℓ)</th>";
+        htmlString += "<th>Running Time</th>";
+        htmlString += "<th>Est. Flow Rate (ℓ/hr)</th>";
     } else if (type === "Analog") {
-        htmlString += "";
+        htmlString += "<th>Analog</th>";
+        htmlString += "<th>Peak Value (" + unit + ")</th>";
+        htmlString += "<th>Est. Avg. Value (" + unit + ")</th>";
+        htmlString += "<th>Last Value (" + unit + ")</th>";
     }
+
     htmlString += "</tr>";
 
     return htmlString;
 }
 
 
-function btnChart_Analog() {
-
-}
 
 function createChart(chartType, chartTitle) {
-    options = {
-        chart: {
-            type: "line",
-            style: {
-                'fontFamily': 'Tahoma'
-            }
-        },
-        title: {
-            text: chartTitle
-        },
-        xAxis: {
-            type: "datetime"
-        },
-        plotOptions: {
-            column: {
-                dataLabels: {
-                    enabled: true
+    let options;
+
+    if (chartType === "Engine") {
+        options = {
+            chart: {
+                type: "line",
+                style: {
+                    'fontFamily': 'Tahoma'
+                }
+            },
+            title: {
+                text: chartTitle
+            },
+            xAxis: {
+                type: "datetime"
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+
+            },
+            tooltip: {
+                formatter: function () {
+                    var formatter = tooltipFormatter(this, chartType);
+                    return formatter;
                 }
             }
+        };
+    } else if (chartType === "Analog") {
+        options = {
+            chart: {
+                type: "line",
+                style: {
+                    'fontFamily': 'Tahoma'
+                }
+            },
+            title: {
+                text: chartTitle
+            },
+            xAxis: {
+                type: "datetime"
+            },
+            plotOptions: {
+                column: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
 
-        },
-        tooltip: {
-            formatter: function () {
-                var formatter = tooltipFormatter(this, chartType);
-                return formatter;
+            },
+            tooltip: {
+                formatter: function () {
+                    var formatter = tooltipFormatter(this, chartType);
+                    return formatter;
+                }
             }
-        }
-    };
+        };
+    }
+
 
     $("#chart").highcharts($.extend(true, {}, options));
 }
@@ -372,16 +516,22 @@ function tooltipFormatter(chart, chartType) {
     var dateFormatHC = '%d-%b-%y %H:%M:%S';
     var rateText = "";
     var formatter = "";
-    rateText = "Total Consumption : ";
+    if (chartType === "Engine") {
+        rateText = "Total Consumption : ";
 
-    formatter = "<b>" + chart.series.name + "</b><br>" +
-        Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
-        rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + "<br>"
-        + chart.point.additionalInfo;
+        formatter = "<b>" + chart.series.name + "</b><br>" +
+            Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+            rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + "<br>"
+            + chart.point.additionalInfo;
 
-    // if (chartTitle === "Fuel Cons. Rate (ℓ/hr)") {
-    //     formatter += "<br>" + chart.point.additionalInfo;
-    // }
+    } else if (chartType === "Analog") {
+        rateText = "Value : ";
+
+        formatter = "<b>" + chart.series.name + "</b><br>" +
+            Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+            rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + "<br>";
+    }
+
 
     return formatter;
 }

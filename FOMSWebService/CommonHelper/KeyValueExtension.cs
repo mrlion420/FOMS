@@ -46,5 +46,15 @@ namespace CommonHelper
             
         }
 
+        public static string GetEngineDescFromEngineCode(short? engineCode)
+        {
+            return SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ENGINE), engineCode.ToString()).SysCodeDesc;
+        }
+
+        public static string GetAnalogDescFromAnalogCode(short? analogCode)
+        {
+            return SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ANALOG), analogCode.ToString()).SysCodeDesc;
+        }
+
     }
 }
