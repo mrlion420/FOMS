@@ -83,7 +83,7 @@ function loadSelectMainContainer() {
 
     var reportType = $("#selectReportType").val();
     $("#selectMainContainer").html("");
-    $("#selectMainContainer").load("/report_items/" + reportType + ".html", function () {
+    $("#selectMainContainer").load("../report_items/" + reportType + ".html", function () {
         loadDatetimePickers();
         loadMainSelectType();
     });
@@ -226,6 +226,10 @@ function buttonClickHandler() {
                 method = undefined;
                 break;
         }
+    });
+
+    $("#selectMainContainer").on("click", "#btnMap", function(){
+        btnMap_Position();        
     });
 }
 
@@ -411,6 +415,63 @@ async function GetEventLog() {
     }
 }
 
+async function btnMap_Position(){
+    await generatePositionReportView();
+    let method = "GetPositionByQuery";
+
+    let parameters = PARAMETER_COMBINED;
+    parameters.querytime = $("#selectInterval").val();
+    parameters.startDatetimeStr = $("#startDatetime").val();
+    parameters.endDatetimeStr = $("#endDatetime").val();
+    parameters.eventType = $("#checkboxInput").val();
+
+    try{
+        let data = await ajaxGet(method , parameters);
+        console.log(data);
+        await initMap("map");
+        insertMapMarkersWithEvents(data, MAP);
+        $.each(data, function (indexInArray, valueOfElement) { 
+            //addPolylinesToMap(valueOfElement);     
+        });
+        
+        
+    }catch(ex){
+        console.log(ex);
+    }
+}
+
+function drawMap(data){
+    let latLonArray = [];
+    $.each(data, function(key, value){
+        for(let i = 0; i < value.length; i++){
+            let resultArray = value[i];
+            let currentArray = [parseFloat(resultArray.LATITUDE), parseFloat(resultArray.LONGITUDE)];
+            latLonArray.push(currentArray);
+            setDirectionIcon(resultArray);
+        }
+    });
+    if(latLonArray.length > 1){
+        drawPolylineOnMap(latLonArray, MAP);
+        setStartEndMarkerOnPopupMap(data, MAP);
+    }else{
+        insertMapMarkers(latLonArray, MAP);
+    }
+    
+}
+
+function addPolylinesToMap(data){
+    var latLonArray = [];
+    featureGroup = [];
+    for (var i = 0; i < data.length; i++) {
+        var resultArray = data[i];
+        var currentArray = [parseFloat(resultArray.Latitude), parseFloat(resultArray.Longitude)];
+        latLonArray.push(currentArray);
+    }
+    drawPolylineOnMap(latLonArray, MAP, true);
+    setStartEndMarkerOnPopupMap(data, MAP);
+}
+
+
 function createTableHeaders(type, unit) {
     let htmlString = "<table><tr>";
     if (type === "Engine") {
@@ -434,8 +495,6 @@ function createTableHeaders(type, unit) {
 
     return htmlString;
 }
-
-
 
 function createChart(chartType, chartTitle) {
     let options;
@@ -541,6 +600,18 @@ function generateChartReportView() {
     htmlString += "<div id='chart' class='chart'></div>";
     htmlString += "<div class='chart-item'>";
     htmlString += "<div class='chart-summary' id='chartSummary'>";
+    htmlString += "</div>";
+    htmlString += "<div class='event-container' id='eventContainer'></div>";
+    htmlString += "</div>";
+
+    $("#resultContainer").html(htmlString);
+}
+
+function generatePositionReportView(){
+    let htmlString = "";
+    htmlString += "<div class='position-container'>";
+    htmlString += "<div class='map-container'>";
+    htmlString += "<div id='map'></div>";
     htmlString += "</div>";
     htmlString += "<div class='event-container' id='eventContainer'></div>";
     htmlString += "</div>";

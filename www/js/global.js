@@ -4,9 +4,9 @@ $(document).ready(function(){
 });
 
 // GLOBAL VARIABLES
-// const WEBSERVICEHOST = "http://122.11.177.14:1703/FOMSWebService.svc/"; // For web service
+const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
 // const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
-const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
+// const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [
 	"itemFleet",
@@ -33,8 +33,6 @@ const MENU_PAGE = [
 var LOGINMENU = ["itemUserLogin", "itemEngineerLogin", "itemUserGuide"];
 var PAGELOAD = true;
 var INTERVAL_ARRAY = [];
-// Feature group that contains all the polylines 
-var FEATURE_GROUP = null;
 // Map object 
 var MAP = null;
 // Map marker object
@@ -96,12 +94,12 @@ function ajaxGet(methodName , data){
 }
 
 function loadSideMenu(){
-	if(getCurrentPage() === "Login.html"){
-		$("#sideMenu").load("/menu/LoginMenu.html" , function(){
+	if(getCurrentPage().toLowerCase() === "login.html"){
+		$("#sideMenu").load("../menu/LoginMenu.html" , function(){
 			loginMenuClick();
 		});
 	}else{
-		$("#sideMenu").load("/menu/MainMenu.html" , function(){
+		$("#sideMenu").load("../menu/MainMenu.html" , function(){
 			displaySelectedTab();
 			sideMenuClick();
 		});
@@ -134,7 +132,7 @@ function displaySelectedTab(){
 function sideMenuClick(){
 	$("#sideMenu .wrapper").on('click', 'div', function(){
 		var menuId = MENU_ID.indexOf(this.id);
-		redirectPageWithReturn("/main/" + MENU_PAGE[menuId]);
+		redirectPageWithReturn("" + MENU_PAGE[menuId]);
 	});
 }
 
@@ -147,7 +145,7 @@ function getCurrentPage(){
 
 function logoutBtnClickHandler(){
 	$("#imgLogout").click(function(){
-		redirectPageWithReturn("/main/Login.html");
+		redirectPageWithReturn("Login.html");
 	});
 }
 
@@ -231,6 +229,10 @@ function removeSpace(str){
 	str = str.replace(/\s/g, '');
 	return str;
 }
+
+function getPosition(string, subString, index) {
+	return string.split(subString, index).join(subString).length;
+ }
 
 function paginationTable(maxTableRows){
 	var currentPage = parseInt($("#currentTablePage").text());
@@ -353,7 +355,7 @@ function drawPolylineOnMapLeaflet(latlonArray , map , isInFeatureGroup){
 	}
 }
 
-function drawPolylineOnMap(latlonArray, map , isInFeatureGroup){
+function drawPolylineOnMap(latlonArray, map ){
 	var polyLine = new google.maps.Polyline({
 		geodesic: true,
 		strokeColor: '#FF0000',
@@ -460,6 +462,93 @@ function insertMapMarkers(data, map){
 		bounds.extend(latLng);
 	}
 	map.fitBounds(bounds);
+}
+
+function insertMapMarkersWithEvents(data,map){
+	var bounds = new google.maps.LatLngBounds();
+	$.each(data, function(key, value){
+		for(let i = 0; i < value.length; i++){
+			var icon = setDirectionIcon(value[i]);	
+			var lat = parseFloat(value[i].LATITUDE);
+			var lon = parseFloat(value[i].LONGITUDE);
+			let sog = parseFloat(value[i].SOG);
+			let cog = parseFloat(value[i].COG);
+			let wgsLat = value[i].WGS84_LATITUDE;
+			let wgsLon = value[i].WGS84_LONGITUDE;
+			let positionDatetime = value[i].POSITION_DATETIME;
+			let eventDetails = "";
+
+			if(value[i].EVENT_DETAIL !== ""){
+				let splitString = value[i].EVENT_DETAIL.split("|");
+				for(let j = 0; j < splitString.length; j++){
+					let lastIndex = getPosition(splitString[j], "~", 3);
+					let singleEvent = splitString[j].substring(lastIndex + 1);
+					eventDetails += "<p>" + singleEvent + "</p>";
+				}
+			}
+			
+			var latLng = new google.maps.LatLng(lat, lon);
+	
+			let popupText = "<div class='map-popup'>";
+			popupText += "<div><p>Position Datetime : </p><p>" + positionDatetime + "</p></div>";
+			popupText += "<div><p>Last Position : </p><p>" + wgsLat + " "+ wgsLon  + "</p></div>";
+			popupText += "<div><p>SOG / COG : </p><p>" + sog + " Knots "+ cog + " Deg" + "</p></div>";
+			popupText += "<div><p>Event(s) : </p><div>" + eventDetails + "</div></div>";
+			popupText += "</div>";
+			createMarker(latLng, map, popupText, icon);
+			
+			bounds.extend(latLng);
+		}
+	});
+	
+	map.fitBounds(bounds);
+}
+
+function setDirectionIcon(item) {
+    var iconAddress = "";
+    if (item !== null) {
+        var cog = item.COG;
+
+        if (item.EVENT_DETAIL === '') {
+            if (cog > 337.5 || cog < 22.5) {
+                iconAddress = "../img/N.png";
+            } else if (cog >= 67.5 && cog < 112.5) {
+                iconAddress = "../img/E.png";
+            } else if (cog >= 157.5 && cog < 202.5) {
+                iconAddress = "../img/S.png";
+            } else if (cog >= 247.5 && cog < 292.5) {
+                iconAddress = "../img/W.png";
+            } else if (cog >= 22.5 && cog < 67.5) {
+                iconAddress = "../img/NE.png";
+            } else if (cog >= 112.5 && cog < 157.5) {
+                iconAddress = "../img/SE.png";
+            } else if (cog >= 202.5 && cog < 247.5) {
+                iconAddress = "../img/SW.png";
+            } else if (cog >= 292.5 && cog < 337.5) {
+                iconAddress = "../img/NW.png";
+            }
+        } else {
+            if (cog > 337.5 || cog < 22.5) {
+                iconAddress = "../img/N_EVENT.png";
+            } else if (cog >= 67.5 && cog < 112.5) {
+                iconAddress = "../img/E_EVENT.png";
+            } else if (cog >= 157.5 && cog < 202.5) {
+                iconAddress = "../img/S_EVENT.png";
+            } else if (cog >= 247.5 && cog < 292.5) {
+                iconAddress = "../img/W_EVENT.png";
+            } else if (cog >= 22.5 && cog < 67.5) {
+                iconAddress = "../img/NE_EVENT.png";
+            } else if (cog >= 112.5 && cog < 157.5) {
+                iconAddress = "../img/SE_EVENT.png";
+            } else if (cog >= 202.5 && cog < 247.5) {
+                iconAddress = "../img/SW_EVENT.png";
+            } else if (cog >= 292.5 && cog < 337.5) {
+                iconAddress = "../img/NW_EVENT.png";
+            }
+
+        }
+    }
+    return iconAddress;
 }
 
 function createMarker(latlon, map, iwContent, icon) {

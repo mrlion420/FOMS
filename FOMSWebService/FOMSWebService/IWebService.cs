@@ -108,7 +108,6 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<List<AnalogData>> GetCurrentAnalogData(int vesselId);
 
-
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         Stream GetSynchornizedChartByAnalogId(int vesselId, double timezone, int querytime, string analogId, bool includeRefSignal);
@@ -138,6 +137,10 @@ namespace FOMSWebService
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<EventData> GetAllEventsByQuery(int vesselId, double timezone, string startDatetimeStr, string endDatetimeStr);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        Stream GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType);
 
         #endregion
 

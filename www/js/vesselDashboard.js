@@ -476,7 +476,7 @@ async function generateStaticMapFromQueryTime(){
         await initMap("map");
         let data = await ajaxGet(method, parameters);
         await addPolylinesToMap(data);
-        MAP.fitBounds(FEATURE_GROUP.getBounds());
+        // MAP.fitBounds(FEATURE_GROUP.getBounds());
 
     }catch(ex){
         console.log(ex);
