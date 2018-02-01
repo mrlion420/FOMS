@@ -228,8 +228,8 @@ function buttonClickHandler() {
         }
     });
 
-    $("#selectMainContainer").on("click", "#btnMap", function(){
-        btnMap_Position();        
+    $("#selectMainContainer").on("click", "#btnMap", function () {
+        btnMap_Position();
     });
 }
 
@@ -339,11 +339,11 @@ async function btnChart_Analog() {
         let data = await ajaxGet(method, parameters);
         let chartLineType = $("#selectChartType").val();
         let firstKey;
-        for(let key in data){
+        for (let key in data) {
             firstKey = key;
             break;
         }
-        let htmlString = createTableHeaders("Analog" , data[firstKey][0].Unit);
+        let htmlString = createTableHeaders("Analog", data[firstKey][0].Unit);
 
         $.each(data, function (key, value) {
             let seriesArray = [];
@@ -415,7 +415,7 @@ async function GetEventLog() {
     }
 }
 
-async function btnMap_Position(){
+async function btnMap_Position() {
     await generatePositionReportView();
     let method = "GetPositionByQuery";
 
@@ -425,50 +425,49 @@ async function btnMap_Position(){
     parameters.endDatetimeStr = $("#endDatetime").val();
     parameters.eventType = $("#checkboxInput").val();
 
-    try{
-        let data = await ajaxGet(method , parameters);
+    try {
+        let data = await ajaxGet(method, parameters);
         console.log(data);
         await initMap("map");
         insertMapMarkersWithEvents(data, MAP);
-        $.each(data, function (indexInArray, valueOfElement) { 
-            //addPolylinesToMap(valueOfElement);     
-        });
-        
-        
-    }catch(ex){
+        addPolylinesToMap(data);
+
+    } catch (ex) {
         console.log(ex);
     }
 }
 
-function drawMap(data){
+function drawMap(data) {
     let latLonArray = [];
-    $.each(data, function(key, value){
-        for(let i = 0; i < value.length; i++){
+    $.each(data, function (key, value) {
+        for (let i = 0; i < value.length; i++) {
             let resultArray = value[i];
             let currentArray = [parseFloat(resultArray.LATITUDE), parseFloat(resultArray.LONGITUDE)];
             latLonArray.push(currentArray);
             setDirectionIcon(resultArray);
         }
     });
-    if(latLonArray.length > 1){
+    if (latLonArray.length > 1) {
         drawPolylineOnMap(latLonArray, MAP);
         setStartEndMarkerOnPopupMap(data, MAP);
-    }else{
+    } else {
         insertMapMarkers(latLonArray, MAP);
     }
-    
+
 }
 
-function addPolylinesToMap(data){
+function addPolylinesToMap(data) {
     var latLonArray = [];
-    featureGroup = [];
-    for (var i = 0; i < data.length; i++) {
-        var resultArray = data[i];
-        var currentArray = [parseFloat(resultArray.Latitude), parseFloat(resultArray.Longitude)];
-        latLonArray.push(currentArray);
-    }
-    drawPolylineOnMap(latLonArray, MAP, true);
-    setStartEndMarkerOnPopupMap(data, MAP);
+    $.each(data, function (indexInArray, valueOfElement) {
+        for (var i = 0; i < valueOfElement.length; i++) {
+            var resultArray = valueOfElement[i];
+            var currentArray = [parseFloat(resultArray.LATITUDE), parseFloat(resultArray.LONGITUDE)];
+            latLonArray.push(currentArray);
+        }
+    });
+
+    drawPolylineOnMap(latLonArray, MAP);
+    setStartEndMarkerOnPositionMap(latLonArray, MAP);
 }
 
 
@@ -607,7 +606,7 @@ function generateChartReportView() {
     $("#resultContainer").html(htmlString);
 }
 
-function generatePositionReportView(){
+function generatePositionReportView() {
     let htmlString = "";
     htmlString += "<div class='position-container'>";
     htmlString += "<div class='map-container'>";

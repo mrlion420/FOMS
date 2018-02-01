@@ -4,8 +4,8 @@ $(document).ready(function(){
 });
 
 // GLOBAL VARIABLES
-const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
-// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+// const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
+const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 // const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [
@@ -40,7 +40,7 @@ var MAP_MARKER = null;
 var INFO_WINDOW = null;
 // Timezone 
 var TIMEZONE = 8;
-var USERID = 53;
+var USERID = 3;
 // var USERID = 38; 
 var COMPANYID = 0;
 var FLEETID = 0;
@@ -320,6 +320,35 @@ function setStartEndMarkerOnPopupMap(latlonArray, map){
 
 	var endLat = latlonArray[latlonArray.length - 1].Latitude;
 	var endLon = latlonArray[latlonArray.length - 1].Longitude;
+	latLng = new google.maps.LatLng(endLat, endLon);
+	var endMarker = new google.maps.Marker({
+		position: latLng,
+        map: map,        
+        icon: endIcon
+	});
+}
+
+function setStartEndMarkerOnPositionMap(latlonArray, map){
+	var startLat = latlonArray[0][0];
+	var startLon = latlonArray[0][1];
+	var latLng = new google.maps.LatLng(startLat, startLon);
+
+	var startIcon = {
+        url: '../img/start_vessel.png'
+	};
+	
+	var startMarker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        icon: startIcon
+	});
+	
+	var endIcon = {
+		url: '../img/vessel.png'
+	};		
+
+	var endLat = latlonArray[latlonArray.length - 1][0];
+	var endLon = latlonArray[latlonArray.length - 1][1];
 	latLng = new google.maps.LatLng(endLat, endLon);
 	var endMarker = new google.maps.Marker({
 		position: latLng,

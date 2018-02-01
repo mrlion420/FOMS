@@ -180,6 +180,7 @@ p{
     display: flex;
     align-items: center;
     width: 150px;
+    flex-direction: row-reverse;
 }
 
 .main-container .top-select-container p{
@@ -191,8 +192,7 @@ p{
     font-size: 18px;
     background-color: #3282E4;
     padding: 6px 10px;
-    max-width: 400px;
-    min-width: 250px;
+    width: 250px;
     border: 1px solid black;
     color: white;
 }
@@ -245,8 +245,7 @@ p{
 	width: 120px;
 	height: 40px;
 	background: #333;
-	margin: 20px 60px;
-
+	margin: 0px 60px;
 	border-radius: 50px;
     position: relative;
 }
@@ -940,7 +939,7 @@ p{
 }
 
 .report .position-container .map-container{
-    width: 70%;
+    width: 60%;
     height: 600px;
     margin: 0px 10px 0px 0px;
 }
@@ -950,10 +949,37 @@ p{
     width: 100%;
 }
 
-.report .position-container .event-container{
-    width: 27%;
+.report .position-container .event-container table{
+    width: 100%;
+    border-collapse: collapse;
+    border-left: 1.5px solid #3282E4;
+    border-right: 1.5px solid #3282E4;
+    border-bottom: 1.5px solid #3282E4;
 }
 
+
+.report .position-container .event-container table th{
+    background-color: #3282E4;
+    color: white;
+    font-size: 16px;
+    /* border-right: 2.5px solid white; */
+    padding: 8px 0px;
+}
+
+.report .position-container .event-containertable th:last-child{
+    border-right: 0;
+}
+
+.report .position-container .event-container table td:first-child{
+    text-align: left;
+}
+
+.report .position-container .event-container table td{
+    padding : 0px 5px;
+    text-align: right;
+    font-size: 18px;
+    height: 35px;
+}
 
 /* ----------------- LOGIN SECTION ---------------- */
 .login{

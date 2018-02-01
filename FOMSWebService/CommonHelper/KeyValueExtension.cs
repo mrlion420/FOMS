@@ -56,5 +56,10 @@ namespace CommonHelper
             return SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ANALOG), analogCode.ToString()).SysCodeDesc;
         }
 
+        public static string GetEngineUnitFromMeasurementUnit(int measurementUnit)
+        {
+            return SystemCode.GetBySysCodeTypeIdSysCodeId(49, measurementUnit.ToString()).SysCodeShortDesc;
+        }
+
     }
 }

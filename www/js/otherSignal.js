@@ -85,6 +85,7 @@ function populateVesselSelectBox(data){
 
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
+		VESSELID = TEMP_VESSELID;
 		GetCurrentAlarmStatus();
 		GetIOAlarmByQuery();
 	});
@@ -94,6 +95,17 @@ function submitBtnClickHandler(){
 function selectDropdownChangeEvent(){
 	$("#querySelect").change(function(){
 		GetIOAlarmByQuery();
+	});
+
+	$("#fleetSelect").change(function () {
+		fleetSelectChangeFunction();
+	});
+
+	$("#vesselSelect").change(function () {
+		VESSELID = $("#vesselSelect").val();
+		// Check if the analogs needed to reloaded or not 
+		// By checking if the vessel Id has changed
+		//reloadAllAnalog();
 	});
 }
 
@@ -176,4 +188,15 @@ function populateIOAlarmTable(data){
 	$("#totalTablePage").text(pageCount);
 	$("#tableContainer").html(htmlString);
 	paginationTable(maxTableRows);
+}
+
+function selectDropdownChangeEvent() {
+	
+
+}
+
+async function fleetSelectChangeFunction() {
+	FLEETID = $("#fleetSelect").val();
+	await getUserRelatedVessels();
+	await reloadAllAnalog();
 }

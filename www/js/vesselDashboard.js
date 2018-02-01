@@ -20,16 +20,16 @@ async function mainFunction() {
     generateStaticMapFromQueryTime();
     
     getRecentEventList();
-    setInterval(getRecentEventList, 1000 * 10);
+    // setInterval(getRecentEventList, 1000 * 10);
 
     getRecentDistance();
-    setInterval(getRecentDistance, 1000 * 3);
+    // setInterval(getRecentDistance, 1000 * 3);
 
     getRecentPosition();
-    setInterval(getRecentPosition, 1000 * 3);
+    // setInterval(getRecentPosition, 1000 * 3);
 
     getEngineTotalAndEstConsumption();
-    setInterval(getEngineTotalAndEstConsumption, 1000 * 3);
+    // setInterval(getEngineTotalAndEstConsumption, 1000 * 3);
 
 }
 
@@ -386,7 +386,7 @@ function addLiveChartPointToChart(data , chart){
         var singleObject = valueOfElement;
         for (var i = 0; i < singleObject.length; i++) {
             var result = singleObject[i];
-            var value = round(parseFloat(result.EST_FLOW_RATE), 2);
+            var value = round(parseFloat(result.CALCULATED_TOTAL_FLOW), 2);
             var ticks = parseFloat(result.Ticks);
             var additionalInfo = result.ADDITIONAL_INFO;
             var unit = result.Unit;
@@ -424,10 +424,10 @@ function tooltipFormatter(chart){
     var formatter = "";
     var chartTitle = $("#chartTitle").text();
 
-    if (chartTitle !== "Fuel Cons. Rate (ℓ/hr)") {
-        rateText = "Est. Flow Rate : "; // Bunker
+    if (chartTitle !== "Daily Flow Rate") {
+        rateText = "Consumption : "; 
     } else {
-        rateText = "Est. Consumption Rate (ℓ/hr) : ";
+        rateText = "Flow Rate : "; // Bunker
     }
 
     formatter = "<b>" + chart.series.name + "</b><br>" +
@@ -448,7 +448,7 @@ function addSeriesIntoChart(data){
         var singleObject = valueOfElement;
         for (var i = 0; i < singleObject.length; i++) {
             var result = singleObject[i];
-            var value = round(parseFloat(result.EST_FLOW_RATE), 2);
+            var value = round(parseFloat(result.CALCULATED_TOTAL_FLOW), 2);
             var ticks = parseFloat(result.Ticks);
             var additionalInfo = result.ADDITIONAL_INFO;
             var unit = result.Unit;
@@ -534,11 +534,11 @@ function selectDropdownChangeEvent(){
         var htmlString = "";
         switch (SELECTED_ENGINE_TYPE) {
             case "4":
-                htmlString = "Est. Consumption Rate (ℓ/hr)";
+                htmlString = "Daily Flow Rate";
                 break;
 
             default:
-                htmlString = "Fuel Cons. Rate (ℓ/hr)";
+                htmlString = "Daily Fuel Consumption";
                 break;
         }
         $("#chartTitle").html(htmlString);

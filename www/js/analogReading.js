@@ -1,180 +1,175 @@
 $(document).ready(function () {
-    mainFunction();
+	mainFunction();
 });
 
-async function mainFunction(){
-    hideChartViews();
-    await getUserRelatedFleets();
-    await getUserRelatedVessels();
-    await GetCurrentAnalogData();
-    await GetAllAnalog();
+async function mainFunction() {
+	hideChartViews();
+	await getUserRelatedFleets();
+	await getUserRelatedVessels();
+	await GetCurrentAnalogData();
+	await GetAllAnalog();
 
-    selectDropdownChangeEvent();
-    submitBtnClickHandler();
+	selectDropdownChangeEvent();
+	submitBtnClickHandler();
 }
 
-async function getUserRelatedFleets(){
-    var method = "GetUserRelatedFleets";
-    try{
-        let data = await ajaxGet(method, PARAMETER_USERID);
-        populateFleetSelectBox(data);
-    }catch(ex){
-        console.log(ex);
-    }
+async function getUserRelatedFleets() {
+	var method = "GetUserRelatedFleets";
+	try {
+		let data = await ajaxGet(method, PARAMETER_USERID);
+		populateFleetSelectBox(data);
+	} catch (ex) {
+		console.log(ex);
+	}
 }
 
-function populateFleetSelectBox(data){
-    var isFirstItem = true;
-    var htmlString = "";
-    $.each(data, function(index,valueInElement){
-        var key = data[index].Key;
-        var value = data[index].Result;
-        if(isFirstItem){
-            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-            FLEETID = key;
-            isFirstItem = false;
-        }else{
-            htmlString += "<option value='" + key + "'>" + value +"</option>";
-        }
-        
-    });
-    $("#fleetSelect").html(htmlString);
+function populateFleetSelectBox(data) {
+	var isFirstItem = true;
+	var htmlString = "";
+	$.each(data, function (index, valueInElement) {
+		var key = data[index].Key;
+		var value = data[index].Result;
+		if (isFirstItem) {
+			htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+			FLEETID = key;
+			isFirstItem = false;
+		} else {
+			htmlString += "<option value='" + key + "'>" + value + "</option>";
+		}
+
+	});
+	$("#fleetSelect").html(htmlString);
 }
 
-async function getUserRelatedVessels(){
-    var method = "GetUserRelatedVessels";
-    var parameters = PARAMETER_USERID;
-    parameters.fleetId = FLEETID;
-    try{
-        let data = await ajaxGet(method, parameters);
-        populateVesselSelectBox(data);
-    }catch(ex){
-        console.log(ex);
-    }
-    resetConstArrays();
+async function getUserRelatedVessels() {
+	var method = "GetUserRelatedVessels";
+	var parameters = PARAMETER_USERID;
+	parameters.fleetId = FLEETID;
+	try {
+		let data = await ajaxGet(method, parameters);
+		populateVesselSelectBox(data);
+	} catch (ex) {
+		console.log(ex);
+	}
+	resetConstArrays();
 }
 
-function populateVesselSelectBox(data){
-    var isFirstItem = true;
-    var htmlString = "";
+function populateVesselSelectBox(data) {
+	var isFirstItem = true;
+	var htmlString = "";
 
-    $.each(data, function(index,valueInElement){
-        var key = data[index].Key;
-        var value = data[index].Result;
-        if(isFirstItem){
-            htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-            if(PAGELOAD){
-                VESSELID = key;
-                PAGELOAD = false;
-            }else{
-                TEMP_VESSELID = key;
-            }
-            isFirstItem = false;
-        }else{
-            htmlString += "<option value='" + key + "'>" + value +"</option>";
-        }
-        
-    });
-    $("#vesselSelect").html(htmlString);
+	$.each(data, function (index, valueInElement) {
+		var key = data[index].Key;
+		var value = data[index].Result;
+		if (isFirstItem) {
+			htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+			VESSELID = key;
+			isFirstItem = false;
+		} else {
+			htmlString += "<option value='" + key + "'>" + value + "</option>";
+		}
+
+	});
+	$("#vesselSelect").html(htmlString);
 }
 
-async function GetCurrentAnalogData(){
-    var method = "GetCurrentAnalogData";
-    resetConstArrays();
-    try{
-        let data = await ajaxGet(method, PARAMETER_VESSELID);
-        populateAnalogData(data);
-    }catch(ex){
-        console.log(ex);
-    }
+async function GetCurrentAnalogData() {
+	var method = "GetCurrentAnalogData";
+	resetConstArrays();
+	try {
+		let data = await ajaxGet(method, PARAMETER_VESSELID);
+		populateAnalogData(data);
+	} catch (ex) {
+		console.log(ex);
+	}
 }
 
-function populateAnalogData(data){
-    $("#analogBody").html("");
-    for(var i = 0; i < data.length; i++){
-        var analogDataList = data[i];
-        for(var j = 0; j < analogDataList.length; j++){
-            var htmlString = "";
-            var result = analogDataList[j];
-            var imgUrl = "../img/tick.png";
-            var cssClass = "no-alarm";
-            if(result.AlarmStatus === "1"){
-                imgUrl = "../img/cross.png";
-                cssClass = "alarm";
-            }
+function populateAnalogData(data) {
+	$("#analogBody").html("");
+	for (var i = 0; i < data.length; i++) {
+		var analogDataList = data[i];
+		for (var j = 0; j < analogDataList.length; j++) {
+			var htmlString = "";
+			var result = analogDataList[j];
+			var imgUrl = "../img/tick.png";
+			var cssClass = "no-alarm";
+			if (result.AlarmStatus === "1") {
+				imgUrl = "../img/cross.png";
+				cssClass = "alarm";
+			}
 
-            htmlString += "<div class='analog-item'>";
-            htmlString += "<canvas id='" + result.AnalogId + "Canvas'></canvas>";
-            htmlString += "<div class='analog-desc'>";
-            htmlString += "<div class='analog-desc-item'>";
-            htmlString += "<p class='" + cssClass + "'>" + result.AnalogName + "</p>";
-           
-            htmlString += "<img src='" + imgUrl + "'/>";
-            htmlString += "</div>";
-            htmlString += "<div class='analog-desc-item'>";
-            htmlString += "<p>Reading : </p>";
-            htmlString += "<p class='" + cssClass + "'>" + result.AnalogValue + "</p>";
-            htmlString += "</div>";
-            htmlString += "</div>";
-            htmlString += "</div>";
-            $("#analogBody").append(htmlString);
-            createRadialGauge(result.AnalogId + "Canvas" , result.AnalogValue);
-        }
+			htmlString += "<div class='analog-item'>";
+			htmlString += "<canvas id='" + result.AnalogId + "Canvas'></canvas>";
+			htmlString += "<div class='analog-desc'>";
+			htmlString += "<div class='analog-desc-item'>";
+			htmlString += "<p class='" + cssClass + "'>" + result.AnalogName + "</p>";
 
-    }
+			htmlString += "<img src='" + imgUrl + "'/>";
+			htmlString += "</div>";
+			htmlString += "<div class='analog-desc-item'>";
+			htmlString += "<p>Reading : </p>";
+			htmlString += "<p class='" + cssClass + "'>" + result.AnalogValue + "</p>";
+			htmlString += "</div>";
+			htmlString += "</div>";
+			htmlString += "</div>";
+			$("#analogBody").append(htmlString);
+			createRadialGauge(result.AnalogId + "Canvas", result.AnalogValue);
+		}
+
+	}
 }
 
-function createRadialGauge(id, value){
-    var gauge = new RadialGauge({
-       renderTo: id,
-       width : 280,
-       height: 180,
-       minValue : 0,
-       maxValue : 200,
-       value : value,
-       units: "litres",
-       colorValueBoxShadow: false,
-       highlights: [
-           { "from": 0, "to": 75, "color": "rgba(0,255,0,.15)" },
-           { "from": 75, "to": 150, "color": "rgba(255,255,0,.15)" },
-           { "from": 150, "to": 200, "color": "rgba(255,30,0,.25)" }
-       ],
-       majorTicks : ["0","20","40","60","80","100","120","140","160","180","200"],
-       minorTicks : 5
-   }).draw();
+function createRadialGauge(id, value) {
+	var gauge = new RadialGauge({
+		renderTo: id,
+		width: 280,
+		height: 180,
+		minValue: 0,
+		maxValue: 200,
+		value: value,
+		units: "litres",
+		colorValueBoxShadow: false,
+		highlights: [
+			{ "from": 0, "to": 75, "color": "rgba(0,255,0,.15)" },
+			{ "from": 75, "to": 150, "color": "rgba(255,255,0,.15)" },
+			{ "from": 150, "to": 200, "color": "rgba(255,30,0,.25)" }
+		],
+		majorTicks: ["0", "20", "40", "60", "80", "100", "120", "140", "160", "180", "200"],
+		minorTicks: 5
+	}).draw();
 }
 
-async function GetAllAnalog(){
-    var method = "GetAllAnalog";
-    try{
-        let data = await ajaxGet(method, PARAMETER_VESSELID);
-        populateAllAnalogData(data);
-    }catch(ex){
-        console.log(ex);
-    }
+async function GetAllAnalog() {
+	var method = "GetAllAnalog";
+	try {
+		let data = await ajaxGet(method, PARAMETER_VESSELID);
+		populateAllAnalogData(data);
+	} catch (ex) {
+		console.log(ex);
+	}
 }
 
-function populateAllAnalogData(data){
-    var htmlString = "";
-    for(var i = 0; i < data.length; i++){
-        var result = data[i];
-        htmlString += "<option value='" + result.AnalogId + "'>" + result.AnalogName + "</option>";
-    }
-    $("#analogIdSelect").html(htmlString);
+function populateAllAnalogData(data) {
+	var htmlString = "";
+	for (var i = 0; i < data.length; i++) {
+		var result = data[i];
+		htmlString += "<option value='" + result.AnalogId + "'>" + result.AnalogName + "</option>";
+	}
+	$("#analogIdSelect").html(htmlString);
 }
 
-async function GetSynchornizedChartByAnalogId(){
-    var method = "GetSynchornizedChartByAnalogId";
+async function GetSynchornizedChartByAnalogId() {
+	var method = "GetSynchornizedChartByAnalogId";
 	var parameters = PARAMETER_VESSELID;
 	parameters.timezone = TIMEZONE;
 	parameters.querytime = $("#querySelect").val();
 	parameters.analogId = $("#analogIdSelect").val();
 	parameters.includeRefSignal = $('#checkboxInput').is(":checked");
 	// parameters.includeRefSignal = "true";
-	try{
+	try {
 		let data = await ajaxGet(method, parameters);
 		populateChartData(data);
-	}catch(ex){
+	} catch (ex) {
 		console.log(ex);
 	}
 	resetConstArrays();
@@ -198,8 +193,8 @@ function populateChartData(data) {
 		for (var i = 0; i < series.length; i++) {
 			var result = series[i];
 			var value;
-            var ticks = parseFloat(result.Ticks);
-            value = round(parseFloat(result.CONVERTED_VALUE), 2);
+			var ticks = parseFloat(result.Ticks);
+			value = round(parseFloat(result.CONVERTED_VALUE), 2);
 
 			var unit = result.Unit;
 			maxValue = getMaxValue(maxValue, value);
@@ -210,8 +205,8 @@ function populateChartData(data) {
 				lastValue = value;
 			}
 			seriesArray.push({ x: ticks, y: value, unit: unit });
-        }
-        
+		}
+
 		var averageValue = getAverageValue(totalValue, series.length);
 		createChart(key, uniqueId);
 		addSingleSeriesIntoChart(seriesArray, key, chartType, uniqueId);
@@ -236,10 +231,10 @@ function populateChartData(data) {
 			}
 		}
 	});
-	
+
 }
 
-function insertChartItemValues(uniqueId, minValue, maxValue,averageValue, lastValue, unit){
+function insertChartItemValues(uniqueId, minValue, maxValue, averageValue, lastValue, unit) {
 	var htmlString = "";
 	htmlString = "<div class='chart-item'>";
 	htmlString += "<div class='main-value'>";
@@ -263,27 +258,27 @@ function insertChartItemValues(uniqueId, minValue, maxValue,averageValue, lastVa
 	$("#chartValues").append(htmlString);
 }
 
-function getMaxValue(maxValue, currentValue){
-	if(currentValue > maxValue){
+function getMaxValue(maxValue, currentValue) {
+	if (currentValue > maxValue) {
 		return currentValue;
-	}else{
+	} else {
 		return maxValue;
 	}
 }
 
-function getMinValue(minValue, currentValue){
-	if(currentValue < minValue){
+function getMinValue(minValue, currentValue) {
+	if (currentValue < minValue) {
 		return currentValue;
-	}else{
+	} else {
 		return minValue;
 	}
 }
 
-function getAverageValue(totalValue, count){
-	return round(parseFloat(totalValue / count), 2 );
+function getAverageValue(totalValue, count) {
+	return round(parseFloat(totalValue / count), 2);
 }
 
-function createChart(chartTitle, uniqueId){
+function createChart(chartTitle, uniqueId) {
 	options = {
 		chart: {
 			type: "line",
@@ -294,10 +289,10 @@ function createChart(chartTitle, uniqueId){
 		title: {
 			text: chartTitle,
 			margin: 15,
-			align : "left",
-			x :30
+			align: "left",
+			x: 30
 		},
-		legend : {
+		legend: {
 			enabled: false
 		},
 		xAxis: {
@@ -326,11 +321,11 @@ function createChart(chartTitle, uniqueId){
 	};
 
 	$('<div class="chart" id="chart-' + uniqueId + '">').appendTo('#chartContainer').highcharts($.extend(true, {}, options));
-	var chart = $("#chart-" + uniqueId ).highcharts();
+	var chart = $("#chart-" + uniqueId).highcharts();
 	syncChartArray.push(chart);
 }
 
-function tooltipFormatter(chart){
+function tooltipFormatter(chart) {
 	var dateFormatHC = '%d-%b-%y %H:%M:%S';
 	var formatter = "";
 	var count = 0;
@@ -354,10 +349,10 @@ function tooltipFormatter(chart){
 	return formatter;
 }
 
-function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId){
+function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId) {
 	var singleChart = syncChartArray[uniqueId];
 	singleChart.addSeries({
-		id : uniqueId,
+		id: uniqueId,
 		type: chartType,
 		name: seriesName,
 		data: seriesArray
@@ -365,86 +360,94 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId){
 
 }
 
-function selectDropdownChangeEvent(){
-    $("#fleetSelect").change(function(){
-        FLEETID = $("#fleetSelect").val();
-        getUserRelatedVessels();
-    });
+function selectDropdownChangeEvent() {
+	$("#fleetSelect").change(function () {
+		fleetSelectChangeFunction();
+	});
 
-    $("#vesselSelect").change(function(){
-        TEMP_VESSELID = $("#vesselSelect").val();
-        // Check if the analogs needed to reloaded or not 
+	$("#vesselSelect").change(function () {
+		VESSELID = $("#vesselSelect").val();
+		// Check if the analogs needed to reloaded or not 
 		// By checking if the vessel Id has changed
-        reloadAllAnalog();
-    });
+		reloadAllAnalog();
+	});
 
-    $("#viewTypeSelect").change(function(){
-        viewTypeSelectChangeFunction();
-    });
+	$("#viewTypeSelect").change(function () {
+		viewTypeSelectChangeFunction();
+	});
 
-    $("#analogIdSelect").change(function(){
-        GetSynchornizedChartByAnalogId();
-    })
+	$("#analogIdSelect").change(function () {
+		//GetSynchornizedChartByAnalogId();
+	})
 
-    $("#checkboxInput").change(function(){
-        GetSynchornizedChartByAnalogId();
-    });
+	$("#checkboxInput").change(function () {
+		//GetSynchornizedChartByAnalogId();
+	});
+
+	$("#vesselSelect").change(function () {
+		TEMP_VESSELID = $("#vesselSelect").val();
+	});
 }
 
-async function viewTypeSelectChangeFunction(){
-    var viewType = $("#viewTypeSelect").val();
-    switch(viewType){
-        case "gauges":
-        hideChartViews();
-        await GetCurrentAnalogData();
-        break;
-
-        case "chart":
-        showChartViews();
-        await GetSynchornizedChartByAnalogId();
-        break;
-    }
+async function fleetSelectChangeFunction() {
+	FLEETID = $("#fleetSelect").val();
+	await getUserRelatedVessels();
+	await reloadAllAnalog();
 }
 
-function hideChartViews(){
-    $("#analogIdSelectDiv").addClass("hidden");
-    $("#checkboxDiv").addClass("hidden");
-    $("#wrapperChart").addClass("display-none");
+async function viewTypeSelectChangeFunction() {
+	var viewType = $("#viewTypeSelect").val();
+	switch (viewType) {
+		case "gauges":
+			hideChartViews();
+			await GetCurrentAnalogData();
+			break;
+
+		case "chart":
+			showChartViews();
+			await GetSynchornizedChartByAnalogId();
+			break;
+	}
+}
+
+function hideChartViews() {
+	$("#analogIdSelectDiv").addClass("hidden");
+	$("#checkboxDiv").addClass("hidden");
+	$("#wrapperChart").addClass("display-none");
 	$("#wrapper").addClass("display-flex");
 	$("#queryDiv").addClass("display-none");
-    
-    $("#analogIdSelectDiv").removeClass("show");
-    $("#checkboxDiv").removeClass("show");
-    $("#wrapperChart").removeClass("display-flex");
+
+	$("#analogIdSelectDiv").removeClass("show");
+	$("#checkboxDiv").removeClass("show");
+	$("#wrapperChart").removeClass("display-flex");
 	$("#wrapper").removeClass("display-none");
-    $("#queryDiv").removeClass("display-flex");
+	$("#queryDiv").removeClass("display-flex");
 }
 
-function showChartViews(){
-    $("#analogIdSelectDiv").addClass("show");
-    $("#checkboxDiv").addClass("show");
-    $("#wrapperChart").addClass("display-flex");
+function showChartViews() {
+	$("#analogIdSelectDiv").addClass("show");
+	$("#checkboxDiv").addClass("show");
+	$("#wrapperChart").addClass("display-flex");
 	$("#wrapper").addClass("display-none");
 	$("#queryDiv").addClass("display-flex");
 
-    $("#analogIdSelectDiv").removeClass("hidden");
-    $("#checkboxDiv").removeClass("hidden");
-    $("#wrapperChart").removeClass("display-none");
+	$("#analogIdSelectDiv").removeClass("hidden");
+	$("#checkboxDiv").removeClass("hidden");
+	$("#wrapperChart").removeClass("display-none");
 	$("#wrapper").removeClass("display-flex");
-    $("#queryDiv").removeClass("display-none");
-    
+	$("#queryDiv").removeClass("display-none");
+
 }
 
-function submitBtnClickHandler(){
-    $("#submitBtn").click(function(){
-        viewTypeSelectChangeFunction();
-    }); 
+function submitBtnClickHandler() {
+	$("#submitBtn").click(function () {
+		
+		viewTypeSelectChangeFunction();
+	});
 }
 
-async function reloadAllAnalog(){
-	if(TEMP_VESSELID !== VESSELID){
-		await GetAllAnalog();
-	}
+async function reloadAllAnalog() {
+	await GetAllAnalog();
 }
 
 

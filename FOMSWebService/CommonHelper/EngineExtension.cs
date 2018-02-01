@@ -35,16 +35,17 @@ namespace CommonHelper
             {
                 engineTable.Columns.Add("Ticks", typeof(string));
                 engineTable.Columns.Add("Unit", typeof(string));
+                int vesselId = Convert.ToInt32(engineTable.Rows[0]["VESSEL_ID"]);
+                Vessel singleVessel = Vessel.GetByVesselId(vesselId);
+                int measurementUnitId = singleVessel.MeasurementUnitId;
+                string engineUnit = KeyValueExtension.GetEngineUnitFromMeasurementUnit(measurementUnitId);
 
                 foreach (DataRow row in engineTable.Rows)
                 {
                     DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
-                    if(viewIntervalEnum != BLL_Enum._VIEW_INTERVAL.Daily)
-                    {
-                        datetime = datetime.AddHours(timezone);
-                    }
+                    
+                    datetime = datetime.AddHours(timezone);
 
-                    string engineUnit = "ℓ/hr";
                     string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
                     row["Unit"] = engineUnit;
                     row["Ticks"] = ticksStr;

@@ -428,7 +428,7 @@ namespace FOMSWebService
                 double estCons = Convert.ToDouble(totalFlow) / (runningMins / 60);
                 engineData.TotalCons = totalFlow.ToString();
                 engineData.EstCons = estCons.ToString();
-                engineData.UserStartDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
+                engineData.UserStartDatetime = "Since " + DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
             }
             catch (Exception ex)
             {
@@ -1298,7 +1298,7 @@ namespace FOMSWebService
                 DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
                 DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
                 // Query Interval - xx:xx:01 to xx:xx:00
-                DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false);
+                DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
                 engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                 if (engineType.Equals("2"))
