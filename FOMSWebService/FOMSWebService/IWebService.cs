@@ -140,7 +140,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        Stream GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType);
+        List<PositionData> GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType);
 
         #endregion
 
@@ -277,11 +277,29 @@ namespace FOMSWebService
         private string wgs84Lon;
         private string totalDistance;
         private string avgLitrePerNm;
-        private string sog;
-        private string cog;
+        private decimal sog;
+        private decimal cog;
         private decimal latitude;
         private decimal longitude;
         private string vesselName;
+        private string eventDesc;
+        private string positionDatetime;
+
+        [DataMember]
+        public string PositionDatetime
+        {
+            get { return positionDatetime; }
+            set { positionDatetime = value; }
+        }
+
+
+        [DataMember]
+        public string EventDesc
+        {
+            get { return eventDesc; }
+            set { eventDesc = value; }
+        }
+
 
         [DataMember]
         public string VesselName
@@ -307,7 +325,7 @@ namespace FOMSWebService
 
 
         [DataMember]
-        public string Cog
+        public decimal Cog
         {
             get { return cog; }
             set { cog = value; }
@@ -315,7 +333,7 @@ namespace FOMSWebService
 
 
         [DataMember]
-        public string Sog
+        public decimal Sog
         {
             get { return sog; }
             set { sog = value; }

@@ -329,8 +329,8 @@ namespace FOMSWebService
 
                 decimal longitude = positionItem.Longitude;
                 string wgs84Longitude = positionItem.Wgs84Longitude;
-                string cog = positionItem.Cog.ToString();
-                string sog = positionItem.Sog.ToString();
+                decimal cog = Convert.ToDecimal(positionItem.Cog.ToString());
+                decimal sog = Convert.ToDecimal(positionItem.Sog.ToString());
 
                 positionData.Latitude = latitude;
                 positionData.Longitude = longitude;
@@ -1056,8 +1056,9 @@ namespace FOMSWebService
             return eventDataList;
         }
 
-        public Stream GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType)
+        public List<PositionData> GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType)
         {
+            List<PositionData> positionDataList = new List<PositionData>();
             string returnString = string.Empty;
             try
             {
@@ -1072,18 +1073,41 @@ namespace FOMSWebService
                     eventTypeEnum = BLL_Enum._EVENT_TYPE.None;
                 }
 
-                DataSet resultDs = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, viewIntervalEnum, startDatetime, endDatetime);
-                //Position.GetAll()
+                DataTable holderTable = new DataTable();
+                if(querytime != 99)
+                {
+                    DataSet resultDs = Position.GetView(vesselId, eventTypeEnum, viewIntervalEnum, startDatetime, endDatetime);
+                    holderTable = resultDs.Tables[0].Copy();
+                }
+                else
+                {
+                    DataTable resultTable = Position.GetAll(vesselId, startDatetime, endDatetime, BLL_Enum._SORT_ORDER.ASC, eventTypeEnum);
+                    holderTable = resultTable.Copy();
+                }
 
-                returnString = JsonConvert.SerializeObject(resultDs);
+                foreach (DataRow positionRow in holderTable.Rows)
+                {
+                    PositionData positionData = new PositionData();
+                    positionData.Wgs84Lat = positionRow["WGS84_LONGITUDE"].ToString();
+                    positionData.Wgs84Lon = positionRow["WGS84_LONGITUDE"].ToString();
+                    positionData.EventDesc = positionRow["EVENT_DETAIL"].ToString();
+                    positionData.Latitude = Convert.ToDecimal(positionRow["LATITUDE"].ToString());
+                    positionData.Longitude = Convert.ToDecimal(positionRow["LONGITUDE"].ToString());
+                    positionData.Sog = Convert.ToDecimal(positionRow["SOG"].ToString());
+                    positionData.Cog = Convert.ToDecimal(positionRow["COG"].ToString());
+                    positionData.PositionDatetime = DateTimeExtension.DisplayDateWithYear(DateTime.Parse(positionRow["POSITION_DATETIME"].ToString()).AddHours(timezone));
+                    positionData.TotalDistance = positionRow["DISTANCE"].ToString();
+
+                    positionDataList.Add(positionData);
+                }
+
             }
             catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
 
-            WebOperationContext.Current.OutgoingResponse.ContentType = "application/json; charset=utf-8";
-            return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
+            return positionDataList;
         }
 
         #endregion

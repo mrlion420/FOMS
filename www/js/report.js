@@ -62,12 +62,7 @@ function populateVesselSelectBox(data) {
         var value = data[index].Result;
         if (isFirstItem) {
             htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-            if (PAGELOAD) {
-                VESSELID = key;
-                PAGELOAD = false;
-            } else {
-                TEMP_VESSELID = key;
-            }
+            VESSELID = key;
             isFirstItem = false;
         } else {
             htmlString += "<option value='" + key + "'>" + value + "</option>";
@@ -92,11 +87,13 @@ function loadSelectMainContainer() {
 function selectChangeEventHandler() {
     $("#fleetSelect").change(function () {
         FLEETID = $("#fleetSelect").val();
-        getUserRelatedVessels();
+        fleetChangeFunction();
     });
 
     $("#vesselSelect").change(function () {
         VESSELID = $("#vesselSelect").val();
+        resetConstArrays();
+        loadMainSelectType();
     });
 
     $("#selectReportType").change(function () {
@@ -109,10 +106,15 @@ function selectChangeEventHandler() {
 
 }
 
+async function fleetChangeFunction() {
+    await getUserRelatedVessels();
+    loadMainSelectType();
+}
+
 async function loadDatetimePickers() {
 
-    var method = "GetCurrentDatetime";
-    var parameters = PARAMETER_USERID;
+    let method = "GetCurrentDatetime";
+    let parameters = PARAMETER_USERID;
     parameters.timezone = TIMEZONE;
     try {
         let data = await ajaxGet(method, parameters);
@@ -423,7 +425,7 @@ async function btnMap_Position() {
     parameters.querytime = $("#selectInterval").val();
     parameters.startDatetimeStr = $("#startDatetime").val();
     parameters.endDatetimeStr = $("#endDatetime").val();
-    parameters.eventType = $("#checkboxInput").val();
+    parameters.eventType = $("#checkboxInput").is(":checked") ? 1 : 0;
 
     try {
         let data = await ajaxGet(method, parameters);
@@ -431,6 +433,7 @@ async function btnMap_Position() {
         await initMap("map");
         insertMapMarkersWithEvents(data, MAP);
         addPolylinesToMap(data);
+        addPositionTable(data);
 
     } catch (ex) {
         console.log(ex);
@@ -440,12 +443,10 @@ async function btnMap_Position() {
 function drawMap(data) {
     let latLonArray = [];
     $.each(data, function (key, value) {
-        for (let i = 0; i < value.length; i++) {
-            let resultArray = value[i];
-            let currentArray = [parseFloat(resultArray.LATITUDE), parseFloat(resultArray.LONGITUDE)];
-            latLonArray.push(currentArray);
-            setDirectionIcon(resultArray);
-        }
+        let currentArray = [parseFloat(value.Latitude), parseFloat(value.Longitude)];
+        latLonArray.push(currentArray);
+        setDirectionIcon(value);
+
     });
     if (latLonArray.length > 1) {
         drawPolylineOnMap(latLonArray, MAP);
@@ -459,11 +460,8 @@ function drawMap(data) {
 function addPolylinesToMap(data) {
     var latLonArray = [];
     $.each(data, function (indexInArray, valueOfElement) {
-        for (var i = 0; i < valueOfElement.length; i++) {
-            var resultArray = valueOfElement[i];
-            var currentArray = [parseFloat(resultArray.LATITUDE), parseFloat(resultArray.LONGITUDE)];
-            latLonArray.push(currentArray);
-        }
+        var currentArray = [parseFloat(valueOfElement.Latitude), parseFloat(valueOfElement.Longitude)];
+        latLonArray.push(currentArray);
     });
 
     drawPolylineOnMap(latLonArray, MAP);
@@ -612,8 +610,49 @@ function generatePositionReportView() {
     htmlString += "<div class='map-container'>";
     htmlString += "<div id='map'></div>";
     htmlString += "</div>";
-    htmlString += "<div class='event-container' id='eventContainer'></div>";
+    htmlString += "<div class='table-container' id='tableContainer'></div>";
     htmlString += "</div>";
 
     $("#resultContainer").html(htmlString);
+}
+
+function addPositionTable(data){
+    let htmlString = "";
+    htmlString = "<table>";
+    htmlString += "<tr>";
+    htmlString += "<th style='display:none'></th>";
+    htmlString += "<th>Date Time</th>";
+    htmlString += "<th>Location</th>";
+    htmlString += "<th>SOG</th>";
+    htmlString += "<th>COG</th>";
+    htmlString += "<th>Est. Dist (Nm)</th>";
+    htmlString += "<th>Event(s)</th>";
+    htmlString += "</tr>";
+    let count = 0;
+    $.each(data , function(key, value){
+        let datetime = value.PositionDatetime;
+        let location = value.Wgs84Lat + " " + value.Wgs84Lon;
+        let sog = value.Sog;
+        let cog = value.Cog;
+        let distance = round(value.TotalDistance, 2);
+        let eventImage = "";
+        let events = value.EventDesc;
+        if(events !== ''){
+            eventImage = "<img src='../img/event_listing.png'/>";
+        }
+
+        htmlString += "<tr>";
+        htmlString += "<td style='display:none' id='" + count + "'></td>";
+        htmlString += "<td>" + datetime + "</td>";
+        htmlString += "<td>" + location + "</td>";
+        htmlString += "<td>" + sog + "</td>";
+        htmlString += "<td>" + cog + "</td>";
+        htmlString += "<td>" + distance + "</td>";
+        htmlString += "<td>" + eventImage + "</td>";
+        htmlString += "</tr>";
+        count++;
+    });
+
+    htmlString += "</table>";
+    $("#tableContainer").html(htmlString);
 }

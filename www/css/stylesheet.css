@@ -939,7 +939,7 @@ p{
 }
 
 .report .position-container .map-container{
-    width: 60%;
+    width: 50%;
     height: 600px;
     margin: 0px 10px 0px 0px;
 }
@@ -949,7 +949,12 @@ p{
     width: 100%;
 }
 
-.report .position-container .event-container table{
+.report .position-container .table-container{
+    height: 600px;
+}
+
+.report .position-container table{
+    height: 90%;
     width: 100%;
     border-collapse: collapse;
     border-left: 1.5px solid #3282E4;
@@ -958,7 +963,7 @@ p{
 }
 
 
-.report .position-container .event-container table th{
+.report .position-container table th{
     background-color: #3282E4;
     color: white;
     font-size: 16px;
@@ -966,19 +971,30 @@ p{
     padding: 8px 0px;
 }
 
-.report .position-container .event-containertable th:last-child{
+.report .position-container table th:last-child{
     border-right: 0;
 }
 
-.report .position-container .event-container table td:first-child{
+.report .position-container table td:first-child{
     text-align: left;
 }
 
-.report .position-container .event-container table td{
+.report .position-container table td{
+    min-width: 60px;
     padding : 0px 5px;
-    text-align: right;
-    font-size: 18px;
+    text-align: left;
+    font-size: 16px;
     height: 35px;
+}
+
+.report .position-container table td:nth-child(4),
+.report .position-container table td:nth-child(5),
+.report .position-container table td:nth-child(6){
+    text-align: right;
+}
+
+.report .position-container table td:last-child{
+    text-align: center;
 }
 
 /* ----------------- LOGIN SECTION ---------------- */
@@ -1035,7 +1051,7 @@ p{
 }
 
 .map-popup p{
-    font-size: 16px;
+    font-size: 14px;
     padding: 0;
     margin: 10px 0px 5px 0px; 
 }
