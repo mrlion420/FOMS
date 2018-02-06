@@ -254,7 +254,7 @@ namespace FOMSWebService
                 DateTime dateTimeEnd = DateTime.UtcNow;
 
                 DataTable eventListDataTable = new DataTable();
-                List<EventList> eventList = EventList.GetAll(vesselId, datetimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All);
+                List<EventList> eventList = EventList.GetAll(vesselId, datetimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All, BLL_Enum._SORT_ORDER.DESC);
                 //eventListDataTable = EventList.GetEventDisplayDetailByPeriod(dateTimeStart, dateTimeEnd, BLL_Enum._EVENT_TYPE.All, 20);
 
                 foreach (EventList eventItem in eventList)
@@ -360,7 +360,7 @@ namespace FOMSWebService
                 string currentOperationCode = Convert.ToString(latestOperation.OperationModeCode);
 
                 string operationDesc = SystemCode.GetBySysCodeTypeIdSysCodeId(systemCodeEventType, currentOperationCode).SysCodeDesc;
-                result.Key = DateTimeExtension.DisplayDateWithUTC(startDateTime, timezone);
+                result.Key =  DateTimeExtension.DisplayDateWithUTC(startDateTime, timezone);
                 result.Result = operationDesc;
             }
             catch (Exception ex)
@@ -502,7 +502,7 @@ namespace FOMSWebService
                 estCons = Convert.ToDouble(totalFlow) / (runningMins / 60);
                 engineData.TotalCons = totalFlow.ToString();
                 engineData.EstCons = estCons.ToString();
-                engineData.UserStartDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
+                engineData.UserStartDatetime = "Since " + DateTimeExtension.DisplayDateAddTimezoneWithUTC(startDatetime, timezone);
 
             }
             catch (Exception ex)
@@ -1431,7 +1431,6 @@ namespace FOMSWebService
             try
             {
 
-                string engineUnit = string.Empty;
                 int numOfPoint = 10; // Default to 10 for daily
                 int seconds = 86400; // 24 hours - Daily
                 DataSet resultSet = new DataSet();
@@ -1441,11 +1440,14 @@ namespace FOMSWebService
                 DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
                 DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
                 List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                Vessel singleVessel = vesselList[0];
+                string engineUnit = KeyValueExtension.GetEngineUnitFromMeasurementUnit(singleVessel.MeasurementUnitId);
+
                 foreach (Vessel vessel in vesselList)
                 {
                     // Query Interval - xx:xx:01 to xx:xx:00
                     DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
-                    resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId);
+                    resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId, engineUnit);
 
                     if (engineType.Equals("2"))
                     {
@@ -1454,7 +1456,7 @@ namespace FOMSWebService
                         engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                         // Query Interval - xx:xx:01 to xx:xx:00
                         DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
-                        resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId);
+                        resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId, engineUnit);
                     }
                 }
                 returnString = JsonConvert.SerializeObject(resultSet);

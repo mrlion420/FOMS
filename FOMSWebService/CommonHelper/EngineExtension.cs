@@ -121,10 +121,10 @@ namespace CommonHelper
             return resultDS;
         }
 
-        public static DataSet CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel, int fleetId)
+        public static DataSet CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, double timezone, Vessel vessel, int fleetId, string engineUnit)
         {
             int tableCount = 0;
-
+            engineUnit += "/hr";
             foreach (DataTable table in dsData.Tables)
             {
                 if (tableCount != 0)
@@ -140,11 +140,9 @@ namespace CommonHelper
                         //double runningMins = Convert.ToDouble(row["RUNNING_MINS"]);
                         //calculatedEstFlowRate += (totalFlow / runningMins) * 60;
                         calculatedEstFlowRate += Convert.ToDouble(row["EST_FLOW_RATE"]);
-
-                        DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
+                        DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString()).AddHours(timezone);
                         string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
-                        string engineUnit = "ℓ/hr";
-
+                        
                         // Combine the second and later tables' data to first table
                         firstTable.Rows[rowCount]["Unit"] = engineUnit;
                         firstTable.Rows[rowCount]["Ticks"] = ticksStr;
@@ -164,7 +162,6 @@ namespace CommonHelper
                     {
                         DateTime datetime = DateTime.Parse(row["READING_DATETIME"].ToString());
                         string ticksStr = Convert.ToString(DateTimeExtension.ToUnixTime(datetime) * 1000);
-                        string engineUnit = "ℓ/hr";
                         double totalFlow = Convert.ToDouble(row["CALCULATED_TOTAL_FLOW"]);
                         double runningMins = Convert.ToDouble(row["RUNNING_MINS"]);
                         double calculatedEstFlowRate = (totalFlow / runningMins) * 60;

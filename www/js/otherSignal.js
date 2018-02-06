@@ -67,13 +67,7 @@ function populateVesselSelectBox(data){
 		var value = data[index].Result;
 		if(isFirstItem){
 			htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-			if(PAGELOAD){
-				VESSELID = key;
-				TEMP_VESSELID = key;
-				PAGELOAD = false;
-			}else{
-				TEMP_VESSELID = key;
-			}
+			VESSELID = key;
 			isFirstItem = false;
 		}else{
 			htmlString += "<option value='" + key + "'>" + value +"</option>";
@@ -85,7 +79,6 @@ function populateVesselSelectBox(data){
 
 function submitBtnClickHandler(){
     $("#submitBtn").click(function(){
-		VESSELID = TEMP_VESSELID;
 		GetCurrentAlarmStatus();
 		GetIOAlarmByQuery();
 	});
@@ -190,13 +183,7 @@ function populateIOAlarmTable(data){
 	paginationTable(maxTableRows);
 }
 
-function selectDropdownChangeEvent() {
-	
-
-}
-
 async function fleetSelectChangeFunction() {
 	FLEETID = $("#fleetSelect").val();
 	await getUserRelatedVessels();
-	await reloadAllAnalog();
 }

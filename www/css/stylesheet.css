@@ -228,7 +228,7 @@ p{
 }
 
 .main-container .top-select-container input{
-    
+    font-size: 16px;
     min-width: 238px;
     background-color: #3282E4;
     color: white;
@@ -962,7 +962,6 @@ p{
     border-bottom: 1.5px solid #3282E4;
 }
 
-
 .report .position-container table th{
     background-color: #3282E4;
     color: white;
@@ -995,6 +994,10 @@ p{
 
 .report .position-container table td:last-child{
     text-align: center;
+}
+
+.report .position-container table img{
+    cursor: pointer;
 }
 
 /* ----------------- LOGIN SECTION ---------------- */

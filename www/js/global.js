@@ -4,8 +4,8 @@ $(document).ready(function () {
 });
 
 // GLOBAL VARIABLES
-// const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
-const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
+// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 // const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [

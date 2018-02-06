@@ -3,7 +3,8 @@ $(document).ready(function () {
 
 });
 
-let maxTableRows = 5;
+let maxTableRows = 12;
+let globalPositionData = null;
 
 async function mainFunction() {
     await getUserRelatedFleets();
@@ -236,6 +237,20 @@ function buttonClickHandler() {
     $("#selectMainContainer").on("click", "#btnMap", function () {
         btnMap_Position();
     });
+
+    $("#resultContainer").on("click", "tr", function () {
+        let firstColumn = $(this).find("td:first").text();
+        let id = parseInt(firstColumn);
+        let splitString = globalPositionData[id].EventDesc.split("|");
+        let eventDetails = "";
+
+        for (let i = 0; i < splitString.length; i++) {
+            let lastIndex = getPosition(splitString[i], "~", 3);
+            let singleEvent = splitString[i].substring(lastIndex + 1);
+            eventDetails += "<p>" + singleEvent + "</p><br/>";
+        }
+        customAlert("Events" , eventDetails, false, null);
+    });
 }
 
 async function btnChart_FuelCons() {
@@ -432,7 +447,7 @@ async function btnMap_Position() {
 
     try {
         let data = await ajaxGet(method, parameters);
-        console.log(data);
+        globalPositionData = data;
         await initMap("map");
         insertMapMarkersWithEvents(data, MAP);
         addPolylinesToMap(data);
@@ -619,9 +634,7 @@ function generatePositionReportView() {
     $("#resultContainer").html(htmlString);
 }
 
-
-
-function addPositionTable(data){
+function addPositionTable(data) {
     let htmlString = "";
     htmlString = "<table>";
     htmlString += "<tr>";
@@ -636,17 +649,17 @@ function addPositionTable(data){
     let count = 0;
     let pageCount = 1;
     var currentRowCount = 1;
-    $.each(data , function(key, value){
-        if(currentRowCount > maxTableRows){
-			pageCount++;
-			currentRowCount = 1;
-		}
-		if(count < maxTableRows){
-			htmlString += "<tr id='table-" + count + "'>";	
-		}else{
-			htmlString += "<tr id='table-" + count + "' style='display:none;'>";	
+    $.each(data, function (key, value) {
+        if (currentRowCount > maxTableRows) {
+            pageCount++;
+            currentRowCount = 1;
         }
-        
+        if (count < maxTableRows) {
+            htmlString += "<tr id='table-" + count + "'>";
+        } else {
+            htmlString += "<tr id='table-" + count + "' style='display:none;'>";
+        }
+
         let datetime = value.PositionDatetime;
         let location = value.Wgs84Lat + " " + value.Wgs84Lon;
         let sog = value.Sog;
@@ -654,11 +667,11 @@ function addPositionTable(data){
         let distance = round(value.TotalDistance, 2);
         let eventImage = "";
         let events = value.EventDesc;
-        if(events !== ''){
-            eventImage = "<img src='../img/event_listing.png'/>";
+        if (events !== '') {
+            eventImage = "<img src='../img/event_listing.png' class='event-image'/>";
         }
 
-        htmlString += "<td style='display:none' id='" + count + "'></td>";
+        htmlString += "<td style='display:none' id='" + count + "'>" + count + "</td>";
         htmlString += "<td>" + datetime + "</td>";
         htmlString += "<td>" + location + "</td>";
         htmlString += "<td>" + sog + "</td>";
@@ -676,5 +689,5 @@ function addPositionTable(data){
     $("#tableContainer").html(htmlString);
     $("#totalTablePage").text(pageCount);
     paginationTable(maxTableRows);
-    
+
 }
