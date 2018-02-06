@@ -676,3 +676,5 @@ System.ArgumentException: Must specify valid information for parsing in the stri
    at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
    at CommonHelper.EnumExtension.GetAnalogEnum_FromAnalogType(String analogType) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EnumExtension.cs:line 14
    at FOMSWebService.FOMSWebService.GetAnalogChartByQueryTime(Int32 vesselId, Double timezone, Int32 querytime, String startDatetimeStr, String endDatetimeStr, String analogType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1104
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 745

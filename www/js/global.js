@@ -3,6 +3,8 @@ $(document).ready(function () {
 	logoutBtnClickHandler();
 });
 
+sessionStorage.setItem("engineUnit", "ℓ");
+
 // GLOBAL VARIABLES
 const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
 // const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
@@ -153,6 +155,7 @@ function customAlert(title, message, redirect, redirectUrl) {
 	if (redirect) {
 		$("#dialog").dialog({
 			width: 400,
+			height : 250,
 			modal: true,
 			title: title,
 			open: function () {
@@ -171,6 +174,7 @@ function customAlert(title, message, redirect, redirectUrl) {
 	} else {
 		$("#dialog").dialog({
 			width: 400,
+			height : 250,
 			modal: true,
 			title: title,
 			open: function () {

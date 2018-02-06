@@ -76,11 +76,11 @@
                 <div class="left-container">
                     <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>
                     <div class="multiple-item">
-                        <p>Total Consumption (ℓ)</p>
+                        <p id="lblTotalCons">Total Consumption (ℓ)</p>
                         <p id="totalCons">1,408.45</p>
                     </div>
                     <div class="multiple-item">
-                        <p>Estimate Consumption (ℓ/hr)</p>
+                        <p id="lblEstCons">Estimate Consumption (ℓ/hr)</p>
                         <p id="estCons">65.59</p>
                     </div>
                     <div class="chart-header">
@@ -97,33 +97,20 @@
                         </div>
                     </div>
                     <div class="multiple-item">
-                        <p>Total Bunkering In (ℓ)</p>
+                        <p id="lblBunkerIn">Total Bunkering In (ℓ)</p>
                         <p id="totalBunkerIn">25,500,000</p>
                     </div>
                     <div class="multiple-item">
-                        <p>Total Bunkering Out (ℓ)</p>
+                        <p id="lblBunkerOut">Total Bunkering Out (ℓ)</p>
                         <p id="totalBunkerOut">1,500</p>
                     </div>
                 </div>
                 <div class="right-container">
-                    <div id="lastOperationMode">OP Mode : DP Mode (12-Sept-2017 01:51 UTC +8)</div>
-                    <!-- <div class="single-item">
-                        <p id="latAndLon"></p>
-                    </div>
-                    <div class="single-item">
-                        <p id="sogAndCog">0 Knots 0 Deg</p>
-                    </div> -->
+                    <div id="lastOperationMode">OP Mode : --</div>
+
                     <div class="map-container">
                         <div class="select-container">
-                            <!-- <select id="queryTime">
-                                <option value="24" selected>Last 24 Hours</option>
-                                <option value="12">Last 12 Hours</option>
-                                <option value="6">Last 6 Hours</option>
-                                <option value="3">Last 3 Hours</option>
-                                <option value="1">Last 1 Hour</option>
-                                <option value="0.5">Last 30 Mins</option>
-                                <option value="0.25">Last 15 Mins</option>
-                            </select> -->
+
                         </div>
                         <div id="map">
                             
@@ -131,11 +118,11 @@
                     </div>
                     <div class="item-container">
                         <div class="multiple-item">
-                            <p>Total Distance (Nm)</p>
+                            <p id="lblTotalDist">Total Distance (Nm)</p>
                             <p id="totalDistance">107.4</p>
                         </div>
                         <div class="multiple-item">
-                            <p>Avg. Cons (ℓ/Nm)</p>
+                            <p id="avgConsPerDist">Avg. Cons (ℓ/Nm)</p>
                             <p id="avgCons">131.54</p>
                         </div>
                         <div class="multiple-item">

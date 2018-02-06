@@ -9,6 +9,7 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
+    setLabels(); 
     await getUserRelatedFleets();
     await getAllEngineTypesByFleet();
     getEngineTotalAndEstConsumptionByFleet();
@@ -21,6 +22,16 @@ async function mainFunction() {
     // Handlers
     submitBtnClickHandler();
     selectDropdownChangeEvent();
+}
+
+function setLabels(){
+    let engineUnit = sessionStorage.getItem("engineUnit");
+    $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
+    $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
+    $("#chartTitle").text("Daily Fuel Cons. Rate (" + engineUnit + "/hr)");
+    $("#lblBunkerIn").text("Total Bunkering In (" + engineUnit + ")");
+    $("#lblBunkerOut").text("Total Bunkering Out (" + engineUnit + ")");
+    $("#avgConsPerDist").text("Avg. Cons (" + engineUnit + "/Nm)");
 }
 
 async function getUserRelatedFleets() {
@@ -149,18 +160,18 @@ function createChart() {
 function tooltipFormatter(chart) {
     let dateFormatHC = '%d-%b-%y %H:%M:%S';
     let rateText = "";
-    let formatter = "";
     let chartTitle = $("#chartTitle").text();
     let startDatetime = chart.x - (86400 * 1000); // value - 1 day 
     let endDatetime = chart.x - (1 * 1000) // value - 1 second
+    let engineUnit = sessionStorage.getItem("engineUnit");
 
-    if (chartTitle !== "Fuel Cons. Rate (ℓ/hr)") {
+    if (chartTitle !== "Daily Fuel Cons. Rate (" + engineUnit + "/hr)") {
         rateText = "Est. Flow Rate : "; // Bunker
     } else {
-        rateText = "Est. Consumption Rate (ℓ/hr) : ";
+        rateText = "Est. Consumption Rate (" + engineUnit + "/hr) : ";
     }
 
-    formatter = "<b>" + chart.series.name + "</b><br>" +
+    let formatter = "<b>" + chart.series.name + "</b><br>" +
         Highcharts.dateFormat(dateFormatHC, startDatetime) + " - " + Highcharts.dateFormat(dateFormatHC, endDatetime) + "<br>" +
         rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit;
 
@@ -235,15 +246,16 @@ function selectDropdownChangeEvent() {
     });
 
     $("#engineTypeSelect").change(function () {
+        let engineUnit = sessionStorage.getItem("engineUnit");
         SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
         var htmlString = "";
         switch (SELECTED_ENGINE_TYPE) {
             case "4":
-                htmlString = "Est. Consumption Rate (ℓ/hr)";
+                htmlString = "Daily Est. Consumption Rate ("+ engineUnit + "/hr)";
                 break;
 
             default:
-                htmlString = "Fuel Cons. Rate (ℓ/hr)";
+                htmlString = "Daily Fuel Cons. Rate (" + engineUnit + "/hr)";
                 break;
         }
         $("#chartTitle").html(htmlString);

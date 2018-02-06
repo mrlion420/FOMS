@@ -33,6 +33,13 @@ async function mainFunction() {
 
 }
 
+function setLabels(){
+    let engineUnit = sessionStorage.getItem("engineUnit");
+    $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
+    $("#lblEstCons").text("Estimate Consumption (" + engineUnit + ")");
+    $("#lblTotalAvgDist").text("Total Distance (Nm) / Avg. Distance (" + engineUnit + "/Nm)");
+}
+
 async function getUserRelatedCompany(){
     var method = "GetUserRelatedCompany";
     try{
@@ -413,16 +420,18 @@ function addLiveChartPointToChart(data , chart){
 }
 
 function getTimeofLastPoint(seriesArray){
-    var length = seriesArray.length;
-    var time = seriesArray[length - 1].x;
+    let length = seriesArray.length;
+    let time = seriesArray[length - 1].x;
     return time;
 }
 
 function tooltipFormatter(chart){
-    var dateFormatHC = '%d-%b-%y %H:%M:%S';
-    var rateText = "";
-    var formatter = "";
-    var chartTitle = $("#chartTitle").text();
+    let dateFormatHC = '%d-%b-%y %H:%M:%S';
+    let rateText = "";
+    let chartTitle = $("#chartTitle").text();
+    let startDatetime = chart.x - (86400 * 1000); // value - 1 day 
+    let endDatetime = chart.x - (1 * 1000) // value - 1 second
+    let engineUnit = sessionStorage.getItem("engineUnit");
 
     if (chartTitle !== "Daily Flow Rate") {
         rateText = "Consumption : "; 
@@ -430,8 +439,8 @@ function tooltipFormatter(chart){
         rateText = "Flow Rate : "; // Bunker
     }
 
-    formatter = "<b>" + chart.series.name + "</b><br>" +
-        Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
+    let formatter = "<b>" + chart.series.name + "</b><br>" +
+        Highcharts.dateFormat(dateFormatHC, startDatetime) + " - " + Highcharts.dateFormat(dateFormatHC, endDatetime) + "<br>" +
         rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit;
 
     if (chartTitle === "Fuel Cons. Rate (ℓ/hr)") {
