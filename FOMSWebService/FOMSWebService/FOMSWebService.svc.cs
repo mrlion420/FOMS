@@ -192,6 +192,23 @@ namespace FOMSWebService
             return datetimeData;
         }
 
+        public DateTimeData GetCurrentDatetime_ForDateTimePicker(int userId, double timezone)
+        {
+            DateTimeData datetimeData = new DateTimeData();
+            try
+            {
+                DateTime today = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
+                datetimeData.StartDatetime = DateTimeExtension.DisplayDateWithYear(today.AddDays(-1));
+                datetimeData.EndDatetime = DateTimeExtension.DisplayDateWithYear(today);
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return datetimeData;
+        }
+
         #endregion
 
         #region Login Page Methods

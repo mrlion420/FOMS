@@ -5,6 +5,8 @@ $(document).ready(function () {
 
 let maxTableRows = 12;
 let globalPositionData = null;
+let globalStartDatetime = null;
+let globalEndDatetime = null;
 
 async function mainFunction() {
     await getUserRelatedFleets();
@@ -116,8 +118,7 @@ async function fleetChangeFunction() {
 }
 
 async function loadDatetimePickers() {
-
-    let method = "GetCurrentDatetime";
+    let method = "GetCurrentDatetime_ForDateTimePicker";
     let parameters = PARAMETER_USERID;
     parameters.timezone = TIMEZONE;
     try {
@@ -132,39 +133,71 @@ async function loadDatetimePickers() {
 
 function insertDatetime(data) {
 
-    var startDateString = data.StartDatetime;
-    var endDateString = data.EndDatetime;
-    var format = "d-M-y";
+    let startDateString = data.StartDatetime;
+    let endDateString = data.EndDatetime;
+    globalStartDatetime = startDateString;
+    globalEndDatetime = endDateString;
+    let format = "d-M-y H:i";
 
     $("#startDatetime").datetimepicker({
         value: startDateString,
-        format: format
+        format: format,
+        timepicker: false
     });
     $("#endDatetime").datetimepicker({
         value: endDateString,
-        format: format
+        format: format,
+        timepicker: false
     });
 }
 
 function changeDatetimeFormat() {
-    var interval = $("#selectInterval").val();
-    var format = "";
+    let interval = $("#selectInterval").val();
+    let format = "d-M-y H:i";
+    let step = "";
+    let timepicker = true;
+    // Interval is in hours
     switch (interval) {
-        case "24":
-            format = "d-M-y";
+        case "0.25":
+            step = 15;
+            break;
+
+        case "0.5":
+            step = 30;
+            break;
+
+        case "1":
+            step = 60;
             break;
 
         default:
-            format = "d-M-y H:i";
+            timepicker = false;
             break;
     }
+    if (timepicker) {
+        $("#startDatetime").datetimepicker({
+            timepicker: timepicker,
+            format: format,
+            step: step
+        });
+        $("#endDatetime").datetimepicker({
+            timepicker: timepicker,
+            format: format,
+            step: step
+        });
+    } else {
+        $("#startDatetime").datetimepicker({
+            value: globalStartDatetime,
+            format: format,
+            timepicker: false
+        });
+        $("#endDatetime").datetimepicker({
+            value: globalEndDatetime,
+            format: format,
+            timepicker: false
+        });
+    }
 
-    $("#startDatetime").datetimepicker({
-        format: format
-    });
-    $("#endDatetime").datetimepicker({
-        format: format
-    });
 }
 
 async function loadMainSelectType() {
@@ -247,9 +280,9 @@ function buttonClickHandler() {
         for (let i = 0; i < splitString.length; i++) {
             let lastIndex = getPosition(splitString[i], "~", 3);
             let singleEvent = splitString[i].substring(lastIndex + 1);
-            eventDetails += "<p>" + singleEvent + "</p><br/>";
+            eventDetails += "<label class='event-detail'>" + singleEvent + "</label><br/>";
         }
-        customAlert("Events" , eventDetails, false, null);
+        customAlert("Events", eventDetails, false, null);
     });
 }
 

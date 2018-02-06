@@ -38,8 +38,12 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         DateTimeData GetCurrentDatetime(int userId, double timezone);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        DateTimeData GetCurrentDatetime_ForDateTimePicker(int userId, double timezone);
+
         #endregion
-        
+
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<EventData> GetRecentEventList(int vesselId, double timezone);

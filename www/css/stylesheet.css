@@ -1000,6 +1000,11 @@ p{
     cursor: pointer;
 }
 
+.event-detail{
+    margin: 7px 0px 7px 0px;
+    padding : 0px;
+}
+
 /* ----------------- LOGIN SECTION ---------------- */
 .login{
     width: 100%;
@@ -1056,7 +1061,7 @@ p{
 .map-popup p{
     font-size: 14px;
     padding: 0;
-    margin: 10px 0px 5px 0px; 
+    margin: 5px 0px 5px 0px; 
 }
 
 .map-popup div{

@@ -147,7 +147,7 @@ async function GetIOAlarmByQuery(){
 function populateIOAlarmTable(data){
 	var htmlString = "<table>";
 	htmlString += "<tr>";
-	htmlString += "<th>DateTime</th>";
+	htmlString += "<th>Date Time</th>";
 	htmlString += "<th>Description</th>";
 	htmlString += "<th>Location</th>";
 	htmlString += "</tr>";
