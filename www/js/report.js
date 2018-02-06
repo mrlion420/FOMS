@@ -3,6 +3,8 @@ $(document).ready(function () {
 
 });
 
+let maxTableRows = 5;
+
 async function mainFunction() {
     await getUserRelatedFleets();
     await getUserRelatedVessels();
@@ -10,6 +12,7 @@ async function mainFunction() {
     loadSelectMainContainer();
     selectChangeEventHandler();
     buttonClickHandler();
+    dynamicTablePaginationClickHandler(maxTableRows, "resultContainer");
 }
 
 async function getUserRelatedFleets() {
@@ -616,6 +619,8 @@ function generatePositionReportView() {
     $("#resultContainer").html(htmlString);
 }
 
+
+
 function addPositionTable(data){
     let htmlString = "";
     htmlString = "<table>";
@@ -629,7 +634,19 @@ function addPositionTable(data){
     htmlString += "<th>Event(s)</th>";
     htmlString += "</tr>";
     let count = 0;
+    let pageCount = 1;
+    var currentRowCount = 1;
     $.each(data , function(key, value){
+        if(currentRowCount > maxTableRows){
+			pageCount++;
+			currentRowCount = 1;
+		}
+		if(count < maxTableRows){
+			htmlString += "<tr id='table-" + count + "'>";	
+		}else{
+			htmlString += "<tr id='table-" + count + "' style='display:none;'>";	
+        }
+        
         let datetime = value.PositionDatetime;
         let location = value.Wgs84Lat + " " + value.Wgs84Lon;
         let sog = value.Sog;
@@ -641,7 +658,6 @@ function addPositionTable(data){
             eventImage = "<img src='../img/event_listing.png'/>";
         }
 
-        htmlString += "<tr>";
         htmlString += "<td style='display:none' id='" + count + "'></td>";
         htmlString += "<td>" + datetime + "</td>";
         htmlString += "<td>" + location + "</td>";
@@ -651,8 +667,14 @@ function addPositionTable(data){
         htmlString += "<td>" + eventImage + "</td>";
         htmlString += "</tr>";
         count++;
+        currentRowCount++;
     });
 
     htmlString += "</table>";
+    htmlString += '<div class="table-pagination"><i class="fa fa-arrow-circle-left fa-2x" aria-hidden="true" id="backPagination"></i><p>Page</p><p id="currentTablePage">1</p><p> of </p><p id="totalTablePage">1</p><i class="fa fa-arrow-circle-right fa-2x" aria-hidden="true" id="forwardPagination"></i></div>';
+
     $("#tableContainer").html(htmlString);
+    $("#totalTablePage").text(pageCount);
+    paginationTable(maxTableRows);
+    
 }

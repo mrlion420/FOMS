@@ -273,6 +273,25 @@ function tablePaginationClickHandler(maxTableRows) {
 	});
 }
 
+function dynamicTablePaginationClickHandler(maxTableRows, containerName){
+	$("#" + containerName).on("click", "#forwardPagination", function(){
+		var maxPage = parseInt($("#totalTablePage").text());
+		var currentPage = parseInt($("#currentTablePage").text());
+		if (currentPage !== maxPage) {
+			$("#currentTablePage").text(currentPage + 1);
+		}
+		paginationTable(maxTableRows);
+	});
+
+	$("#" + containerName).on("click", "#backPagination", function(){
+		var currentPage = parseInt($("#currentTablePage").text());
+		if (currentPage !== 1) {
+			$("#currentTablePage").text(currentPage - 1);
+		}
+		paginationTable(maxTableRows);
+	});
+}
+
 function setStartEndMarkerOnPopupMapLeaflet(latlonArray, map) {
 	var startLat = latlonArray[0].Latitude;
 	var startLon = latlonArray[0].Longitude;
