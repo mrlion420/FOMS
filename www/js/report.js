@@ -7,6 +7,8 @@ let maxTableRows = 12;
 let globalPositionData = null;
 let globalStartDatetime = null;
 let globalEndDatetime = null;
+let reportId = null;
+let intervalValue = null;
 
 async function mainFunction() {
     await getUserRelatedFleets();
@@ -284,6 +286,51 @@ function buttonClickHandler() {
         }
         customAlert("Events", eventDetails, false, null);
     });
+
+    $("#selectMainContainer").on("click", "#btnExport", function () {
+        let reportType = $("#selectReportType").val();
+        exportFunction(reportType);
+    });
+}
+
+async function exportFunction(reportType){
+    let method = "GenerateReport";
+    let parameters = PARAMETER_COMBINED;
+    parameters.userId = sessionStorage.getItem("userId");
+    parameters.querytime = $("#selectInterval").val();
+    parameters.startDatetimeStr = $("#startDatetime").val();
+    parameters.endDatetimeStr = $("#endDatetime").val();
+    parameters.reportType = reportType;
+    parameters.selectMainType = $("#selectMainType").val();
+    try{
+        let data = await ajaxGet(method, parameters);
+        reportId = data.Result;
+        intervalValue = setInterval(function(){
+            checkReportStatus();
+        }, 1000 * 5);
+        
+    }catch(ex){
+        console.log(ex);
+    }
+    
+}
+
+async function checkReportStatus(){
+    let method = "CheckReportStatus";
+    let parameters = PARAMETER_VESSELID;
+    parameters.reportId = reportId;
+    try{
+        let data = await ajaxGet(method, parameters);
+        if(data.Result === "2"){
+            clearInterval(intervalValue);
+            let htmlString = "<p>Report has been generated successfully. Please click on Download button to download the report</p>" +
+            "<a id='download' href='export_reports/" + reportId + "' download>Download</a><a id='close'>Close</a>";
+            $("#reportDownloadDiv").html(htmlString);
+            $("#reportDownload").show();
+        }
+    }catch(ex){
+        console.log(ex);
+    }
 }
 
 async function btnChart_FuelCons() {

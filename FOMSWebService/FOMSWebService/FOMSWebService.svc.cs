@@ -1127,6 +1127,72 @@ namespace FOMSWebService
             return positionDataList;
         }
 
+        public ResultData GenerateReport(int vesselId, double timezone, int userId, int querytime, string startDatetimeStr, string endDatetimeStr, string reportType, string selectMainType)
+        {
+            ResultData resultData = new ResultData();
+            try
+            {
+                string startDatetime = DateTime.Parse(startDatetimeStr).ToString("dd-MMM-yyyy HH:mm");
+                string endDatetime = DateTime.Parse(endDatetimeStr).ToString("dd-MMM-yyyy HH:mm");
+                BLL_Enum._REPORT_FILE_FORMAT fileFormatEnum = BLL_Enum._REPORT_FILE_FORMAT.Excel;
+                BLL_Enum._REPORT_TYPE reportTypeEnum = BLL_Enum._REPORT_TYPE.All;
+
+                switch (reportType)
+                {
+                    case "FuelCons_Report":
+                        reportTypeEnum = BLL_Enum._REPORT_TYPE.Fuel_Report;
+                        break;
+
+                    case "Loading_Report":
+                        
+                        break;
+
+                    case "Analog_Report":
+                        reportTypeEnum = BLL_Enum._REPORT_TYPE.Analog_Report;
+                        break;
+
+                    case "Event_Report":
+                        reportTypeEnum = BLL_Enum._REPORT_TYPE.Event_Report;
+                        break;
+                }
+                if(querytime == 1)
+                {
+                    querytime = 3;
+                }
+                else if (querytime == 24)
+                {
+                    querytime = 6;
+                }
+                
+                long id = ReportRequest.AddNewRequest(vesselId, reportTypeEnum, fileFormatEnum, selectMainType, startDatetime, endDatetime, querytime.ToString(), userId.ToString(), "");
+                resultData.Result = id.ToString();
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultData;
+        }
+
+        public ResultData CheckReportStatus(int vesselId, int reportId)
+        {
+            ResultData resultData = new ResultData();
+            try
+            {
+                ReportRequest modelReportRequest = new ReportRequest();
+                modelReportRequest = ReportRequest.GetByVesselIdReportRequestId(vesselId, reportId);
+                short reportStatus = modelReportRequest.ReportStatus;
+                resultData.Result = reportStatus.ToString();
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultData;
+        }
+
         #endregion
 
         #region Chart Related Methods

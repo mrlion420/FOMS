@@ -146,6 +146,14 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         List<PositionData> GetPositionByQuery(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string eventType);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        ResultData CheckReportStatus(int vesselId, int reportId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        ResultData GenerateReport(int vesselId, double timezone, int userId, int querytime, string startDatetimeStr, string endDatetimeStr, string reportType, string selectMainType);
+
         #endregion
 
         #region Chart Related Methods

@@ -1005,6 +1005,39 @@ p{
     padding : 0px;
 }
 
+#reportDownload{
+	z-index: 9;
+	display: none;
+	position: absolute;
+	left: 34%;
+	top: 38%;
+	height: auto;
+	width: 500px;
+	border: 2px solid white;	
+	border-radius: 10px;
+	background-color: white;
+}
+
+#reportDownload div{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#reportDownload p{
+	margin: 5px;
+}
+
+#reportDownload a{
+	color: black;
+	padding: 5px 10px;
+	border-radius: 5px;
+	background-color: yellow;
+	margin-bottom: 5px;
+	cursor: pointer;
+}
+
+
 /* ----------------- LOGIN SECTION ---------------- */
 .login{
     width: 100%;
