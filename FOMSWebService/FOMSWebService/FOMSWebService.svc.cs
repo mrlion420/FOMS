@@ -1220,25 +1220,46 @@ namespace FOMSWebService
             try
             {
                 BLL_Enum._VIEW_INTERVAL viewIntervalEnum;
-                int numOfPoints;
+                int numOfPoints = 0;
                 short engineIdShort = Convert.ToInt16(engineId);
-                string unit = "ℓ/hr";
+                Vessel singleVessel = Vessel.GetByVesselId(vesselId);
 
-                DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
-                DateTime endDateTime = DateTime.UtcNow;
+                string unit = KeyValueExtension.GetEngineUnitFromMeasurementUnit(singleVessel.MeasurementUnitId) + "/hr";
+                //DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
+                //DateTime endDateTime = DateTime.UtcNow;
                 if (querytime != 24)
                 {
                     // if the query time is not for last 24 hours
                     viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Daily;
-                    numOfPoints = (int)(endDateTime - startDateTime).TotalDays;
+
+                    if(querytime == 168)
+                    {
+                        numOfPoints = 7;
+                    }
+                    else if(querytime == 336)
+                    {
+                        numOfPoints = 14;
+                    }
+                    querytime = 86400; // Hourly
+                    
                 }
                 else
                 {
                     viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Hour_1;
                     numOfPoints = 24;
+                    querytime = 3600;
                 }
 
-                DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, viewIntervalEnum, numOfPoints, startDateTime, false, false);
+                DateTime endDatetime = DateTimeExtension.CalculateEndDatetime(querytime, timezone, viewIntervalEnum);
+                DateTime startDatetime = endDatetime.AddSeconds(-querytime * numOfPoints);
+
+                if(numOfPoints != 24)
+                {
+                   // numOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
+                }
+                
+
+                DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, viewIntervalEnum, numOfPoints, startDatetime, false, false);
                 DataSet resultDs = EngineExtension.AddChartWithTicksAndUnit(engineDs, timezone, unit);
 
                 if (includeRefSignal)
@@ -1248,7 +1269,7 @@ namespace FOMSWebService
                     {
                         if (analog.RefEngineId == engineIdShort)
                         {
-                            DataSet analogDs = AnalogReading.GetViewByAnalogId(vesselId, analog.AnalogId, viewIntervalEnum, numOfPoints, startDateTime, false, false);
+                            DataSet analogDs = AnalogReading.GetViewByAnalogId(vesselId, analog.AnalogId, viewIntervalEnum, numOfPoints, startDatetime, false, false);
                             analogDs = AnalogExtension.AddChartWithTicksAndUnit(analogDs, timezone, analog);
                             resultDs = ChartExtension.CombineDataSets_IntoOne(resultDs, analogDs);
                         }

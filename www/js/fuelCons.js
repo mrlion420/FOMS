@@ -71,13 +71,7 @@ function populateVesselSelectBox(data){
 		var value = data[index].Result;
 		if(isFirstItem){
 			htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-			if(PAGELOAD){
-				VESSELID = key;
-				TEMP_VESSELID = key;
-				PAGELOAD = false;
-			}else{
-				TEMP_VESSELID = key;
-			}
+			VESSELID = key;
 			isFirstItem = false;
 		}else{
 			htmlString += "<option value='" + key + "'>" + value +"</option>";
@@ -324,6 +318,9 @@ function insertChartItemValues(uniqueId, minValue, maxValue,averageValue, lastVa
 		var selectedText = $("#engineIdSelect option:selected").text().toLowerCase();
 		if(selectedText.indexOf("bunker") !== -1){
 			// Bunker
+			lastValueHeader = "Est. Flow Rate";
+			averageValueHeader = "Average Flow";
+			maxMinHeader = "Peak / Lowest Flow";
 		}else{
 			// Engine
 			lastValueHeader = "Est. Consumption Rate";
@@ -377,6 +374,7 @@ function getAverageValue(totalValue, count){
 }
 
 function createChart(chartTitle, uniqueId){
+	let engineName = $("#engineIdSelect option:selected").text().toLowerCase();
 	options = {
 		chart: {
 			type: "line",
@@ -412,7 +410,7 @@ function createChart(chartTitle, uniqueId){
 				};
 			},
 			formatter: function () {
-				var formatter = tooltipFormatter(this);
+				var formatter = tooltipFormatter(this, engineName);
 				return formatter;
 			}
 		}
@@ -423,11 +421,12 @@ function createChart(chartTitle, uniqueId){
 	syncChartArray.push(chart);
 }
 
-function tooltipFormatter(chart){
+function tooltipFormatter(chart, engineName){
 	var dateFormatHC = '%d-%b-%y %H:%M:%S';
 	var formatter = "";
 	var count = 0;
 	var rateText = "";
+	
 	// Id == 0 means, if the chart is for engine.
 	// Engine chart series id will always be 0
 	if (chart.series.options.id === 0) {
@@ -435,7 +434,11 @@ function tooltipFormatter(chart){
 		if (chart.point.unit === "ℓ") {
 			rateText = "Consumption : ";
 		} else {
-			rateText = "Est. Consumption Rate : ";
+			if(engineName.indexOf("bunker") !== -1){
+				rateText = "Est. Flow Rate : ";
+			}else{
+				rateText = "Est. Consumption Rate : ";	
+			}
 		}
 		formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
 			rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
@@ -460,7 +463,6 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType, uniqueId){
 
 function submitBtnClickHandler(){
 	$("#submitBtn").click(function(){
-		VESSELID = TEMP_VESSELID;
 		viewTypeSelectChangeFunction();
 	});
 }
@@ -473,12 +475,11 @@ async function submitBtnFunctions(){
 
 function selectDropdownChangeEvent(){
 	$("#fleetSelect").change(function(){
-		FLEETID = $("#fleetSelect").val();
-		getUserRelatedVessels();
+		fleetSelectChangeFunction();
 	});
 
 	$("#vesselSelect").change(function(){
-		TEMP_VESSELID = $("#vesselSelect").val();
+		VESSELID = $("#vesselSelect").val();
 		// Check if the engines needed to reloaded or not 
 		// By checking if the vessel Id haschanged
 		reloadAllEngines();
@@ -489,17 +490,18 @@ function selectDropdownChangeEvent(){
 	});
 
 	$("#engineIdSelect").change(function(){
-		GetSynchornizedChartByEngineId();
+		// GetSynchornizedChartByEngineId();
 	});
 
 	$("#checkboxInput").change(function(){
-		GetSynchornizedChartByEngineId();
+		// GetSynchornizedChartByEngineId();
 	});
 }
-async function reloadAllEngines(){
-	if(TEMP_VESSELID !== VESSELID){
-		await getAllEngines();
-	}
+
+async function fleetSelectChangeFunction(){
+	FLEETID = $("#fleetSelect").val();
+	await getUserRelatedVessels();
+	await getAllEngines();
 }
 
 async function viewTypeSelectChangeFunction(){

@@ -392,7 +392,7 @@ function selectDropdownChangeEvent() {
 async function fleetSelectChangeFunction() {
 	FLEETID = $("#fleetSelect").val();
 	await getUserRelatedVessels();
-	await reloadAllAnalog();
+	await GetAllAnalog();
 }
 
 async function viewTypeSelectChangeFunction() {
@@ -447,7 +447,7 @@ function submitBtnClickHandler() {
 }
 
 async function reloadAllAnalog() {
-	await GetAllAnalog();
+	await ();
 }
 
 

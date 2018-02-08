@@ -2,37 +2,37 @@ $(document).ready(function () {
     loadJS_ByPage();
 });
 
-function loadJS_ByPage() {
+async function loadJS_ByPage() {
     let currentPage = getCurrentPage().toLowerCase();
-    injectDynamicJavascript("global.js");
+    await injectDynamicJavascript("global.js");
 
     switch (currentPage) {
         case "login":
-            injectDynamicJavascript("login.js");
+            await injectDynamicJavascript("login.js");
             break;
 
         case "fleetdashboard":
-            injectDynamicJavascript("fleetdashboard.js");
+            await injectDynamicJavascript("fleetdashboard.js");
             break;
 
         case "vesseldashboard":
-            injectDynamicJavascript("vesseldashboard.js");
+            await injectDynamicJavascript("vesseldashboard.js");
             break;
 
         case "analogreading":
-            injectDynamicJavascript("analogreading.js");
+            await injectDynamicJavascript("analogreading.js");
             break;
 
         case "fuelcons":
-            injectDynamicJavascript("fuelcons.js");
+            await injectDynamicJavascript("fuelcons.js");
             break;
 
         case "othersignal":
-            injectDynamicJavascript("othersignal.js");
+            await injectDynamicJavascript("othersignal.js");
             break;
 
         case "report":
-            injectDynamicJavascript("report.js");
+            await injectDynamicJavascript("report.js");
             break;
     }
 }
