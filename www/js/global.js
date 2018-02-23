@@ -3,9 +3,9 @@ $(document).ready(function () {
 	logoutBtnClickHandler();
 });
 
-sessionStorage.setItem("engineUnit", "ℓ");
-sessionStorage.setItem("timezone", 8);
-sessionStorage.setItem("userId", 3);
+// sessionStorage.setItem("engineUnit", "ℓ");
+// sessionStorage.setItem("timezone", 8);
+// sessionStorage.setItem("userId", 3);
 
 // GLOBAL VARIABLES
 const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
@@ -43,9 +43,14 @@ var MAP = null;
 var MAP_MARKER = null;
 var INFO_WINDOW = null;
 // Timezone 
-// var TIMEZONE = 8;
-// var USERID = 3;
+if(sessionStorage.getItem("timezone") !== undefined){
+	var TIMEZONE = sessionStorage.getItem("timezone");
+}
 
+if(sessionStorage.getItem("userId") !== undefined){
+	var USERID = sessionStorage.getItem("userId");
+}
+// var USERID = 3;
 // var USERID = 38; 
 var COMPANYID = 0;
 var FLEETID = 0;
@@ -56,10 +61,17 @@ const DELIMITER = ";";
 const TRUE = "True";
 const FALSE = "False";
 
-var PARAMETER_USERID = { userId: USERID };
-var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
-var PARAMETER_VESSELID = { vesselId: VESSELID };
-var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+function setConstArrays() {
+	if (sessionStorage.getItem("userId") !== undefined) {
+		var TIMEZONE = sessionStorage.getItem("timezone");
+		var USERID = sessionStorage.getItem("userId");
+
+		var PARAMETER_USERID = { userId: USERID };
+		var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
+		var PARAMETER_VESSELID = { vesselId: VESSELID };
+		var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+	}
+}
 
 // To remove all the unnecessary paramters from the array that were added
 function resetConstArrays() {
@@ -160,7 +172,7 @@ function customAlert(title, message, redirect, redirectUrl) {
 	if (redirect) {
 		$("#dialog").dialog({
 			width: 400,
-			height : 250,
+			height: 250,
 			modal: true,
 			title: title,
 			open: function () {
@@ -179,7 +191,7 @@ function customAlert(title, message, redirect, redirectUrl) {
 	} else {
 		$("#dialog").dialog({
 			width: 400,
-			height : 250,
+			height: 250,
 			modal: true,
 			title: title,
 			open: function () {
@@ -282,8 +294,8 @@ function tablePaginationClickHandler(maxTableRows) {
 	});
 }
 
-function dynamicTablePaginationClickHandler(maxTableRows, containerName){
-	$("#" + containerName).on("click", "#forwardPagination", function(){
+function dynamicTablePaginationClickHandler(maxTableRows, containerName) {
+	$("#" + containerName).on("click", "#forwardPagination", function () {
 		var maxPage = parseInt($("#totalTablePage").text());
 		var currentPage = parseInt($("#currentTablePage").text());
 		if (currentPage !== maxPage) {
@@ -292,7 +304,7 @@ function dynamicTablePaginationClickHandler(maxTableRows, containerName){
 		paginationTable(maxTableRows);
 	});
 
-	$("#" + containerName).on("click", "#backPagination", function(){
+	$("#" + containerName).on("click", "#backPagination", function () {
 		var currentPage = parseInt($("#currentTablePage").text());
 		if (currentPage !== 1) {
 			$("#currentTablePage").text(currentPage - 1);

@@ -9,7 +9,7 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
-    setLabels(); 
+    setLabels();
     await getUserRelatedFleets();
     await getAllEngineTypesByFleet();
     getEngineTotalAndEstConsumptionByFleet();
@@ -24,7 +24,7 @@ async function mainFunction() {
     selectDropdownChangeEvent();
 }
 
-function setLabels(){
+function setLabels() {
     let engineUnit = sessionStorage.getItem("engineUnit");
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
     $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
@@ -35,13 +35,31 @@ function setLabels(){
 }
 
 async function getUserRelatedFleets() {
-    var method = "GetUserRelatedFleets";
-    try {
-        let data = await ajaxGet(method, PARAMETER_USERID);
-        populateFleetSelectBox(data);
-    } catch (ex) {
-        console.log(ex);
+    // var method = "GetUserRelatedFleets";
+    // try {
+    //     let data = await ajaxGet(method, PARAMETER_USERID);
+    //     populateFleetSelectBox(data);
+    // } catch (ex) {
+    //     console.log(ex);
+    // }
+    let isFirstItem = true;
+    let htmlString = "";
+    let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
+    for (let i = 0; i < fleetObjArray.length; i++) {
+        let resultObj = fleetObjArray[i];
+        let key = resultObj.fleetId;
+        let value = resultObj.fleetName;
+
+        if (isFirstItem) {
+            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+            FLEETID = key;
+            isFirstItem = false;
+        } else {
+            htmlString += "<option value='" + key + "'>" + value + "</option>";
+        }
     }
+    $("#fleetSelect").html(htmlString);
+    setConstArrays();
 }
 
 function populateFleetSelectBox(data) {
@@ -251,7 +269,7 @@ function selectDropdownChangeEvent() {
         var htmlString = "";
         switch (SELECTED_ENGINE_TYPE) {
             case "4":
-                htmlString = "Daily Est. Consumption Rate ("+ engineUnit + "/hr)";
+                htmlString = "Daily Est. Consumption Rate (" + engineUnit + "/hr)";
                 break;
 
             default:
