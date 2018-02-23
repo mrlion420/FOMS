@@ -276,8 +276,9 @@ function populateLastOperationMode(data) {
 
 async function getEngineTotalAndEstConsumption() {
     var method = "GetEngineTotalAndEstConsumption";
-    let parameters = PARAMETER_VESSELID;
+    let parameters = PARAMETER_COMBINED;
     parameters.engineType = SELECTED_ENGINE_TYPE;
+    
     try {
         let data = await ajaxGet(method, parameters);
         populateEngineTotalAndEstConsumption(data);

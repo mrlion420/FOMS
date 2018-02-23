@@ -1006,16 +1006,17 @@ p{
 }
 
 #reportDownload{
+    display: none;
 	z-index: 9;
-	display: none;
 	position: absolute;
 	left: 34%;
 	top: 38%;
 	height: auto;
 	width: 500px;
-	border: 2px solid white;	
+    padding: 5px;
+    border: 1.5px solid black;
 	border-radius: 10px;
-	background-color: white;
+	background-color: #d5d5d5;
 }
 
 #reportDownload div{
@@ -1028,13 +1029,24 @@ p{
 	margin: 5px;
 }
 
-#reportDownload a{
-	color: black;
-	padding: 5px 10px;
+#reportDownloadDiv div{
+    display: flex;
+    flex-direction: row;
+}
+
+#reportDownload div a{
+	color: white;
+    padding: 10px 15px;
 	border-radius: 5px;
-	background-color: yellow;
+	background-color: #0A2444;
 	margin-bottom: 5px;
-	cursor: pointer;
+    cursor: pointer;
+    margin-right: 10px;
+    align-content: center;
+}
+
+#reportDownload a:hover{
+    background-color: #36A148;
 }
 
 

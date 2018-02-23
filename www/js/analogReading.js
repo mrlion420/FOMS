@@ -446,12 +446,6 @@ function submitBtnClickHandler() {
 	});
 }
 
-async function reloadAllAnalog() {
-	await ();
-}
-
-
-
 Highcharts.Pointer.prototype.reset = function () {
 	return undefined;
 };

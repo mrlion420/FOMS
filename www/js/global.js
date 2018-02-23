@@ -43,8 +43,9 @@ var MAP = null;
 var MAP_MARKER = null;
 var INFO_WINDOW = null;
 // Timezone 
-var TIMEZONE = 8;
-var USERID = 3;
+// var TIMEZONE = 8;
+// var USERID = 3;
+
 // var USERID = 38; 
 var COMPANYID = 0;
 var FLEETID = 0;
@@ -62,6 +63,8 @@ var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
 
 // To remove all the unnecessary paramters from the array that were added
 function resetConstArrays() {
+	var TIMEZONE = sessionStorage.getItem("timezone");
+	var USERID = sessionStorage.getItem("userId");
 	PARAMETER_USERID = { userId: USERID };
 	PARAMETER_TIMEZONE = { timezone: TIMEZONE };
 	PARAMETER_VESSELID = { vesselId: VESSELID };

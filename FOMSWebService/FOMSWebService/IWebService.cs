@@ -24,7 +24,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        List<List<ResultData>> GetUserRelatedFleetsAndVessels(int userId);
+        List<ResultData> GetUserRelatedFleetAndVessels(int userId);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -190,7 +190,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "POST", ResponseFormat = WebMessageFormat.Json, BodyStyle = WebMessageBodyStyle.WrappedRequest)]
-        ResultData LoginUser(string userId, string password);
+        LoginData LoginUser(string userId, string password);
 
     }
 
@@ -577,12 +577,22 @@ namespace FOMSWebService
     }
 
     [DataContract]
-    public class GlobalData
+    public class LoginData
     {
-        private int userId;
-        private double timezone;
+        private string userId;
+        private string timezone;
+        private bool loginResult;
 
-        public double Timezone
+        [DataMember]
+        public bool LoginResult
+        {
+            get { return loginResult; }
+            set { loginResult = value; }
+        }
+
+
+        [DataMember]
+        public string Timezone
         {
             get { return timezone; }
             set { timezone = value; }
@@ -590,7 +600,7 @@ namespace FOMSWebService
 
 
         [DataMember]
-        public int UserId
+        public string UserId
         {
             get { return userId; }
             set { userId = value; }

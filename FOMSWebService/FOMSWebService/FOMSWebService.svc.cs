@@ -25,6 +25,7 @@ namespace FOMSWebService
     {
         // Global Variables
         public const string NOT_APPLICABLE = "N/A";
+        public const string DELIMITER = ";";
 
         // Logger Initialization 
         Logger log = new Logger(System.Web.Hosting.HostingEnvironment.ApplicationPhysicalPath + @"\log.txt");
@@ -67,45 +68,46 @@ namespace FOMSWebService
             return companyList;
         }
 
-        public List<List<ResultData>> GetUserRelatedFleetsAndVessels(int userId)
-        {
-            List<List<ResultData>> fleetAndVesselsList = new List<List<ResultData>>();
-            try
-            {
-                List<FleetVessel> fleetVesselList = new List<FleetVessel>();
-                List<Fleet> fleetList = new List<Fleet>();
-                List<Vessel> vesselList = new List<Vessel>();
+        //public List<List<ResultData>> GetUserRelatedFleetsAndVessels(int userId)
+        //{
+        //    List<List<ResultData>> fleetAndVesselsList = new List<List<ResultData>>();
+        //    try
+        //    {
+        //        List<FleetVessel> fleetVesselList = new List<FleetVessel>();
+        //        List<Fleet> fleetList = new List<Fleet>();
+        //        List<Vessel> vesselList = new List<Vessel>();
 
-                User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
-                // Resulting fleet list 
-                List<ResultData> resultFleetList = new List<ResultData>();
-                foreach (Fleet fleet in fleetList)
-                {
-                    ResultData resultFleet = new ResultData();
-                    resultFleet.Result = fleet.FleetName;
-                    resultFleet.Key = fleet.FleetId.ToString();
-                    resultFleetList.Add(resultFleet);
-                }
-                // Resulting Vessel list
-                List<ResultData> resultVesselList = new List<ResultData>();
-                foreach (Vessel vessel in vesselList)
-                {
-                    ResultData resultVessel = new ResultData();
-                    resultVessel.Result = vessel.VesselName;
-                    resultVessel.Key = vessel.VesselId.ToString();
-                    resultVesselList.Add(resultVessel);
-                }
+        //        User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
+        //        // Resulting fleet list 
+        //        List<ResultData> resultFleetList = new List<ResultData>();
+        //        foreach (Fleet fleet in fleetList)
+        //        {
+        //            ResultData resultFleet = new ResultData();
+        //            resultFleet.Result = fleet.FleetName;
+        //            resultFleet.Key = fleet.FleetId.ToString();
+        //            resultFleetList.Add(resultFleet);
+        //        }
+        //        // Resulting Vessel list
+        //        List<ResultData> resultVesselList = new List<ResultData>();
+        //        foreach (Vessel vessel in vesselList)
+        //        {
+        //            ResultData resultVessel = new ResultData();
+        //            resultVessel.Result = vessel.VesselName;
+                    
+        //            resultVessel.Key = vessel.VesselId.ToString();
+        //            resultVesselList.Add(resultVessel);
+        //        }
 
-                fleetAndVesselsList.Add(resultFleetList);
-                fleetAndVesselsList.Add(resultVesselList);
-            }
-            catch (Exception ex)
-            {
-                log.write(ex.ToString());
-            }
+        //        fleetAndVesselsList.Add(resultFleetList);
+        //        fleetAndVesselsList.Add(resultVesselList);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        log.write(ex.ToString());
+        //    }
 
-            return fleetAndVesselsList;
-        }
+        //    return fleetAndVesselsList;
+        //}
 
         public List<ResultData> GetUserRelatedFleets(int userId)
         {
@@ -145,6 +147,54 @@ namespace FOMSWebService
             }
 
             return fleetResultList;
+        }
+
+        public List<ResultData> GetUserRelatedFleetAndVessels(int userId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                List<FleetVessel> fleetVesselList = new List<FleetVessel>();
+                List<Fleet> fleetList = new List<Fleet>();
+                List<Vessel> vesselList = new List<Vessel>();
+
+                bool isSuccessful = User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
+                Dictionary<string, string> fleetVesselDict = new Dictionary<string, string>(); // fleetId-fleetName - vesselId-vesselName;vesselId-vesselName
+
+                foreach(FleetVessel fleetVessel in fleetVesselList)
+                {
+                    long fleetId = fleetVessel.FleetId;
+                    long vesselId = fleetVessel.VesselId;
+                    string fleetName = fleetList.Find(x => x.FleetId == fleetId).FleetName;
+                    string fleetKey = fleetId + "-" + fleetName;
+
+                    string vesselName = vesselList.Find(x => x.VesselId == vesselId).VesselName;
+                    string vesselKey = vesselId + "-" + vesselName;
+
+                    if (fleetVesselDict.ContainsKey(fleetKey))
+                    {
+                        fleetVesselDict[fleetKey] += DELIMITER + vesselKey;
+                    }
+                    else
+                    {
+                        fleetVesselDict.Add(fleetKey, vesselKey);
+                    }
+                }
+
+                foreach(var kvp in fleetVesselDict)
+                {
+                    ResultData resultData = new ResultData();
+                    resultData.Key = kvp.Key;
+                    resultData.Result = kvp.Value;
+                    resultDataList.Add(resultData);
+                }
+            }
+            catch(Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
         }
 
         public List<ResultData> GetUserRelatedVessels(int userId, int fleetId)
@@ -213,9 +263,9 @@ namespace FOMSWebService
 
         #region Login Page Methods
 
-        public ResultData LoginUser(string userId, string password)
+        public LoginData LoginUser(string userId, string password)
         {
-            ResultData result = new ResultData();
+            LoginData loginData = new LoginData();
             //string password = "";
             //string userId = "";
             //var passwordString = "abc";
@@ -239,20 +289,23 @@ namespace FOMSWebService
                 User currentUser = User.ValidateUser(userId, password);
                 if (currentUser == null)
                 {
-                    result.Result = false.ToString();
+                    loginData.LoginResult = false;
                 }
                 else
                 {
 
-                    result.Result = true.ToString();
+                    loginData.LoginResult = true;
                 }
+
+                loginData.Timezone = currentUser.DisplayTimeZone.ToString();
+                loginData.UserId = currentUser.UserId.ToString();
             }
             catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
 
-            return result;
+            return loginData;
         }
 
         #endregion
@@ -463,7 +516,7 @@ namespace FOMSWebService
                 double querytimeDouble = Convert.ToDouble(queryTime);
                 DateTime start, end;
                 // Minus the requested querytime 
-                DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble).AddDays(-3);
+                DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble);
                 start = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, 0, 0);
                 DateTime today = DateTime.UtcNow;
                 end = new DateTime(today.Year, today.Month, today.Day, today.Hour, 0, 0);
