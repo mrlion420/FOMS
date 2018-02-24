@@ -832,3 +832,7 @@ System.FormatException: Input string was not in a correct format.
    at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1420
 System.NullReferenceException: Object reference not set to an instance of an object.
    at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
