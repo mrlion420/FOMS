@@ -53,8 +53,12 @@ async function getUserRelatedVessels() {
                     htmlString += "<option value='" + key + "'>" + value + "</option>";
                 }
             }
-            $("#vesselSelect").html(htmlString);
-            setConstArrays();
+			$("#vesselSelect").html(htmlString);
+			try{
+				setConstArrays();
+			}catch(ex){
+				refreshPage();
+			}
             break;
             
         }
@@ -399,28 +403,28 @@ async function viewTypeSelectChangeFunction() {
 }
 
 function hideChartViews() {
-	$("#analogIdSelectDiv").addClass("hidden");
-	$("#checkboxDiv").addClass("hidden");
+	$("#analogIdSelectDiv").addClass("display-none");
+	$("#checkboxDiv").addClass("display-none");
 	$("#wrapperChart").addClass("display-none");
 	$("#wrapper").addClass("display-flex");
 	$("#queryDiv").addClass("display-none");
 
-	$("#analogIdSelectDiv").removeClass("show");
-	$("#checkboxDiv").removeClass("show");
+	$("#analogIdSelectDiv").removeClass("display-block");
+	$("#checkboxDiv").removeClass("display-block");
 	$("#wrapperChart").removeClass("display-flex");
 	$("#wrapper").removeClass("display-none");
 	$("#queryDiv").removeClass("display-flex");
 }
 
 function showChartViews() {
-	$("#analogIdSelectDiv").addClass("show");
-	$("#checkboxDiv").addClass("show");
+	$("#analogIdSelectDiv").addClass("display-block");
+	$("#checkboxDiv").addClass("display-block");
 	$("#wrapperChart").addClass("display-flex");
 	$("#wrapper").addClass("display-none");
 	$("#queryDiv").addClass("display-flex");
 
-	$("#analogIdSelectDiv").removeClass("hidden");
-	$("#checkboxDiv").removeClass("hidden");
+	$("#analogIdSelectDiv").removeClass("display-none");
+	$("#checkboxDiv").removeClass("display-none");
 	$("#wrapperChart").removeClass("display-none");
 	$("#wrapper").removeClass("display-flex");
 	$("#queryDiv").removeClass("display-none");
