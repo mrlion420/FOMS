@@ -9,9 +9,11 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
-    setLabels();
+    
     await getUserRelatedFleets();
     await getAllEngineTypesByFleet();
+
+    setLabels();
     getEngineTotalAndEstConsumptionByFleet();
     getBunkeringByFleet();
     createEngineChartByFleet();
@@ -26,9 +28,10 @@ async function mainFunction() {
 
 function setLabels() {
     let engineUnit = sessionStorage.getItem("engineUnit");
+    let engineTypeText = $("#engineTypeSelect option:selected").text();
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
     $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
-    $("#chartTitle").text("Daily Fuel Cons. Rate (" + engineUnit + "/hr)");
+    $("#chartTitle").text(engineTypeText + " Daily Fuel Cons. Rate (" + engineUnit + "/hr)");
     $("#lblBunkerIn").text("Total Bunkering In (" + engineUnit + ")");
     $("#lblBunkerOut").text("Total Bunkering Out (" + engineUnit + ")");
     $("#avgConsPerDist").text("Avg. Cons (" + engineUnit + "/Nm)");
