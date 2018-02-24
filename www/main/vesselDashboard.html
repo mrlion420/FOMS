@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
@@ -8,7 +9,8 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
 
     <!-- CSS Files import -->
     <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
@@ -16,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
 
     <!--- Localization Imports -->
@@ -27,7 +29,7 @@
     <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../js/external/moment.js"></script> 
+    <script type="text/javascript" src="../js/external/moment.js"></script>
     <script type="text/javascript" src="../js/external/leaflet.js"></script>
     <script type="text/javascript" src="../js/external/highcharts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
@@ -40,6 +42,7 @@
 
     <title>FOMS</title>
 </head>
+
 <body>
     <div class="header">
         <div>
@@ -52,13 +55,13 @@
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
-            <img src="../img/logout.png" id="imgLogout"/>
+            <img src="../img/logout.png" id="imgLogout" />
         </div>
     </div>
-    
+
     <div class="body-wrapper">
         <div class="side-menu" id="sideMenu">
-           
+
         </div>
         <div class="main-container main">
             <div class="top-select-container">
@@ -72,22 +75,29 @@
                 <div>
                     <p>Fleet : </p>
                     <select id="fleetSelect">
-                        
+
                     </select>
                 </div>
                 <div>
                     <p>Vessel : </p>
                     <select id="vesselSelect">
-                        
+
                     </select>
                 </div>
                 <div>
                     <button id="submitBtn">Submit</button>
-                </div>                
+                </div>
             </div>
             <div class="wrapper">
                 <div class="left-container">
-                    <label id="userStartDatetime"></label>
+                    <div class="engine-select-container">
+                        <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>
+                        <select id="engineTypeSelect">
+                            <option>Main Engine</option>
+                            <option>Aux Engine</option>
+                            <option>Thruster Engine</option>
+                        </select>
+                    </div>
                     <div class="multiple-item">
                         <p id="lblTotalCons">Total Consumption (ℓ)</p>
                         <p id="totalCons">0</p>
@@ -98,11 +108,6 @@
                     </div>
                     <div class="chart-header">
                         <p id="chartTitle">Daily Fuel Consumption</p>
-                        <select id="engineTypeSelect">
-                            <option>Main Engine</option>
-                            <option>Aux Engine</option>
-                            <option>Thruster Engine</option>
-                        </select>
                     </div>
                     <div class="chart-container" id="chart">
 
@@ -129,7 +134,7 @@
                             </select>
                         </div>
                         <div id="map">
-                            
+
                         </div>
                     </div>
                     <div class="multiple-item">
@@ -137,11 +142,12 @@
                         <p id="totalAndAvgLitrePerNm">0.00 / 0.00</p>
                     </div>
                     <div class="event-container" id="eventLog">
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

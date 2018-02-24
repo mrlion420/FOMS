@@ -1023,12 +1023,16 @@ namespace FOMSWebService
                 
                 foreach (EventAlarm singleEvent in eventAlarmList)
                 {
-                    IOAlarmData alarmData = new IOAlarmData();
-                    alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(singleEvent.Datetime.AddHours(timezone));
-                    alarmData.AlarmDescription = singleEvent.Description;
-                    Position position = Position.GetByPositionId(singleEvent.PositionId);
-                    alarmData.Location = position.Wgs84Latitude + " " + position.Wgs84Longitude;
-                    ioAlarmDataList.Add(alarmData);
+                    if(singleEvent.IoAlarmId != 0)
+                    {
+                        IOAlarmData alarmData = new IOAlarmData();
+                        alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(singleEvent.Datetime.AddHours(timezone));
+                        alarmData.AlarmDescription = singleEvent.Description;
+                        Position position = Position.GetByPositionId(singleEvent.PositionId);
+                        alarmData.Location = position.Wgs84Latitude + " " + position.Wgs84Longitude;
+                        ioAlarmDataList.Add(alarmData);
+                    }
+                    
                 }
             }
             catch (Exception ex)

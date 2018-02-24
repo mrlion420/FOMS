@@ -5,15 +5,15 @@ $(document).ready(function () {
 
 var maxTableRows = 8;
 
-async function mainfunction(){
-	tablePaginationClickHandler(maxTableRows);
-	selectDropdownChangeEvent();
-	submitBtnClickHandler();
-
+async function mainfunction(){	
     await getUserRelatedFleets();
 	await getUserRelatedVessels();
 	await GetCurrentAlarmStatus();
 	await GetIOAlarmByQuery();
+
+	tablePaginationClickHandler(maxTableRows);
+	selectDropdownChangeEvent();
+	submitBtnClickHandler();
 }
 
 async function getUserRelatedFleets() {

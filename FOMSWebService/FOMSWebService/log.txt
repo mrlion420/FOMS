@@ -838,3 +838,65 @@ System.NullReferenceException: Object reference not set to an instance of an obj
    at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
 System.NullReferenceException: Object reference not set to an instance of an object.
    at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 815
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632
+System.IndexOutOfRangeException: Cannot find table 0.
+   at System.Data.DataTableCollection.get_Item(Int32 index)
+   at CommonHelper.EngineExtension.CombineEngineChartDataToTotal(DataSet dsData, DataSet resultDS, Double timezone, Vessel vessel, Int32 fleetId, String engineUnit) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EngineExtension.cs:line 199
+   at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1632

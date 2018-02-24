@@ -305,12 +305,16 @@ p{
 }
 
 .main label{
-    font-size: 16px;
+    font-size: 18px;
 }
 
 .main .wrapper{
     display: flex;
     margin: 10px 0px 0px 0px;
+}
+
+#lastOperationMode{
+    font-size: 18px;
 }
 
 .main .wrapper .left-container .multiple-item{
@@ -320,6 +324,20 @@ p{
     display: flex;
     flex-direction: column;
     color: white;
+}
+
+.main .wrapper .left-container .multiple-item div{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.main .wrapper .left-container .multiple-item div p:first-child{
+    margin: 0px auto 0px 0px;
+}
+
+.main .wrapper .left-container .multiple-item div p{
+    font-size: 18px !important;
 }
 
 .main .wrapper .left-container .engine-select-container{

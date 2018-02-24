@@ -106,6 +106,8 @@ function populateEngineTotalAndEstConsumption(data) {
     $("#totalCons").html(totalCons);
     $("#estCons").html(estCons);
     $("#userStartDatetime").html(userStartDatetime);
+    let engineTypeText = $("#engineTypeSelect option:selected").text();
+    $(".engine-type-header").html(engineTypeText);
 }
 
 async function createEngineChartByFleet() {
@@ -246,19 +248,20 @@ function selectDropdownChangeEvent() {
     $("#engineTypeSelect").change(function () {
         let engineUnit = sessionStorage.getItem("engineUnit");
         SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
+        let engineTypeText = $("#engineTypeSelect option:selected").text();
         var htmlString = "";
         switch (SELECTED_ENGINE_TYPE) {
             case "4":
-                htmlString = "Daily Est. Consumption Rate (" + engineUnit + "/hr)";
+                htmlString = engineTypeText + " Daily Est. Flow Rate (" + engineUnit + "/hr) " ;
                 break;
 
             default:
-                htmlString = "Daily Fuel Cons. Rate (" + engineUnit + "/hr)";
+                htmlString = engineTypeText + " Daily Fuel Cons. Rate (" + engineUnit + "/hr) ";
                 break;
         }
         $("#chartTitle").html(htmlString);
         createEngineChartByFleet();
-        // getEngineTotalAndEstConsumption();
+        getEngineTotalAndEstConsumptionByFleet();
     });
 }
 
