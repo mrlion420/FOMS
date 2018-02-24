@@ -82,7 +82,12 @@ async function getUserRelatedVessels() {
                 }
             }
             $("#vesselSelect").html(htmlString);
-            setConstArrays();
+            try{
+                setConstArrays();
+            }catch(ex){
+                refreshPage();
+            }
+            
             break;
             
         }
