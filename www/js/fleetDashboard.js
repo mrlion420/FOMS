@@ -35,13 +35,6 @@ function setLabels() {
 }
 
 async function getUserRelatedFleets() {
-    // var method = "GetUserRelatedFleets";
-    // try {
-    //     let data = await ajaxGet(method, PARAMETER_USERID);
-    //     populateFleetSelectBox(data);
-    // } catch (ex) {
-    //     console.log(ex);
-    // }
     let isFirstItem = true;
     let htmlString = "";
     let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
@@ -60,24 +53,6 @@ async function getUserRelatedFleets() {
     }
     $("#fleetSelect").html(htmlString);
     setConstArrays();
-}
-
-function populateFleetSelectBox(data) {
-    var isFirstItem = true;
-    var htmlString = "";
-    $.each(data, function (index, valueInElement) {
-        var key = data[index].Key;
-        var value = data[index].Result;
-        if (isFirstItem) {
-            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-            FLEETID = key;
-            isFirstItem = false;
-        } else {
-            htmlString += "<option value='" + key + "'>" + value + "</option>";
-        }
-
-    });
-    $("#fleetSelect").html(htmlString);
 }
 
 async function getAllEngineTypesByFleet() {

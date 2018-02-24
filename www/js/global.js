@@ -43,11 +43,11 @@ var MAP = null;
 var MAP_MARKER = null;
 var INFO_WINDOW = null;
 // Timezone 
-if(sessionStorage.getItem("timezone") !== undefined){
+if (sessionStorage.getItem("timezone") !== undefined) {
 	var TIMEZONE = sessionStorage.getItem("timezone");
 }
 
-if(sessionStorage.getItem("userId") !== undefined){
+if (sessionStorage.getItem("userId") !== undefined) {
 	var USERID = sessionStorage.getItem("userId");
 }
 // var USERID = 3;
@@ -61,15 +61,20 @@ const DELIMITER = ";";
 const TRUE = "True";
 const FALSE = "False";
 
+var PARAMETER_USERID;
+var PARAMETER_TIMEZONE; 
+var PARAMETER_VESSELID; 
+var PARAMETER_COMBINED;
+
 function setConstArrays() {
 	if (sessionStorage.getItem("userId") !== undefined) {
 		var TIMEZONE = sessionStorage.getItem("timezone");
 		var USERID = sessionStorage.getItem("userId");
 
-		var PARAMETER_USERID = { userId: USERID };
-		var PARAMETER_TIMEZONE = { timezone: TIMEZONE };
-		var PARAMETER_VESSELID = { vesselId: VESSELID };
-		var PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+		PARAMETER_USERID = { userId: USERID };
+		PARAMETER_TIMEZONE = { timezone: TIMEZONE };
+		PARAMETER_VESSELID = { vesselId: VESSELID };
+		PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
 	}
 }
 
@@ -434,7 +439,7 @@ function drawPolylineOnMap(latlonArray, map) {
 
 	var bounds = new google.maps.LatLngBounds();
 	polyLine.setMap(map);
-	for (var i = 0; i < latlonArray.length - 1; i++) {
+	for (var i = 0; i < latlonArray.length; i++) {
 		var latLng = new google.maps.LatLng(latlonArray[i][0], latlonArray[i][1]);
 		var polyLineArray = polyLine.getPath();
 		polyLineArray.push(latLng);

@@ -754,3 +754,33 @@ System.IndexOutOfRangeException: Cannot find table 0.
    at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1554
 System.NullReferenceException: Object reference not set to an instance of an object.
    at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 762
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetDailyEngineChartByEngineType(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1477
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetEngineTotalAndEstConsumption(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 491
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetDailyEngineChartByEngineType(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1477
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetEngineTotalAndEstConsumption(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 491
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetDailyEngineChartByEngineType(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1477
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at FOMSWebService.FOMSWebService.GetEngineTotalAndEstConsumption(Int32 vesselId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 491
