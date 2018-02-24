@@ -1020,6 +1020,7 @@ namespace FOMSWebService
                 DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
                 DateTime endDateTime = DateTime.UtcNow;
                 List<EventAlarm> eventAlarmList = EventAlarm.GetAllByPeriod(vesselId, startDateTime, endDateTime);
+                
                 foreach (EventAlarm singleEvent in eventAlarmList)
                 {
                     IOAlarmData alarmData = new IOAlarmData();

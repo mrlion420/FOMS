@@ -52,7 +52,12 @@ async function getUserRelatedFleets() {
         }
     }
     $("#fleetSelect").html(htmlString);
-    setConstArrays();
+    try{
+        setConstArrays();
+    }catch(ex){
+        location.reload();
+    }
+    
 }
 
 async function getAllEngineTypesByFleet() {

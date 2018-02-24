@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
@@ -8,7 +9,8 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
 
     <!-- CSS Files import -->
     <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
@@ -16,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
 
     <!--- Localization Imports -->
@@ -27,7 +29,7 @@
     <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../js/external/moment.js"></script> 
+    <script type="text/javascript" src="../js/external/moment.js"></script>
     <script type="text/javascript" src="../js/external/leaflet.js"></script>
     <script type="text/javascript" src="../js/external/highcharts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
@@ -40,6 +42,7 @@
 
     <title>FOMS</title>
 </head>
+
 <body>
     <div class="header">
         <div>
@@ -52,13 +55,13 @@
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
-            <img src="../img/logout.png" id="imgLogout"/>
+            <img src="../img/logout.png" id="imgLogout" />
         </div>
     </div>
-    
+
     <div class="body-wrapper">
         <div class="side-menu" id="sideMenu">
-           
+
         </div>
         <div class="main-container main fleet">
             <div class="top-select-container">
@@ -71,26 +74,30 @@
                 </div>
                 <div>
                     <button id="submitBtn">Submit</button>
-                </div>                
+                </div>
             </div>
             <div class="wrapper">
                 <div class="left-container">
-                    <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>
-                    <div class="multiple-item">
-                        <p id="lblTotalCons">Total Consumption (ℓ)</p>
-                        <p id="totalCons">1,408.45</p>
-                    </div>
-                    <div class="multiple-item">
-                        <p id="lblEstCons">Estimate Consumption (ℓ/hr)</p>
-                        <p id="estCons">65.59</p>
-                    </div>
-                    <div class="chart-header">
-                        <p id="chartTitle">Daily Fuel Cons. Rate (ℓ/hr)</p>
+                    <div class="engine-select-container">
+                        <label id="userStartDatetime">Today (Since 11-Sept-2017 00:00 UTC +8)</label>
                         <select id="engineTypeSelect">
                             <option>Main Engine</option>
                             <option>Aux Engine</option>
                             <option>Thruster Engine</option>
                         </select>
+                    </div>
+
+                    <div class="multiple-item">
+                        <p id="lblTotalCons">Total Consumption (ℓ)</p>
+                        <p id="totalCons">-</p>
+                    </div>
+                    <div class="multiple-item">
+                        <p id="lblEstCons">Estimate Consumption (ℓ/hr)</p>
+                        <p id="estCons">-</p>
+                    </div>
+                    <div class="chart-header">
+                        <p id="chartTitle">Daily Fuel Cons. Rate (ℓ/hr)</p>
+
                     </div>
                     <div class="chart-container">
                         <div class="chart" id="chart">
@@ -99,32 +106,31 @@
                     </div>
                     <div class="multiple-item">
                         <p id="lblBunkerIn">Total Bunkering In (ℓ)</p>
-                        <p id="totalBunkerIn">25,500,000</p>
+                        <p id="totalBunkerIn">-</p>
                     </div>
                     <div class="multiple-item">
                         <p id="lblBunkerOut">Total Bunkering Out (ℓ)</p>
-                        <p id="totalBunkerOut">1,500</p>
+                        <p id="totalBunkerOut">-</p>
                     </div>
                 </div>
                 <div class="right-container">
-                    <div id="lastOperationMode">OP Mode : --</div>
 
                     <div class="map-container">
                         <div class="select-container">
 
                         </div>
                         <div id="map">
-                            
+
                         </div>
                     </div>
                     <div class="item-container">
                         <div class="multiple-item">
                             <p id="lblTotalDist">Total Distance (Nm)</p>
-                            <p id="totalDistance">107.4</p>
+                            <p id="totalDistance">-</p>
                         </div>
                         <div class="multiple-item">
                             <p id="avgConsPerDist">Avg. Cons (ℓ/Nm)</p>
-                            <p id="avgCons">131.54</p>
+                            <p id="avgCons">-</p>
                         </div>
                         <div class="multiple-item">
                             <div>
@@ -132,10 +138,10 @@
                                 <p>Not Reporting</p>
                             </div>
                             <div>
-                                <p id="activeVessel">4</p>
-                                <p id="notActiveVessel">1</p>
+                                <p id="activeVessel">-</p>
+                                <p id="notActiveVessel">-</p>
                             </div>
-                            <p>(No report for the last 2 hours)</p>
+                            <p>-</p>
                         </div>
                     </div>
                     <!-- <div class="multiple-item">
@@ -144,11 +150,12 @@
                         <p id="totalAndAvgLitrePerNm">0.00 / 0.00</p>
                     </div> -->
                     <div class="event-container" id="eventLog">
-                        
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

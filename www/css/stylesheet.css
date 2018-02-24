@@ -305,7 +305,7 @@ p{
 }
 
 .main label{
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .main .wrapper{
@@ -320,6 +320,17 @@ p{
     display: flex;
     flex-direction: column;
     color: white;
+}
+
+.main .wrapper .left-container .engine-select-container{
+    display: flex;
+    width: 95%;
+    align-items: center;
+    margin: 0px 0px 10px 0px;
+}
+
+.main .wrapper .left-container .engine-select-container label{
+    margin-right: auto;
 }
 
 .main .wrapper .left-container .multiple-item:nth-child(2){
@@ -800,13 +811,12 @@ p{
 }
 
 .other-signal .query-container p{
-    width: 160px; 
+    width: 150px; 
 }
 
 .other-signal .query-container select{
     font-size: 22px;
     background: #3282E4;
-    margin : 0px 0px 0px 20px;
     padding: 3px;
 }
 

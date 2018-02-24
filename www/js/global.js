@@ -3,7 +3,7 @@ $(document).ready(function () {
 	logoutBtnClickHandler();
 });
 
-// sessionStorage.setItem("engineUnit", "ℓ");
+sessionStorage.setItem("engineUnit", "ℓ");
 // sessionStorage.setItem("timezone", 8);
 // sessionStorage.setItem("userId", 3);
 
