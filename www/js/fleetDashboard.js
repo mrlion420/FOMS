@@ -155,7 +155,7 @@ function tooltipFormatter(chart) {
     let rateText = "";
     let chartTitle = $("#chartTitle").text();
     let startDatetime = chart.x - (86400 * 1000); // value - 1 day 
-    let endDatetime = chart.x - (1 * 1000) // value - 1 second
+    let endDatetime = chart.x - (1 * 1000); // value - 1 second
     let engineUnit = sessionStorage.getItem("engineUnit");
 
     if (chartTitle !== "Daily Fuel Cons. Rate (" + engineUnit + "/hr)") {

@@ -64,7 +64,7 @@ async function getUserRelatedVessels() {
             try{
                 setConstArrays();
             }catch(ex){
-                refreshPage();
+                location.reload();
             }
             
             break;
