@@ -16,65 +16,57 @@ async function mainfunction(){
 	await GetIOAlarmByQuery();
 }
 
-async function getUserRelatedFleets(){
-	var method = "GetUserRelatedFleets";
-	try{
-		let data = await ajaxGet(method, PARAMETER_USERID);
-		populateFleetSelectBox(data);
-	}catch(ex){
-		console.log(ex);
-	}
+async function getUserRelatedFleets() {
+    let isFirstItem = true;
+    let htmlString = "";
+    let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
+    for (let i = 0; i < fleetObjArray.length; i++) {
+        let resultObj = fleetObjArray[i];
+        let key = resultObj.fleetId;
+        let value = resultObj.fleetName;
+
+        if (isFirstItem) {
+            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+            FLEETID = key;
+            isFirstItem = false;
+        } else {
+            htmlString += "<option value='" + key + "'>" + value + "</option>";
+        }
+    }
+    $("#fleetSelect").html(htmlString);
 }
 
-function populateFleetSelectBox(data){
-	var isFirstItem = true;
-	var htmlString = "";
-	$.each(data, function(index,valueInElement){
-		var key = data[index].Key;
-		var value = data[index].Result;
-		if(isFirstItem){
-			htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-			FLEETID = key;
-			isFirstItem = false;
-		}else{
-			htmlString += "<option value='" + key + "'>" + value +"</option>";
-		}
-		
-	});
-	$("#fleetSelect").html(htmlString);
-}
-
-
-async function getUserRelatedVessels(){
-	var method = "GetUserRelatedVessels";
-	var parameters = PARAMETER_USERID;
-	parameters.fleetId = FLEETID;
-	try{
-		let data = await ajaxGet(method, parameters);
-		populateVesselSelectBox(data);
-	}catch(ex){
-		console.log(ex);
-	}
-	resetConstArrays();
-}
-
-function populateVesselSelectBox(data){
-	var isFirstItem = true;
-	var htmlString = "";
-
-	$.each(data, function(index,valueInElement){
-		var key = data[index].Key;
-		var value = data[index].Result;
-		if(isFirstItem){
-			htmlString += "<option value='" + key + "' selected>" + value +"</option>";    
-			VESSELID = key;
-			isFirstItem = false;
-		}else{
-			htmlString += "<option value='" + key + "'>" + value +"</option>";
-		}
-		
-	});
-	$("#vesselSelect").html(htmlString);
+async function getUserRelatedVessels() {
+    let isFirstItem = true;
+    let htmlString = "";
+    let fleetVesselObjArray = JSON.parse(sessionStorage.getItem("fleetVesselObj"))
+    for (let i = 0; i < fleetVesselObjArray.length; i++) {
+        let resultObj = fleetVesselObjArray[i];
+        if (resultObj.fleetId === FLEETID) {
+            let vesselSplitString = resultObj.vesselList.split(";");
+            
+            for (let j = 0; j < vesselSplitString.length; j++) {
+                let key = vesselSplitString[j].split("-")[0];
+                let value = vesselSplitString[j].split("-")[1];
+                if (isFirstItem) {
+                    htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+                    VESSELID = key;
+                    isFirstItem = false;
+                } else {
+                    htmlString += "<option value='" + key + "'>" + value + "</option>";
+                }
+            }
+            $("#vesselSelect").html(htmlString);
+            try{
+                setConstArrays();
+            }catch(ex){
+                refreshPage();
+            }
+            
+            break;
+            
+        }
+    }
 }
 
 function submitBtnClickHandler(){
