@@ -1370,6 +1370,10 @@ namespace FOMSWebService
                 }
 
                 DateTime endDatetime = DateTimeExtension.CalculateEndDatetime(querytime, timezone, viewIntervalEnum);
+                if(viewIntervalEnum == BLL_Enum._VIEW_INTERVAL.Hour_1)
+                {
+                    endDatetime = endDatetime.AddHours(-1); // Remove the last hour in Hourly interval
+                }
                 DateTime startDatetime = endDatetime.AddSeconds(-querytime * numOfPoints);
 
                 if(numOfPoints != 24)
