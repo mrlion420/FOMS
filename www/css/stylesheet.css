@@ -558,7 +558,7 @@ p{
 
 .main .wrapper .right-container .event-container{
     width: 100%;
-    background-color: #4395F3;
+    background-color: lightgrey;
     overflow: auto;
     height: 320px;
     margin: 10px 0px 10px 0px;
@@ -642,6 +642,7 @@ p{
     color : green;
     margin: 0;
     padding: 10px 10px 10px 0px;
+    color: 30px;
 }
 
 .fuel-cons-chart{
@@ -1191,6 +1192,7 @@ select{
     background-color: #3282E4;
     padding: 6px 10px;
     max-width: 300px;
+    color: white;
 }
 
 select option{

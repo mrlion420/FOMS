@@ -341,6 +341,7 @@ function submitBtnClickHandler() {
 
 async function buttonClickFunctions() {
     await getAllEngineTypesByFleet();
+    setLabels();
     createEngineChartByFleet();
     getEngineTotalAndEstConsumptionByFleet();
     getBunkeringByFleet();

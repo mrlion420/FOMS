@@ -259,6 +259,48 @@ namespace FOMSWebService
             return datetimeData;
         }
 
+        public List<ResultData> GetAllEngineTypesWithoutBunker(int vesselId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                HashSet<short> engineCodeHS = new HashSet<short>();
+                List<Engine> engineList = Engine.GetAll(vesselId);
+                foreach (Engine engine in engineList)
+                {
+                    short engineCode = engine.EngineCode.GetValueOrDefault();
+                    if (engineCode == 3)
+                    {
+                        engineCode = 2;
+                    }
+                    engineCodeHS.Add(engineCode);
+                }
+
+                foreach (short engineCode in engineCodeHS)
+                {
+                    ResultData result = new ResultData();
+                    string engineType = KeyValueExtension.GetEngineDescFromEngineCode(engineCode);
+                    if (engineCode != 2)
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = engineType;
+                    }
+                    else
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = "Thursters";
+                    }
+                    resultDataList.Add(result);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
+        }
+
         #endregion
 
         #region Login Page Methods
@@ -430,7 +472,7 @@ namespace FOMSWebService
                 string currentOperationCode = Convert.ToString(latestOperation.OperationModeCode);
 
                 string operationDesc = SystemCode.GetBySysCodeTypeIdSysCodeId(systemCodeEventType, currentOperationCode).SysCodeDesc;
-                result.Key =  DateTimeExtension.DisplayDateWithUTC(startDateTime, timezone);
+                result.Key = "Since " + DateTimeExtension.DisplayDateWithUTC(startDateTime, timezone);
                 result.Result = operationDesc;
             }
             catch (Exception ex)
@@ -841,6 +883,7 @@ namespace FOMSWebService
                 {
                     AnalogData analogData = new AnalogData();
                     analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+                    
                     analogData.AnalogValue = analog.LatestReading.ToString();
                     analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
                     analogData.RefEngineId = analog.RefEngineId.ToString();

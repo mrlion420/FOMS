@@ -470,17 +470,23 @@ function selectDropdownChangeEvent() {
 
     $("#vesselSelect").change(function () {
         VESSELID = $("#vesselSelect").val();
+        resetConstArrays();
     });
 }
 
 function submitBtnClickHandler() {
     $("#submitBtn").click(function () {
-        getLastOperationMode();
-        createEngineChartByEngineType();
-        getRecentEventList();
-        getRecentDistance();
-        getRecentPosition();
-        getEngineTotalAndEstConsumption();
-        generateStaticMapFromQueryTime();
+       submitFunction(); 
     });
+}
+
+async function submitFunction(){
+    await getAllEngineTypes();
+    getLastOperationMode();
+    createEngineChartByEngineType();
+    getRecentEventList();
+    getRecentDistance();
+    getRecentPosition();
+    getEngineTotalAndEstConsumption();
+    generateStaticMapFromQueryTime();
 }
