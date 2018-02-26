@@ -28,10 +28,8 @@ async function mainFunction() {
     // setInterval(getRecentDistance, 1000 * 3);
 
     getRecentPosition();
-    // setInterval(getRecentPosition, 1000 * 3);
 
     getEngineTotalAndEstConsumption();
-    // setInterval(getEngineTotalAndEstConsumption, 1000 * 3);
 
 }
 
@@ -39,8 +37,8 @@ function setLabels() {
     let engineUnit = sessionStorage.getItem("engineUnit");
     let engineTypeText = $("#engineTypeSelect option:selected").text();
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
-    $("#lblEstCons").text("Estimate Consumption (" + engineUnit + ")");
-    $("#chartTitle").text(engineTypeText + " Daily Fuel Consumption ");
+    $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
+    $("#chartTitle").text(engineTypeText + " Daily Consumption (" + engineUnit + ")");
     $("#lblTotalAvgDist").text("Today Total Distance (Nm) / Avg. Distance (" + engineUnit + "/Nm)");
 }
 

@@ -105,13 +105,13 @@ function populateAnalogData(data) {
 			htmlString += "</div>";
 			htmlString += "</div>";
 			$("#analogBody").append(htmlString);
-			createRadialGauge(result.AnalogId + "Canvas", result.AnalogValue);
+			createRadialGauge(result.AnalogId + "Canvas", result.AnalogValue, result.AnalogUnit);
 		}
 
 	}
 }
 
-function createRadialGauge(id, value) {
+function createRadialGauge(id, value, unit) {
 	var gauge = new RadialGauge({
 		renderTo: id,
 		width: 280,
@@ -119,7 +119,7 @@ function createRadialGauge(id, value) {
 		minValue: 0,
 		maxValue: 200,
 		value: value,
-		units: "litres",
+		units: unit,
 		colorValueBoxShadow: false,
 		highlights: [
 			{ "from": 0, "to": 75, "color": "rgba(0,255,0,.15)" },

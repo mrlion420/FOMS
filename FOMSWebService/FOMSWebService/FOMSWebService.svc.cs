@@ -890,65 +890,65 @@ namespace FOMSWebService
                     analogDictWithCode[analogCode].Add(analog);
                 }
 
-                foreach(var kvp in analogDictWithCode)
-                {
-                    BLL_Enum._ANALOG analogEnum = EnumExtension.GetAnalogEnum_FromAnalogType(kvp.Key.ToString());
-                    DataTable resultTable = AnalogReading.GetLatest(vesselId, analogEnum);
-                    foreach(Analog analog in kvp.Value)
-                    {
-                        foreach(DataRow row in resultTable.Rows)
-                        {
-                            if(analog.AnalogId == Convert.ToInt16(row["ANALOG_ID"]))
-                            {
-                                AnalogData analogData = new AnalogData();
-                                analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
-
-                                analogData.AnalogValue = row["LATEST_READING"].ToString();
-                                analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
-                                analogData.RefEngineId = analog.RefEngineId.ToString();
-                                analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
-                                analogData.AnalogId = analog.AnalogId.ToString();
-                                analogData.AnalogName = analog.ShortDescription;
-
-                                if (dict.ContainsKey(analog.RefEngineId))
-                                {
-                                    dict[analog.RefEngineId].Add(analogData);
-                                }
-                                else
-                                {
-                                    List<AnalogData> holder = new List<AnalogData>();
-                                    holder.Add(analogData);
-                                    dict.Add(analog.RefEngineId, holder);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                //foreach (Analog analog in analogList)
+                //foreach(var kvp in analogDictWithCode)
                 //{
-                //    AnalogData analogData = new AnalogData();
-                //    analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
-
-                //    analogData.AnalogValue = analog.LatestReading.ToString();
-                //    analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
-                //    analogData.RefEngineId = analog.RefEngineId.ToString();
-                //    analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
-                //    analogData.AnalogId = analog.AnalogId.ToString();
-                //    analogData.AnalogName = analog.ShortDescription;
-
-                //    if (dict.ContainsKey(analog.RefEngineId))
+                //    BLL_Enum._ANALOG analogEnum = EnumExtension.GetAnalogEnum_FromAnalogType(kvp.Key.ToString());
+                //    DataTable resultTable = AnalogReading.GetLatest(vesselId, analogEnum);
+                //    foreach(Analog analog in kvp.Value)
                 //    {
-                //        dict[analog.RefEngineId].Add(analogData);
-                //    }
-                //    else
-                //    {
-                //        List<AnalogData> holder = new List<AnalogData>();
-                //        holder.Add(analogData);
-                //        dict.Add(analog.RefEngineId, holder);
-                //    }
+                //        foreach(DataRow row in resultTable.Rows)
+                //        {
+                //            if(analog.AnalogId == Convert.ToInt16(row["ANALOG_ID"]))
+                //            {
+                //                AnalogData analogData = new AnalogData();
+                //                analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
 
+                //                analogData.AnalogValue = row["LATEST_READING"].ToString();
+                //                analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                //                analogData.RefEngineId = analog.RefEngineId.ToString();
+                //                analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
+                //                analogData.AnalogId = analog.AnalogId.ToString();
+                //                analogData.AnalogName = analog.ShortDescription;
+
+                //                if (dict.ContainsKey(analog.RefEngineId))
+                //                {
+                //                    dict[analog.RefEngineId].Add(analogData);
+                //                }
+                //                else
+                //                {
+                //                    List<AnalogData> holder = new List<AnalogData>();
+                //                    holder.Add(analogData);
+                //                    dict.Add(analog.RefEngineId, holder);
+                //                }
+                //            }
+                //        }
+                //    }
                 //}
+
+                foreach (Analog analog in analogList)
+                {
+                    AnalogData analogData = new AnalogData();
+                    analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+
+                    analogData.AnalogValue = analog.LatestReading.ToString();
+                    analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                    analogData.RefEngineId = analog.RefEngineId.ToString();
+                    analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
+                    analogData.AnalogId = analog.AnalogId.ToString();
+                    analogData.AnalogName = analog.ShortDescription;
+
+                    if (dict.ContainsKey(analog.RefEngineId))
+                    {
+                        dict[analog.RefEngineId].Add(analogData);
+                    }
+                    else
+                    {
+                        List<AnalogData> holder = new List<AnalogData>();
+                        holder.Add(analogData);
+                        dict.Add(analog.RefEngineId, holder);
+                    }
+
+                }
 
                 foreach (var kvp in dict)
                 {

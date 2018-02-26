@@ -31,7 +31,7 @@ function setLabels() {
     let engineTypeText = $("#engineTypeSelect option:selected").text();
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
     $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
-    $("#chartTitle").text(engineTypeText + " Daily Fuel Cons. Rate (" + engineUnit + "/hr)");
+    $("#chartTitle").text(engineTypeText + " Daily Consumption (" + engineUnit + ")");
     $("#lblBunkerIn").text("Total Bunkering In (" + engineUnit + ")");
     $("#lblBunkerOut").text("Total Bunkering Out (" + engineUnit + ")");
     $("#avgConsPerDist").text("Avg. Cons (" + engineUnit + "/Nm)");
@@ -167,12 +167,12 @@ function tooltipFormatter(chart) {
     let startDatetime = chart.x - (86400 * 1000); // value - 1 day 
     let endDatetime = chart.x - (1 * 1000); // value - 1 second
     let engineUnit = sessionStorage.getItem("engineUnit");
-
-    if (chartTitle !== "Daily Fuel Cons. Rate (" + engineUnit + "/hr)") {
-        rateText = "Est. Flow Rate : "; // Bunker
-    } else {
-        rateText = "Est. Consumption Rate (" + engineUnit + "/hr) : ";
-    }
+    rateText = "Total Consumption (" + engineUnit + ") : ";
+    // if (chartTitle !== "Daily Fuel Cons. Rate (" + engineUnit + "/hr)") {
+    //     rateText = "Est. Flow Rate : "; // Bunker
+    // } else {
+    //     rateText = "Est. Consumption Rate (" + engineUnit + ") : ";
+    // }
 
     let formatter = "<b>" + chart.series.name + "</b><br>" +
         Highcharts.dateFormat(dateFormatHC, startDatetime) + " - " + Highcharts.dateFormat(dateFormatHC, endDatetime) + "<br>" +
@@ -192,7 +192,7 @@ function addSeriesIntoChart(data) {
         var singleObject = valueOfElement;
         for (var i = 0; i < singleObject.length; i++) {
             var result = singleObject[i];
-            var value = round(parseFloat(result.EST_FLOW_RATE), 2);
+            var value = round(parseFloat(result.Result), 2);
             var ticks = parseFloat(result.Ticks);
             var additionalInfo = result.ADDITIONAL_INFO;
             var unit = result.Unit;
