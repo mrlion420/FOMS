@@ -100,7 +100,7 @@ function populateAnalogData(data) {
 			htmlString += "</div>";
 			htmlString += "<div class='analog-desc-item'>";
 			htmlString += "<p>Reading : </p>";
-			htmlString += "<p class='" + cssClass + "'>" + result.AnalogValue + "</p>";
+			htmlString += "<p class='" + cssClass + "'>" + numberWithCommas(result.AnalogValue) + "</p>";
 			htmlString += "</div>";
 			htmlString += "</div>";
 			htmlString += "</div>";
