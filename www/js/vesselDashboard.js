@@ -13,6 +13,7 @@ async function mainFunction() {
     await getUserRelatedVessels();
 
     await getAllEngineTypes();
+    setLabels();
     await initMap("map");
     selectDropdownChangeEvent();
     submitBtnClickHandler();
@@ -36,9 +37,11 @@ async function mainFunction() {
 
 function setLabels() {
     let engineUnit = sessionStorage.getItem("engineUnit");
+    let engineTypeText = $("#engineTypeSelect option:selected").text();
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
     $("#lblEstCons").text("Estimate Consumption (" + engineUnit + ")");
-    $("#lblTotalAvgDist").text("Total Distance (Nm) / Avg. Distance (" + engineUnit + "/Nm)");
+    $("#chartTitle").text(engineTypeText + " Daily Fuel Consumption ");
+    $("#lblTotalAvgDist").text("Today Total Distance (Nm) / Avg. Distance (" + engineUnit + "/Nm)");
 }
 
 async function getUserRelatedFleets() {
@@ -207,6 +210,8 @@ function populateEngineTotalAndEstConsumption(data) {
     $("#totalCons").html(totalCons);
     $("#estCons").html(estCons);
     $("#userStartDatetime").html(userStartDatetime);
+    let engineTypeText = $("#engineTypeSelect option:selected").text();
+    $(".engine-type-header").html(engineTypeText);
 }
 
 async function getAllEngineTypes() {
@@ -466,6 +471,7 @@ function selectDropdownChangeEvent() {
         $("#chartTitle").html(htmlString);
         createEngineChartByEngineType();
         getEngineTotalAndEstConsumption();
+        setLabels();
     });
 
     $("#vesselSelect").change(function () {

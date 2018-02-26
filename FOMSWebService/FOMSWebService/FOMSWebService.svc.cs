@@ -93,7 +93,7 @@ namespace FOMSWebService
         //        {
         //            ResultData resultVessel = new ResultData();
         //            resultVessel.Result = vessel.VesselName;
-                    
+
         //            resultVessel.Key = vessel.VesselId.ToString();
         //            resultVesselList.Add(resultVessel);
         //        }
@@ -161,7 +161,7 @@ namespace FOMSWebService
                 bool isSuccessful = User.GetFleetVesselByUserID(userId, ref fleetVesselList, ref fleetList, ref vesselList);
                 Dictionary<string, string> fleetVesselDict = new Dictionary<string, string>(); // fleetId-fleetName - vesselId-vesselName;vesselId-vesselName
 
-                foreach(FleetVessel fleetVessel in fleetVesselList)
+                foreach (FleetVessel fleetVessel in fleetVesselList)
                 {
                     long fleetId = fleetVessel.FleetId;
                     long vesselId = fleetVessel.VesselId;
@@ -181,7 +181,7 @@ namespace FOMSWebService
                     }
                 }
 
-                foreach(var kvp in fleetVesselDict)
+                foreach (var kvp in fleetVesselDict)
                 {
                     ResultData resultData = new ResultData();
                     resultData.Key = kvp.Key;
@@ -189,7 +189,7 @@ namespace FOMSWebService
                     resultDataList.Add(resultData);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
@@ -251,7 +251,7 @@ namespace FOMSWebService
                 datetimeData.StartDatetime = DateTimeExtension.DisplayDateWithYear(today.AddDays(-1));
                 datetimeData.EndDatetime = DateTimeExtension.DisplayDateWithYear(today);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
@@ -879,30 +879,76 @@ namespace FOMSWebService
             try
             {
                 List<Analog> analogList = Analog.GetAll(vesselId);
+                Dictionary<int, List<Analog>> analogDictWithCode = new Dictionary<int, List<Analog>>();
                 foreach (Analog analog in analogList)
                 {
-                    AnalogData analogData = new AnalogData();
-                    analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
-                    
-                    analogData.AnalogValue = analog.LatestReading.ToString();
-                    analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
-                    analogData.RefEngineId = analog.RefEngineId.ToString();
-                    analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
-                    analogData.AnalogId = analog.AnalogId.ToString();
-                    analogData.AnalogName = analog.ShortDescription;
-
-                    if (dict.ContainsKey(analog.RefEngineId))
+                    int analogCode = analog.AnalogCode;
+                    if (!analogDictWithCode.ContainsKey(analog.AnalogCode))
                     {
-                        dict[analog.RefEngineId].Add(analogData);
+                        analogDictWithCode.Add(analogCode, new List<Analog>());
                     }
-                    else
-                    {
-                        List<AnalogData> holder = new List<AnalogData>();
-                        holder.Add(analogData);
-                        dict.Add(analog.RefEngineId, holder);
-                    }
-
+                    analogDictWithCode[analogCode].Add(analog);
                 }
+
+                foreach(var kvp in analogDictWithCode)
+                {
+                    BLL_Enum._ANALOG analogEnum = EnumExtension.GetAnalogEnum_FromAnalogType(kvp.Key.ToString());
+                    DataTable resultTable = AnalogReading.GetLatest(vesselId, analogEnum);
+                    foreach(Analog analog in kvp.Value)
+                    {
+                        foreach(DataRow row in resultTable.Rows)
+                        {
+                            if(analog.AnalogId == Convert.ToInt16(row["ANALOG_ID"]))
+                            {
+                                AnalogData analogData = new AnalogData();
+                                analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+
+                                analogData.AnalogValue = row["LATEST_READING"].ToString();
+                                analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                                analogData.RefEngineId = analog.RefEngineId.ToString();
+                                analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
+                                analogData.AnalogId = analog.AnalogId.ToString();
+                                analogData.AnalogName = analog.ShortDescription;
+
+                                if (dict.ContainsKey(analog.RefEngineId))
+                                {
+                                    dict[analog.RefEngineId].Add(analogData);
+                                }
+                                else
+                                {
+                                    List<AnalogData> holder = new List<AnalogData>();
+                                    holder.Add(analogData);
+                                    dict.Add(analog.RefEngineId, holder);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                //foreach (Analog analog in analogList)
+                //{
+                //    AnalogData analogData = new AnalogData();
+                //    analogData.AnalogType = KeyValueExtension.GetAnalogDesc(analog.AnalogCode);
+
+                //    analogData.AnalogValue = analog.LatestReading.ToString();
+                //    analogData.AnalogUnit = KeyValueExtension.GetAnalogUnit(analog.AnalogUnitCode);
+                //    analogData.RefEngineId = analog.RefEngineId.ToString();
+                //    analogData.AlarmStatus = analog.AnalogAlarmStatusCode.ToString();
+                //    analogData.AnalogId = analog.AnalogId.ToString();
+                //    analogData.AnalogName = analog.ShortDescription;
+
+                //    if (dict.ContainsKey(analog.RefEngineId))
+                //    {
+                //        dict[analog.RefEngineId].Add(analogData);
+                //    }
+                //    else
+                //    {
+                //        List<AnalogData> holder = new List<AnalogData>();
+                //        holder.Add(analogData);
+                //        dict.Add(analog.RefEngineId, holder);
+                //    }
+
+                //}
 
                 foreach (var kvp in dict)
                 {
@@ -1063,10 +1109,10 @@ namespace FOMSWebService
                 DateTime startDateTime = DateTime.UtcNow.AddHours(-querytime);
                 DateTime endDateTime = DateTime.UtcNow;
                 List<EventAlarm> eventAlarmList = EventAlarm.GetAllByPeriod(vesselId, startDateTime, endDateTime);
-                
+
                 foreach (EventAlarm singleEvent in eventAlarmList)
                 {
-                    if(singleEvent.IoAlarmId != 0)
+                    if (singleEvent.IoAlarmId != 0)
                     {
                         IOAlarmData alarmData = new IOAlarmData();
                         alarmData.AlarmDateTime = DateTimeExtension.DisplayDateWithYear(singleEvent.Datetime.AddHours(timezone));
@@ -1075,7 +1121,7 @@ namespace FOMSWebService
                         alarmData.Location = position.Wgs84Latitude + " " + position.Wgs84Longitude;
                         ioAlarmDataList.Add(alarmData);
                     }
-                    
+
                 }
             }
             catch (Exception ex)
@@ -1192,7 +1238,7 @@ namespace FOMSWebService
                 }
 
                 DataTable holderTable = new DataTable();
-                if(querytime != 99)
+                if (querytime != 99)
                 {
                     DataSet resultDs = Position.GetView(vesselId, eventTypeEnum, viewIntervalEnum, startDatetime, endDatetime);
                     holderTable = resultDs.Tables[0].Copy();
@@ -1245,7 +1291,7 @@ namespace FOMSWebService
                         break;
 
                     case "Loading_Report":
-                        
+
                         break;
 
                     case "Analog_Report":
@@ -1256,7 +1302,7 @@ namespace FOMSWebService
                         reportTypeEnum = BLL_Enum._REPORT_TYPE.Event_Report;
                         break;
                 }
-                if(querytime == 1)
+                if (querytime == 1)
                 {
                     querytime = 3;
                 }
@@ -1264,11 +1310,11 @@ namespace FOMSWebService
                 {
                     querytime = 6;
                 }
-                
+
                 long id = ReportRequest.AddNewRequest(vesselId, reportTypeEnum, fileFormatEnum, selectMainType, startDatetime, endDatetime, querytime.ToString(), userId.ToString(), "");
                 resultData.Result = id.ToString();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
@@ -1286,7 +1332,7 @@ namespace FOMSWebService
                 short reportStatus = modelReportRequest.ReportStatus;
                 resultData.Result = reportStatus.ToString();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 log.write(ex.ToString());
             }
@@ -1399,16 +1445,16 @@ namespace FOMSWebService
                     // if the query time is not for last 24 hours
                     viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Daily;
 
-                    if(querytime == 168)
+                    if (querytime == 168)
                     {
                         numOfPoints = 7;
                     }
-                    else if(querytime == 336)
+                    else if (querytime == 336)
                     {
                         numOfPoints = 14;
                     }
                     querytime = 86400; // Daily
-                    
+
                 }
                 else
                 {
@@ -1418,17 +1464,17 @@ namespace FOMSWebService
                 }
 
                 DateTime endDatetime = DateTimeExtension.CalculateEndDatetime(querytime, timezone, viewIntervalEnum);
-                if(viewIntervalEnum == BLL_Enum._VIEW_INTERVAL.Hour_1)
+                if (viewIntervalEnum == BLL_Enum._VIEW_INTERVAL.Hour_1)
                 {
                     endDatetime = endDatetime.AddHours(-1); // Remove the last hour in Hourly interval
                 }
                 DateTime startDatetime = endDatetime.AddSeconds(-querytime * numOfPoints);
 
-                if(numOfPoints != 24)
+                if (numOfPoints != 24)
                 {
-                   // numOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
+                    // numOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
                 }
-                
+
 
                 DataSet engineDs = EngineReading.GetViewByEngineId(vesselId, engineIdShort, viewIntervalEnum, numOfPoints, startDatetime, false, false);
                 DataSet resultDs = EngineExtension.AddChartWithTicksAndUnit(engineDs, timezone, unit);
