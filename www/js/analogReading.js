@@ -14,55 +14,55 @@ async function mainFunction() {
 }
 
 async function getUserRelatedFleets() {
-    let isFirstItem = true;
-    let htmlString = "";
-    let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
-    for (let i = 0; i < fleetObjArray.length; i++) {
-        let resultObj = fleetObjArray[i];
-        let key = resultObj.fleetId;
-        let value = resultObj.fleetName;
+	let isFirstItem = true;
+	let htmlString = "";
+	let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
+	for (let i = 0; i < fleetObjArray.length; i++) {
+		let resultObj = fleetObjArray[i];
+		let key = resultObj.fleetId;
+		let value = resultObj.fleetName;
 
-        if (isFirstItem) {
-            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-            FLEETID = key;
-            isFirstItem = false;
-        } else {
-            htmlString += "<option value='" + key + "'>" + value + "</option>";
-        }
-    }
-    $("#fleetSelect").html(htmlString);
+		if (isFirstItem) {
+			htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+			FLEETID = key;
+			isFirstItem = false;
+		} else {
+			htmlString += "<option value='" + key + "'>" + value + "</option>";
+		}
+	}
+	$("#fleetSelect").html(htmlString);
 }
 
 async function getUserRelatedVessels() {
-    let isFirstItem = true;
-    let htmlString = "";
-    let fleetVesselObjArray = JSON.parse(sessionStorage.getItem("fleetVesselObj"))
-    for (let i = 0; i < fleetVesselObjArray.length; i++) {
-        let resultObj = fleetVesselObjArray[i];
-        if (resultObj.fleetId === FLEETID) {
-            let vesselSplitString = resultObj.vesselList.split(";");
-            
-            for (let j = 0; j < vesselSplitString.length; j++) {
-                let key = vesselSplitString[j].split("-")[0];
-                let value = vesselSplitString[j].split("-")[1];
-                if (isFirstItem) {
-                    htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-                    VESSELID = key;
-                    isFirstItem = false;
-                } else {
-                    htmlString += "<option value='" + key + "'>" + value + "</option>";
-                }
-            }
+	let isFirstItem = true;
+	let htmlString = "";
+	let fleetVesselObjArray = JSON.parse(sessionStorage.getItem("fleetVesselObj"))
+	for (let i = 0; i < fleetVesselObjArray.length; i++) {
+		let resultObj = fleetVesselObjArray[i];
+		if (resultObj.fleetId === FLEETID) {
+			let vesselSplitString = resultObj.vesselList.split(";");
+
+			for (let j = 0; j < vesselSplitString.length; j++) {
+				let key = vesselSplitString[j].split("-")[0];
+				let value = vesselSplitString[j].split("-")[1];
+				if (isFirstItem) {
+					htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+					VESSELID = key;
+					isFirstItem = false;
+				} else {
+					htmlString += "<option value='" + key + "'>" + value + "</option>";
+				}
+			}
 			$("#vesselSelect").html(htmlString);
-			try{
+			try {
 				setConstArrays();
-			}catch(ex){
+			} catch (ex) {
 				location.reload();
 			}
-            break;
-            
-        }
-    }
+			break;
+
+		}
+	}
 }
 
 async function GetCurrentAnalogData() {
@@ -325,12 +325,6 @@ function tooltipFormatter(chart) {
 	// Id == 0 means, if the chart is for engine.
 	// Engine chart series id will always be 0
 	if (chart.series.options.id === 0) {
-		// Check if the unit is litres, which means that the daily interval is live
-		if (chart.point.unit === "ℓ") {
-			rateText = "Consumption : ";
-		} else {
-			rateText = "Est. Consumption Rate : ";
-		}
 		formatter += Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
 			rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit + '<br>';
 	} else {
@@ -433,7 +427,7 @@ function showChartViews() {
 
 function submitBtnClickHandler() {
 	$("#submitBtn").click(function () {
-		
+
 		viewTypeSelectChangeFunction();
 	});
 }

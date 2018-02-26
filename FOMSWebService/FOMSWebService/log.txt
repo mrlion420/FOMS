@@ -1108,3 +1108,19 @@ System.IndexOutOfRangeException: Cannot find table 0.
    at FOMSWebService.FOMSWebService.GetTotalEngineChartByFleet(Int32 fleetId, Double timezone, String engineType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1721
 System.NullReferenceException: Object reference not set to an instance of an object.
    at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 857
+System.Data.DuplicateNameException: A DataTable named 'Temperature^ME1 Turbo' already belongs to this DataSet.
+   at System.Data.DataTableCollection.RegisterName(String name, String tbNamespace)
+   at System.Data.DataTableCollection.BaseAdd(DataTable table)
+   at System.Data.DataTableCollection.Add(DataTable table)
+   at CommonHelper.ChartExtension.CombineDataSets_IntoOne(DataSet resultDataset, DataSet secondDataset) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\ChartExtension.cs:line 39
+   at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1562
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Int16.Parse(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt16(String value)
+   at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1514
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 857
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 857
