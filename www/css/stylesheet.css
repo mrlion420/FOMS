@@ -1128,28 +1128,29 @@ p{
 /* ----------------- GLOBAL SECTION ---------------- */
 
 .map-popup{
-    
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
 }
 
 .map-popup p{
     font-size: 14px;
-    padding: 0;
-    margin: 5px 0px 5px 0px; 
+    padding: 0 ;
+    margin: 5px 0px 5px 0px !important; 
 }
 
 .map-popup div{
     display: flex;
     align-items: flex-start;
+    align-self: flex-start;
 }
 
 .map-popup div p:first-child{
-    width: 150px;
+    width: 150px ;
 }
 
 .map-popup div div{
-    display: flex;
+    display: flex ;
     flex-direction: column;
 }
 

@@ -8,8 +8,8 @@ sessionStorage.setItem("engineUnit", "ℓ");
 // sessionStorage.setItem("userId", 3);
 
 // GLOBAL VARIABLES
-// const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
-const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
+// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 // const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [
@@ -535,6 +535,44 @@ function insertMapMarkers(data, map) {
 
 		bounds.extend(latLng);
 	}
+	map.fitBounds(bounds);
+}
+
+function insertMapMarkersWithDetails(data, map){
+	var bounds = new google.maps.LatLngBounds();
+	var icon = {
+		url: '../img/vessel.png'
+	};
+	
+	$.each(data, function (key, value) {
+		let vesselName = value.VesselName;
+		var lat = parseFloat(value.Latitude);
+		var lon = parseFloat(value.Longitude);
+		let sog = parseFloat(value.Sog);
+		let cog = parseFloat(value.Cog);
+		let wgsLat = value.Wgs84Lat;
+		let wgsLon = value.Wgs84Lon;
+		let positionDatetime = value.PositionDatetime;
+		let eventDetails = "";
+
+		if (value.EventDesc !== "") {
+			let splitString = value.EventDesc.split(";");
+			eventDetails = "<p>"+ splitString[0] + "</p>";
+		}
+
+		var latLng = new google.maps.LatLng(lat, lon);
+
+		let popupText = "<div class='map-popup'>";
+		popupText += "<div><p>Vessel : </p><p>" + vesselName + "</p></div>";
+		popupText += "<div><p>Position Datetime : </p><p>" + positionDatetime + "</p></div>";
+		popupText += "<div><p>Last Position : </p><p>" + wgsLat + " " + wgsLon + "</p></div>";
+		popupText += "<div><p>SOG / COG : </p><p>" + sog + " Knots " + cog + " Deg" + "</p></div>";
+		// popupText += "<div><p>Event(s) : </p><div>" + eventDetails + "</div></div>";
+		popupText += "</div>";
+		createMarker(latLng, map, popupText, icon);
+
+		bounds.extend(latLng);
+	});
 	map.fitBounds(bounds);
 }
 

@@ -54,7 +54,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        PositionData GetVesselLatestPosition(int vesselId);
+        PositionData GetVesselLatestPosition(int vesselId, double timezone);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -102,7 +102,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        List<PositionData> GetFleetCurrentPosition(int fleetId);
+        List<PositionData> GetFleetCurrentPosition(int fleetId, double timezone);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
@@ -296,6 +296,15 @@ namespace FOMSWebService
         private string vesselName;
         private string eventDesc;
         private string positionDatetime;
+        private string latestDatetime;
+
+        [DataMember]
+        public string LatestDatetime
+        {
+            get { return latestDatetime; }
+            set { latestDatetime = value; }
+        }
+
 
         [DataMember]
         public string PositionDatetime

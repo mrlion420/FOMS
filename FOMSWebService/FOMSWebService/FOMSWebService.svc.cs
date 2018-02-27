@@ -6,17 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.ServiceModel.Web;
 using System.ServiceModel.Activation;
 using System.Text;
 using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Globalization;
-using System.Security.Cryptography;
 
 namespace FOMSWebService
 {
@@ -429,7 +423,7 @@ namespace FOMSWebService
             return position;
         }
 
-        public PositionData GetVesselLatestPosition(int vesselId)
+        public PositionData GetVesselLatestPosition(int vesselId, double timezone)
         {
             PositionData positionData = new PositionData();
             try
@@ -450,6 +444,7 @@ namespace FOMSWebService
                 positionData.Wgs84Lon = wgs84Longitude;
                 positionData.Cog = cog;
                 positionData.Sog = sog;
+                positionData.PositionDatetime = DateTimeExtension.DisplayDateWithUTC(positionItem.PositionDatetime, timezone);
             }
             catch (Exception ex)
             {
@@ -814,12 +809,23 @@ namespace FOMSWebService
             return resultData;
         }
 
-        public List<PositionData> GetFleetCurrentPosition(int fleetId)
+        public List<PositionData> GetFleetCurrentPosition(int fleetId, double timezone)
         {
             List<PositionData> positionDataList = new List<PositionData>();
             try
             {
                 List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                DateTime latestDatetime = new DateTime(1970, 1, 1);
+                foreach(Vessel vessel in vesselList)
+                {
+                    PositionData positionData = new PositionData();
+                    Position latestPosition = Position.GetLatest(vessel.VesselId);
+                    if(latestPosition.PositionDatetime > latestDatetime)
+                    {
+                        latestDatetime = latestPosition.PositionDatetime;
+                    }
+                }
+
                 foreach (Vessel vessel in vesselList)
                 {
                     PositionData positionData = new PositionData();
@@ -827,6 +833,18 @@ namespace FOMSWebService
                     positionData.Latitude = latestPosition.Latitude;
                     positionData.Longitude = latestPosition.Longitude;
                     positionData.VesselName = vessel.VesselName;
+                    positionData.Wgs84Lat = latestPosition.Wgs84Latitude;
+                    positionData.Wgs84Lon = latestPosition.Wgs84Longitude;
+                    positionData.PositionDatetime = DateTimeExtension.DisplayDateWithYear(latestPosition.PositionDatetime.AddHours(timezone));
+                    positionData.LatestDatetime = DateTimeExtension.DisplayDateAddTimezoneWithUTC(latestDatetime, timezone);
+                    string eventDesc = string.Empty;
+                    
+                    List<EventSystem> systemEventList =  EventSystem.GetAllByPositionID(vessel.VesselId, latestPosition.PositionId);   
+                    foreach(EventSystem systemEvent in systemEventList)
+                    {
+                        eventDesc += systemEvent.Description + ";";
+                    }
+                    positionData.EventDesc = eventDesc;
                     positionDataList.Add(positionData);
                 }
             }

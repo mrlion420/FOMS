@@ -38,7 +38,11 @@ function setLabels() {
     let engineTypeText = $("#engineTypeSelect option:selected").text();
     $("#lblTotalCons").text("Total Consumption (" + engineUnit + ")");
     $("#lblEstCons").text("Estimate Consumption (" + engineUnit + "/hr)");
-    $("#chartTitle").text(engineTypeText + " Daily Consumption (" + engineUnit + ")");
+    let chartTitle = engineTypeText + " Daily Consumption (" + engineUnit + ")";
+    if(engineTypeText.includes("Bunker")){
+        chartTitle = engineTypeText + " Daily Flow (" + engineUnit + ")";
+    }
+    $("#chartTitle").text(chartTitle);
     $("#lblTotalAvgDist").text("Today Total Distance (Nm) / Avg. Distance (" + engineUnit + "/Nm)");
 }
 
@@ -143,14 +147,17 @@ function populateRecentDistance(data) {
 
 async function getRecentPosition() {
     var method = "GetVesselLatestPosition";
+    let parameters = PARAMETER_COMBINED;
     try {
-        let data = await ajaxGet(method, PARAMETER_VESSELID);
+        let data = await ajaxGet(method, parameters);
         populateRecentPosition(data);
 
         // If the currently selected position query is for live
         if (SELECTED_POSITION_QUERY === "0") {
             updateMapMarker(data.Latitude, data.Longitude, true);
         }
+
+        $("#lblLastUpdated").text("Position Last Updated : " + data.PositionDatetime);
     } catch (ex) {
         console.log(ex);
     }
@@ -349,17 +356,17 @@ function tooltipFormatter(chart) {
     let endDatetime = chart.x - (1 * 1000); // value - 1 second
     let engineUnit = sessionStorage.getItem("engineUnit");
 
-    if (chartTitle !== "Daily Flow Rate") {
+    if (!chartTitle.includes("Bunker")) {
         rateText = "Consumption : ";
     } else {
-        rateText = "Flow Rate : "; // Bunker
+        rateText = "Flow : "; // Bunker
     }
 
     let formatter = "<b>" + chart.series.name + "</b><br>" +
         Highcharts.dateFormat(dateFormatHC, startDatetime) + " - " + Highcharts.dateFormat(dateFormatHC, endDatetime) + "<br>" +
         rateText + Highcharts.numberFormat(chart.y, 2) + '  ' + chart.point.unit;
 
-    if (chartTitle === "Fuel Cons. Rate (ℓ/hr)") {
+    if (!chartTitle.includes("Bunker")) {
         formatter += "<br>" + chart.point.additionalInfo;
     }
 

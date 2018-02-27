@@ -319,18 +319,20 @@ function populateDistanceAndAvgConsAndReportingVessels(data) {
 
 async function GetFleetCurrentPosition() {
     var method = "GetFleetCurrentPosition";
-    var parameters = { fleetId: FLEETID };
+    var parameters = { fleetId: FLEETID , timezone : TIMEZONE};
     try {
         let data = await ajaxGet(method, parameters);
         await initMap("map");
         populateFleetCurrentPositionOnMap(data);
+        $("#lblLastUpdated").text("Last Updated : " + data[0].LatestDatetime);
+        
     } catch (ex) {
         console.log(ex);
     }
 }
 
 function populateFleetCurrentPositionOnMap(data) {
-    insertMapMarkers(data, MAP);
+    insertMapMarkersWithDetails(data, MAP);
 }
 
 function submitBtnClickHandler() {

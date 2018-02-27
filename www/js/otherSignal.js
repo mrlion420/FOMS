@@ -91,6 +91,7 @@ function selectDropdownChangeEvent(){
 		// Check if the analogs needed to reloaded or not 
 		// By checking if the vessel Id has changed
 		//reloadAllAnalog();
+		resetConstArrays();
 	});
 }
 
