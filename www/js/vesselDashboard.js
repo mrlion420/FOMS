@@ -220,7 +220,7 @@ function populateEngineTotalAndEstConsumption(data) {
 }
 
 async function getAllEngineTypes() {
-    method = "GetAllEngineTypes";
+    method = "GetAllEngineTypesWithoutBunker";
     try {
         let data = await ajaxGet(method, PARAMETER_VESSELID);
         populateAllEngineTypesToSelect(data);
@@ -250,7 +250,11 @@ async function createEngineChartByEngineType() {
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try {
         let data = await ajaxGet(method, parameters);
-        createChart();
+        let yAxisUnit = "";
+        $.each(data , function(key ,value){
+            yAxisUnit = value[0].Unit;
+        });
+        createChart(yAxisUnit);
         addSeriesIntoChart(data);
     } catch (ex) {
         console.log(ex);
@@ -258,7 +262,7 @@ async function createEngineChartByEngineType() {
     //resetConstArrays();
 }
 
-function createChart() {
+function createChart(yAxisUnit) {
     options = {
         chart: {
             type: "line",
@@ -272,13 +276,17 @@ function createChart() {
         xAxis: {
             type: "datetime"
         },
+        yAxis: {
+            title: {
+                text : yAxisUnit
+            }
+        },
         plotOptions: {
             column: {
                 dataLabels: {
                     enabled: true
                 }
             }
-
         },
         tooltip: {
             formatter: function () {

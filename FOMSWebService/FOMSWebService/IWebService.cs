@@ -42,6 +42,14 @@ namespace FOMSWebService
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
         DateTimeData GetCurrentDatetime_ForDateTimePicker(int userId, double timezone);
 
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetAllEngineTypesWithoutBunker(int vesselId);
+
+        [OperationContract]
+        [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
+        List<ResultData> GetAllEngineTypesByFleetWithoutBunker(int fleetId);
+
         #endregion
 
         [OperationContract]

@@ -182,6 +182,7 @@ function populateChartData(data) {
 		var minValue = 99999;
 		var totalValue = 0;
 		var lastValue = 0;
+		let totalRunningMins = 0;
 		for (var i = 0; i < series.length; i++) {
 			var result = series[i];
 			var value;
@@ -192,6 +193,8 @@ function populateChartData(data) {
 			maxValue = getMaxValue(maxValue, value);
 			minValue = getMinValue(minValue, value);
 			totalValue += value;
+			totalRunningMins += parseFloat(result.RUNNING_MINS);
+			console.log(result);
 
 			if (i === series.length - 1) {
 				lastValue = value;
@@ -199,8 +202,9 @@ function populateChartData(data) {
 			seriesArray.push({ x: ticks, y: value, unit: unit });
 		}
 
-		var averageValue = getAverageValue(totalValue, series.length);
-		createChart(key, uniqueId);
+		var averageValue = getAverageValue(totalValue, totalRunningMins);
+		let chartTitle = getDatatableName(key);
+		createChart(chartTitle, uniqueId);
 		addSingleSeriesIntoChart(seriesArray, key, chartType, uniqueId);
 		insertChartItemValues(uniqueId, minValue, maxValue, averageValue, lastValue, unit);
 		uniqueId++;
@@ -266,8 +270,8 @@ function getMinValue(minValue, currentValue) {
 	}
 }
 
-function getAverageValue(totalValue, count) {
-	return round(parseFloat(totalValue / count), 2);
+function getAverageValue(totalValue, totalRunningMins) {
+	return round(parseFloat(totalValue / (totalRunningMins / 60)), 2);
 }
 
 function createChart(chartTitle, uniqueId) {
@@ -356,6 +360,7 @@ function selectDropdownChangeEvent() {
 		// Check if the analogs needed to reloaded or not 
 		// By checking if the vessel Id has changed
 		resetConstArrays();
+		GetAllAnalog();
 	});
 
 	$("#viewTypeSelect").change(function () {

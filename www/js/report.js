@@ -348,7 +348,7 @@ async function btnChart_FuelCons() {
             htmlString = createTableHeaders("Engine");
         }
 
-        createChart("Engine", chartTitle);
+        
         let data = await ajaxGet(method, parameters);
         let finalTotalCons = 0;
         let finalRunningTime = 0;
@@ -356,6 +356,8 @@ async function btnChart_FuelCons() {
 
         let chartLineType = $("#selectChartType").val();
         $.each(data, function (key, value) {
+            let yAxisUnit = value[0].Unit;
+            createChart("Engine", chartTitle, yAxisUnit);
             let seriesArray = [];
             let series = value;
             let seriesName = key;
@@ -397,12 +399,16 @@ async function btnChart_FuelCons() {
         let minutes = finalRunningTime % 60;
         finalAvgConsRate = round(parseFloat(finalTotalCons / parseFloat(finalRunningTime / 60)), 2);
 
-        htmlString += "<tr>";
-        htmlString += "<td>All Engine(s)</td>";
-        htmlString += "<td>" + numberWithCommas(round(finalTotalCons, 2)) + "</td>";
-        htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
-        htmlString += "<td>" + numberWithCommas(finalAvgConsRate) + "</td>";
-        htmlString += "</tr>";
+        if(engineType !== "4"){
+
+            htmlString += "<tr>";
+            htmlString += "<td>All Engine(s)</td>";
+            htmlString += "<td>" + numberWithCommas(round(finalTotalCons, 2)) + "</td>";
+            htmlString += "<td>" + hours + " Hrs " + minutes + " Mins" + "</td>";
+            htmlString += "<td>" + numberWithCommas(finalAvgConsRate) + "</td>";
+            htmlString += "</tr>";
+        }
+        
         htmlString += "</table>";
 
         $("#chartSummary").html(htmlString);
@@ -427,7 +433,7 @@ async function btnChart_Analog() {
     try {
 
         let chartTitle = $("#selectMainType option:selected").text() + " (" + $("#selectInterval option:selected").text() + ")";
-        createChart("Analog", chartTitle);
+        
         let data = await ajaxGet(method, parameters);
         let chartLineType = $("#selectChartType").val();
         let firstKey;
@@ -438,9 +444,12 @@ async function btnChart_Analog() {
         let htmlString = createTableHeaders("Analog", data[firstKey][0].Unit);
 
         $.each(data, function (key, value) {
+            let yAxisUnit = value[0].Unit;
+            createChart("Analog", chartTitle, yAxisUnit);
+            let analogName = getDatatableName(key);
             let seriesArray = [];
             let series = value;
-            let seriesName = key;
+            let seriesName = analogName;
             let totalValue = 0;
             let lastValue = 0;
             let avgValue = 0;
@@ -464,7 +473,7 @@ async function btnChart_Analog() {
             avgValue = round(parseFloat(totalValue / series.length), 2);
 
             htmlString += "<tr>";
-            htmlString += "<td>" + key + "</td>";
+            htmlString += "<td>" + analogName + "</td>";
             htmlString += "<td>" + numberWithCommas(totalValue) + "</td>";
             htmlString += "<td>" + numberWithCommas(avgValue) + "</td>";
             htmlString += "<td>" + numberWithCommas(lastValue) + "</td>";
@@ -583,7 +592,7 @@ function createTableHeaders(type, unit) {
     return htmlString;
 }
 
-function createChart(chartType, chartTitle) {
+function createChart(chartType, chartTitle, yAxisUnit) {
     let options;
 
     if (chartType === "Engine") {
@@ -599,6 +608,11 @@ function createChart(chartType, chartTitle) {
             },
             xAxis: {
                 type: "datetime"
+            },
+            yAxis: {
+                title : {
+                    text : yAxisUnit
+                }
             },
             plotOptions: {
                 column: {
@@ -628,6 +642,11 @@ function createChart(chartType, chartTitle) {
             },
             xAxis: {
                 type: "datetime"
+            },
+            yAxis: {
+                title : {
+                    text : yAxisUnit
+                }
             },
             plotOptions: {
                 column: {

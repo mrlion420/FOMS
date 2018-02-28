@@ -64,7 +64,7 @@ async function getUserRelatedFleets() {
 }
 
 async function getAllEngineTypesByFleet() {
-    method = "GetAllEngineTypesByFleet";
+    method = "GetAllEngineTypesByFleetWithoutBunker";
     var parameters = { fleetId: FLEETID };
     try {
         let data = await ajaxGet(method, parameters);

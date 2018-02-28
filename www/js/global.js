@@ -8,8 +8,8 @@ sessionStorage.setItem("engineUnit", "ℓ");
 // sessionStorage.setItem("userId", 3);
 
 // GLOBAL VARIABLES
-// const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
-const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
+// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 // const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [
@@ -75,6 +75,14 @@ function setConstArrays() {
 		PARAMETER_TIMEZONE = { timezone: TIMEZONE };
 		PARAMETER_VESSELID = { vesselId: VESSELID };
 		PARAMETER_COMBINED = { vesselId: VESSELID, timezone: TIMEZONE };
+	}
+}
+
+function getDatatableName(name){
+	if(name.includes("^")){
+		return name.substring(name.indexOf("^") + 1);
+	}else{
+		return name;
 	}
 }
 

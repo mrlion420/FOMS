@@ -206,5 +206,25 @@ namespace CommonHelper
             return resultDS;
         }
 
+        public static DataSet RemoveBunkerDataTable(DataSet dsData)
+        {
+            List<DataTable> lstDataTableRemove = new List<DataTable>();
+            foreach(DataTable singleTable in dsData.Tables)
+            {
+                string engineCode = singleTable.Rows[0]["ENGINE_CODE"].ToString();
+                if (engineCode.Equals("4"))
+                {
+                    lstDataTableRemove.Add(singleTable);
+                }
+            }
+
+            foreach(DataTable singleTable in lstDataTableRemove)
+            {
+                dsData.Tables.Remove(singleTable);
+            }
+
+            return dsData;
+        }
+
     }
 }

@@ -267,8 +267,18 @@ namespace FOMSWebService
                     {
                         engineCode = 2;
                     }
-                    engineCodeHS.Add(engineCode);
+                    
+                    if(engineCode != 4)
+                    {
+                        engineCodeHS.Add(engineCode);
+                    }
+                    
                 }
+
+                ResultData allResult = new ResultData();
+                allResult.Key = "99";
+                allResult.Result = "All Engines";
+                resultDataList.Add(allResult);
 
                 foreach (short engineCode in engineCodeHS)
                 {
@@ -286,6 +296,66 @@ namespace FOMSWebService
                     }
                     resultDataList.Add(result);
                 }
+
+               
+
+            }
+            catch (Exception ex)
+            {
+                log.write(ex.ToString());
+            }
+
+            return resultDataList;
+        }
+
+        public List<ResultData> GetAllEngineTypesByFleetWithoutBunker(int fleetId)
+        {
+            List<ResultData> resultDataList = new List<ResultData>();
+            try
+            {
+                HashSet<short> engineCodeHS = new HashSet<short>();
+                List<Vessel> vesselList = Vessel.GetByFleetId(fleetId);
+                foreach (Vessel vessel in vesselList)
+                {
+                    List<Engine> engineList = Engine.GetAll(vessel.VesselId);
+                    foreach (Engine engine in engineList)
+                    {
+                        short engineCode = engine.EngineCode.GetValueOrDefault();
+                        if (engineCode == 3)
+                        {
+                            engineCode = 2;
+                        }
+
+                        if (engineCode != 4)
+                        {
+                            engineCodeHS.Add(engineCode);
+                        }
+                    }
+                }
+
+                ResultData allResult = new ResultData();
+                allResult.Key = "99";
+                allResult.Result = "All Engines";
+                resultDataList.Add(allResult);
+
+                foreach (short engineCode in engineCodeHS)
+                {
+                    ResultData result = new ResultData();
+                    string engineType = SystemCode.GetBySysCodeTypeIdSysCodeId(Convert.ToInt32(BLL_Enum._SYS_CODE_TYPE.ENGINE), engineCode.ToString()).SysCodeDesc;
+                    if (engineCode != 2)
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = engineType;
+                    }
+                    else
+                    {
+                        result.Key = engineCode.ToString();
+                        result.Result = "Thursters";
+                    }
+                    resultDataList.Add(result);
+                }
+
+                
             }
             catch (Exception ex)
             {
@@ -1605,13 +1675,17 @@ namespace FOMSWebService
                 string engineUnit = string.Empty;
                 int numOfPoint = 10; // Default to 10 for daily
                 int seconds = 86400; // 24 hours - Daily
-
-                BLL_Enum._ENGINE engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
+                BLL_Enum._ENGINE engineCodeEnum = BLL_Enum._ENGINE.Main_Engine;
+                engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
 
                 DateTime endTime = DateTimeExtension.CalculateEndDatetime(seconds, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
                 DateTime startTime = DateTimeExtension.CalculateStartDatetime(endTime, BLL_Enum._VIEW_INTERVAL.Daily, seconds, numOfPoint);
                 // Query Interval - xx:xx:01 to xx:xx:00
                 DataSet engineDS = EngineReading.GetView(vesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
+                if(engineCodeEnum == BLL_Enum._ENGINE.All)
+                {
+                    engineDS = EngineExtension.RemoveBunkerDataTable(engineDS);
+                }
                 engineDS = EngineExtension.AddChartWithTicksAndUnit(engineDS, timezone, BLL_Enum._VIEW_INTERVAL.Daily);
 
                 if (engineType.Equals("2"))
@@ -1736,7 +1810,12 @@ namespace FOMSWebService
                 {
                     // Query Interval - xx:xx:01 to xx:xx:00
                     DataSet engineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
+                    if (engineCodeEnum == BLL_Enum._ENGINE.All)
+                    {
+                        engineDS = EngineExtension.RemoveBunkerDataTable(engineDS);
+                    }
                     resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId, engineUnit);
+                    
 
                     if (engineType.Equals("2"))
                     {

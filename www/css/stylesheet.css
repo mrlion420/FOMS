@@ -166,7 +166,7 @@ p{
 .main-container .top-select-container > div{
     display: flex;
     align-items: center;
-    width: 450px;
+    width: 400px;
     margin: 10px 0px 10px 0px;
 }
 
@@ -192,7 +192,7 @@ p{
     font-size: 18px;
     background-color: #3282E4;
     padding: 6px 10px;
-    width: 250px;
+    width: 205px;
     border: 1px solid black;
     color: white;
 }
@@ -229,7 +229,6 @@ p{
 
 .main-container .top-select-container input{
     font-size: 16px;
-    min-width: 238px;
     background-color: #3282E4;
     color: white;
     border: 1px solid black;
@@ -483,6 +482,10 @@ p{
     text-align: right;
 }
 
+.main .wrapper .right-container .multiple-item i{
+    cursor: pointer;
+}
+
 .main .wrapper .right-container .multiple-item > p:nth-child(1){
     font-size: 16px;
     padding: 10px 15px 0px 0px;
@@ -503,7 +506,7 @@ p{
 
 .main .wrapper .right-container .item-container p{
     font-size: 16px;
-    margin: 10px 0px 0px 0px;
+    margin: 10px 0px 10px 0px;
 }
 
 .main .wrapper .right-container .item-container div{
@@ -544,6 +547,7 @@ p{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
+    align-items: center;
 }
 
 .main .wrapper .right-container .item-container .multiple-item div:nth-child(2) p{
@@ -630,6 +634,7 @@ p{
 .fuel-cons .engine-body .engine-item .engine-value{
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .fuel-cons .engine-body .engine-item .engine-value p:nth-child(1){
@@ -643,6 +648,7 @@ p{
     margin: 0;
     padding: 10px 10px 10px 0px;
     color: 30px;
+    width: 80px;
 }
 
 .fuel-cons-chart{
@@ -940,6 +946,7 @@ p{
 
 .report .chart-item .event-container{
     margin: 0px 0px 0px 10px;
+    background-color: lightgray;
     width: 49%;
     height:200px;
     overflow: auto;
