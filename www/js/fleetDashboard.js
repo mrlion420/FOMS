@@ -119,7 +119,12 @@ async function createEngineChartByFleet() {
     parameters.engineType = SELECTED_ENGINE_TYPE;
     try {
         let data = await ajaxGet(method, parameters);
-        createChart();
+        let yAxisUnit = "";
+        $.each(data, function(key, value){
+            yAxisUnit = value[0].Unit;
+        });
+        
+        createChart(yAxisUnit);
         addSeriesIntoChart(data);
     } catch (ex) {
         console.log(ex);
@@ -127,7 +132,7 @@ async function createEngineChartByFleet() {
     resetConstArrays();
 }
 
-function createChart() {
+function createChart(yAxisUnit) {
     options = {
         chart: {
             type: "line",
@@ -140,6 +145,11 @@ function createChart() {
         },
         xAxis: {
             type: "datetime"
+        },
+        yAxis: {
+            title: {
+                text : yAxisUnit
+            }
         },
         plotOptions: {
             column: {
@@ -252,17 +262,7 @@ function selectDropdownChangeEvent() {
         let engineUnit = sessionStorage.getItem("engineUnit");
         SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
         let engineTypeText = $("#engineTypeSelect option:selected").text();
-        var htmlString = "";
-        switch (SELECTED_ENGINE_TYPE) {
-            case "4":
-                htmlString = engineTypeText + " Daily Est. Flow Rate (" + engineUnit + "/hr) " ;
-                break;
-
-            default:
-                htmlString = engineTypeText + " Daily Fuel Cons. Rate (" + engineUnit + "/hr) ";
-                break;
-        }
-        $("#chartTitle").html(htmlString);
+        setLabels();
         createEngineChartByFleet();
         getEngineTotalAndEstConsumptionByFleet();
     });

@@ -1745,7 +1745,7 @@ namespace FOMSWebService
                         engineCodeEnum = (BLL_Enum._ENGINE)Enum.Parse(typeof(BLL_Enum._ENGINE), engineType);
                         // Query Interval - xx:xx:01 to xx:xx:00
                         DataSet secondEngineDS = EngineReading.GetView(vessel.VesselId, engineCodeEnum, BLL_Enum._VIEW_INTERVAL.Daily, numOfPoint, startTime, false, false);
-                        resultSet = EngineExtension.CombineEngineChartDataToTotal(engineDS, resultSet, timezone, vessel, fleetId, engineUnit);
+                        resultSet = EngineExtension.CombineEngineChartDataToTotal(secondEngineDS, resultSet, timezone, vessel, fleetId, engineUnit);
                     }
                 }
                 returnString = JsonConvert.SerializeObject(resultSet);

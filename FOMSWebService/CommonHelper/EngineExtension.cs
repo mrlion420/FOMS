@@ -173,15 +173,18 @@ namespace CommonHelper
             foreach (DataTable table in resultDS.Tables)
             {
                 int rowCount = 0;
-                foreach (DataRow row in table.Rows)
+                if(dsData.Tables.Count != 0)
                 {
-                    // Get the first table
-                    DataTable firstTable = dsData.Tables[0];
-                    double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["Result"]);
-                    estFlowRate += Convert.ToDouble(row["Result"]);
-                    // Re-assign the result Ds table the new added value
-                    row["Result"] = estFlowRate;
-                    rowCount++;
+                    foreach (DataRow row in table.Rows)
+                    {
+                        // Get the first table
+                        DataTable firstTable = dsData.Tables[0];
+                        double estFlowRate = Convert.ToDouble(firstTable.Rows[rowCount]["Result"]);
+                        estFlowRate += Convert.ToDouble(row["Result"]);
+                        // Re-assign the result Ds table the new added value
+                        row["Result"] = estFlowRate;
+                        rowCount++;
+                    }
                 }
 
             }
@@ -189,11 +192,15 @@ namespace CommonHelper
             // if the result dataset is empty, create the result table
             if (resultDS.Tables.Count < 1)
             {
-                // Name the result table the fleet name
-                Fleet currentFleet = Fleet.GetByFleetId(fleetId);
-                dsData.Tables[0].TableName = currentFleet.FleetName;
-                DataTable resultTable = dsData.Tables[0].Copy();
-                resultDS.Tables.Add(resultTable);
+                if(dsData.Tables.Count !=  0)
+                {
+                    // Name the result table the fleet name
+                    Fleet currentFleet = Fleet.GetByFleetId(fleetId);
+                    dsData.Tables[0].TableName = currentFleet.FleetName;
+                    DataTable resultTable = dsData.Tables[0].Copy();
+                    resultDS.Tables.Add(resultTable);
+                }
+                
             }
 
             return resultDS;
