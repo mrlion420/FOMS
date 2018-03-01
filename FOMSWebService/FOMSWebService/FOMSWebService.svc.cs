@@ -818,8 +818,15 @@ namespace FOMSWebService
                 double reportingVessels = 0;
                 double nonReportingVessels = 0;
                 double totalFlow = 0;
+                TimeSpan nonReportingTimespan = new TimeSpan();
+                TimeSpan largestTimespan = new TimeSpan(10);
+                string engineUnit = string.Empty;
+
                 foreach (Vessel vessel in vesselList)
                 {
+                    int measurementUnitId = vessel.MeasurementUnitId;
+                    engineUnit = KeyValueExtension.GetEngineUnitFromMeasurementUnit(measurementUnitId);
+
                     distance += Position.GetTotalDistance(vessel.VesselId, startDatetime, endDatetime);
                     List<SystemCode> engineCodeList = SystemCode.GetSysCodeList(BLL_Enum._SYS_CODE_TYPE.ENGINE);
                     foreach (SystemCode systemCode in engineCodeList)
@@ -832,9 +839,15 @@ namespace FOMSWebService
                     }
                     Position latestPosition = Position.GetLatest(vessel.VesselId);
                     DateTime today = DateTime.UtcNow;
-                    TimeSpan time = today.Subtract(latestPosition.PositionDatetime);
+                    nonReportingTimespan = today.Subtract(latestPosition.PositionDatetime);
+                    
+
+                    if(nonReportingTimespan > largestTimespan)
+                    {
+                        largestTimespan = nonReportingTimespan;
+                    }
                     // If the difference is more than or equal to 2 hours
-                    if (time.TotalHours >= 2)
+                    if (nonReportingTimespan.TotalHours >= 2)
                     {
                         // Vessel is non-reporting
                         nonReportingVessels++;
@@ -856,20 +869,33 @@ namespace FOMSWebService
                 ResultData result = new ResultData();
                 result.Result = distance.ToString();
                 result.Key = "totalDistance";
+
                 ResultData resultAvgCons = new ResultData();
                 resultAvgCons.Result = avgCons.ToString();
                 resultAvgCons.Key = "avgCons";
+
                 ResultData resultReporting = new ResultData();
                 resultReporting.Result = reportingVessels.ToString();
                 resultReporting.Key = "activeVessel";
+
                 ResultData resultNonReporting = new ResultData();
                 resultNonReporting.Result = nonReportingVessels.ToString();
                 resultNonReporting.Key = "notActiveVessel";
+
+                ResultData resultTotalFlowToolTip = new ResultData();
+                resultTotalFlowToolTip.Result = "Based on Total Daily Consumption: " + totalFlow.ToString() + " " + engineUnit;
+                resultTotalFlowToolTip.Key = "totalFlowToolTip";
+
+                ResultData resultNonReportingHours = new ResultData();
+                resultNonReportingHours.Result = "Last reported: " +  TimeSpanExtension.DisplayDuration(largestTimespan);
+                resultNonReportingHours.Key = "nonReportingHours"; 
 
                 resultData.Add(result);
                 resultData.Add(resultAvgCons);
                 resultData.Add(resultReporting);
                 resultData.Add(resultNonReporting);
+                resultData.Add(resultTotalFlowToolTip);
+                resultData.Add(resultNonReportingHours);
             }
             catch (Exception ex)
             {

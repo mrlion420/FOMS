@@ -294,6 +294,11 @@ function createChart(chartTitle, uniqueId) {
 		xAxis: {
 			type: "datetime"
 		},
+		yAxis : {
+			title : {
+				text: ""
+			}
+		},
 		plotOptions: {
 			column: {
 				dataLabels: {

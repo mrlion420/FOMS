@@ -132,3 +132,39 @@ System.FormatException: Input string was not in a correct format.
    at System.Int16.Parse(String s, NumberStyles style, NumberFormatInfo info)
    at System.Convert.ToInt16(String value)
    at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1602
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Int16.Parse(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt16(String value)
+   at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1602
+System.FormatException: Input string was not in a correct format.
+   at System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   at System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Int16.Parse(String s, NumberStyles style, NumberFormatInfo info)
+   at System.Convert.ToInt16(String value)
+   at FOMSWebService.FOMSWebService.GetSynchornizedChartByAnalogId(Int32 vesselId, Double timezone, Int32 querytime, String analogId, Boolean includeRefSignal) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1602
+System.ArgumentException: Must specify valid information for parsing in the string.
+   at System.Enum.EnumResult.SetFailure(ParseFailureKind failure, String failureMessageID, Object failureMessageFormatArgument)
+   at System.Enum.TryParseEnum(Type enumType, String value, Boolean ignoreCase, EnumResult& parseResult)
+   at System.Enum.Parse(Type enumType, String value, Boolean ignoreCase)
+   at CommonHelper.EnumExtension.GetAnalogEnum_FromAnalogType(String analogType) in C:\Samuel\FOMS\FOMSWebService\CommonHelper\EnumExtension.cs:line 14
+   at FOMSWebService.FOMSWebService.GetAnalogChartByQueryTime(Int32 vesselId, Double timezone, Int32 querytime, String startDatetimeStr, String endDatetimeStr, String analogType) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 1446
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 945
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at FOMSWebService.FOMSWebService.GetCurrentEngineData(Int32 vesselId) in C:\Samuel\FOMS\FOMSWebService\FOMSWebService\FOMSWebService.svc.cs:line 971

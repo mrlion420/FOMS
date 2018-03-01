@@ -1134,6 +1134,11 @@ p{
 }
 /* ----------------- GLOBAL SECTION ---------------- */
 
+#loader{
+    display: block;
+    
+}
+
 .map-popup{
     display: flex;
     flex-direction: column;

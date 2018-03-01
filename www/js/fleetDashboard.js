@@ -9,7 +9,7 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
-    
+
     await getUserRelatedFleets();
     await getAllEngineTypesByFleet();
 
@@ -55,12 +55,12 @@ async function getUserRelatedFleets() {
         }
     }
     $("#fleetSelect").html(htmlString);
-    try{
+    try {
         setConstArrays();
-    }catch(ex){
+    } catch (ex) {
         location.reload();
     }
-    
+
 }
 
 async function getAllEngineTypesByFleet() {
@@ -120,10 +120,10 @@ async function createEngineChartByFleet() {
     try {
         let data = await ajaxGet(method, parameters);
         let yAxisUnit = "";
-        $.each(data, function(key, value){
+        $.each(data, function (key, value) {
             yAxisUnit = value[0].Unit;
         });
-        
+
         createChart(yAxisUnit);
         addSeriesIntoChart(data);
     } catch (ex) {
@@ -148,7 +148,7 @@ function createChart(yAxisUnit) {
         },
         yAxis: {
             title: {
-                text : yAxisUnit
+                text: yAxisUnit
             }
         },
         plotOptions: {
@@ -313,19 +313,29 @@ async function GetDistanceAndAvgConsAndReportingVessels() {
 function populateDistanceAndAvgConsAndReportingVessels(data) {
     for (var i = 0; i < data.length; i++) {
         var result = data[i];
-        $("#" + result.Key).html(numberWithCommas(round(parseFloat(result.Result), 2)));
+        if (result.Key === "totalFlowToolTip") {
+            $("#" + result.Key).prop("title", result.Result);
+        } else {
+            if (result.Key === "nonReportingHours") {
+                $("#" + result.Key).html(result.Result, 2);
+            } else {
+                $("#" + result.Key).html(numberWithCommas(round(parseFloat(result.Result), 2)));
+            }
+
+        }
+
     }
 }
 
 async function GetFleetCurrentPosition() {
     var method = "GetFleetCurrentPosition";
-    var parameters = { fleetId: FLEETID , timezone : TIMEZONE};
+    var parameters = { fleetId: FLEETID, timezone: TIMEZONE };
     try {
         let data = await ajaxGet(method, parameters);
         await initMap("map");
         populateFleetCurrentPositionOnMap(data);
         $("#lblLastUpdated").text("Last Updated : " + data[0].LatestDatetime);
-        
+
     } catch (ex) {
         console.log(ex);
     }
