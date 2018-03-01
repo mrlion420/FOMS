@@ -160,9 +160,9 @@ async function getRecentPosition() {
         populateRecentPosition(data);
 
         // If the currently selected position query is for live
-        if (SELECTED_POSITION_QUERY === "0") {
-            updateMapMarker(data.Latitude, data.Longitude, true);
-        }
+        // if (SELECTED_POSITION_QUERY === "0") {
+        //     updateMapMarker(data.Latitude, data.Longitude, true);
+        // }
 
         $("#lblLastUpdated").text("Position Last Updated : " + data.PositionDatetime);
     } catch (ex) {
@@ -417,12 +417,14 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType) {
 async function generateStaticMapFromQueryTime() {
     var method = "GenerateMapFromQueryTime";
     //resetConstArrays();
-    let parameters = PARAMETER_VESSELID;
+    let parameters = PARAMETER_COMBINED;
     parameters.queryTime = SELECTED_POSITION_QUERY;
     try {
         await initMap("map");
         let data = await ajaxGet(method, parameters);
-        await addPolylinesToMap(data);
+        insertMapMarkersWithEvents(data, MAP);
+        addPolylinesToMap(data);
+        // await addPolylinesToMap(data);
         // MAP.fitBounds(FEATURE_GROUP.getBounds());
 
     } catch (ex) {

@@ -515,6 +515,7 @@ namespace FOMSWebService
                 positionData.Cog = cog;
                 positionData.Sog = sog;
                 positionData.PositionDatetime = DateTimeExtension.DisplayDateWithUTC(positionItem.PositionDatetime, timezone);
+
             }
             catch (Exception ex)
             {
@@ -615,32 +616,39 @@ namespace FOMSWebService
             return engineData;
         }
 
-        public List<PositionData> GenerateMapFromQueryTime(int vesselId, string queryTime)
+        public List<PositionData> GenerateMapFromQueryTime(int vesselId, double timezone, string queryTime)
         {
             List<PositionData> positionDataList = new List<PositionData>();
             try
             {
-                double querytimeDouble = Convert.ToDouble(queryTime);
-                DateTime start, end;
+                double querytimeDouble = Convert.ToDouble(queryTime);                
                 // Minus the requested querytime 
-                DateTime startTime = DateTime.UtcNow.AddHours(-querytimeDouble);
-                start = new DateTime(startTime.Year, startTime.Month, startTime.Day, startTime.Hour, 0, 0);
+                DateTime start = DateTime.UtcNow.AddHours(-querytimeDouble);
                 DateTime today = DateTime.UtcNow;
-                end = new DateTime(today.Year, today.Month, today.Day, today.Hour, 0, 0);
                 //PositionList positionList = Position.GetByQueryPeriod(startTime, today, BLL_Enum._SORT_ORDER.ASC);
-                DataSet positionDS = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, BLL_Enum._VIEW_INTERVAL.Live, start, end);
+                DataSet positionDS = Position.GetView(vesselId, BLL_Enum._EVENT_TYPE.All, BLL_Enum._VIEW_INTERVAL.Live, start, today);
 
                 foreach (DataTable positionTable in positionDS.Tables)
                 {
                     foreach (DataRow positionRow in positionTable.Rows)
                     {
                         PositionData positionData = new PositionData();
-                        //latitude = position.Latitude;
-                        //longitude = position.Longitude;
-                        //positionData.Latitude = latitude.ToString();
-                        //positionData.Longitude = longitude.ToString();
+                        ////latitude = position.Latitude;
+                        ////longitude = position.Longitude;
+                        ////positionData.Latitude = latitude.ToString();
+                        ////positionData.Longitude = longitude.ToString();
+                        //positionData.Latitude = Convert.ToDecimal(positionRow["LATITUDE"].ToString());
+                        //positionData.Longitude = Convert.ToDecimal(positionRow["LONGITUDE"].ToString());
+
+                        positionData.Wgs84Lat = positionRow["WGS84_LONGITUDE"].ToString();
+                        positionData.Wgs84Lon = positionRow["WGS84_LONGITUDE"].ToString();
+                        positionData.EventDesc = positionRow["EVENT_DETAIL"].ToString();
                         positionData.Latitude = Convert.ToDecimal(positionRow["LATITUDE"].ToString());
                         positionData.Longitude = Convert.ToDecimal(positionRow["LONGITUDE"].ToString());
+                        positionData.Sog = Convert.ToDecimal(positionRow["SOG"].ToString());
+                        positionData.Cog = Convert.ToDecimal(positionRow["COG"].ToString());
+                        positionData.PositionDatetime = DateTimeExtension.DisplayDateWithYear(DateTime.Parse(positionRow["POSITION_DATETIME"].ToString()).AddHours(timezone));
+                        positionData.TotalDistance = positionRow["DISTANCE"].ToString();
                         positionDataList.Add(positionData);
                     }
                 }

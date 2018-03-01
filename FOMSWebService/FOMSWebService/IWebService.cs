@@ -78,7 +78,7 @@ namespace FOMSWebService
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
-        List<PositionData> GenerateMapFromQueryTime(int vesselId, string queryTime);
+        List<PositionData> GenerateMapFromQueryTime(int vesselId, double timezone, string queryTime);
 
         [OperationContract]
         [WebInvoke(Method = "GET", ResponseFormat = WebMessageFormat.Json)]
