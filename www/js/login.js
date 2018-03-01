@@ -1,7 +1,17 @@
 $(document).ready(function () {
+    isGlobalJSLoaded();
     loginBtnClickHandler();
     enterKeyHandler();
 });
+
+function isGlobalJSLoaded() {
+	try {
+		emptyFunction();
+	} catch (ex) {
+		location.reload();
+	}
+}
+
 
 function loginBtnClickHandler() {
     $("#loginBtn").click(function () {
@@ -13,10 +23,12 @@ function loginBtnClickHandler() {
     });
 }
 
-function loginFunction() {
+async function loginFunction() {
+    showMainLoader();
     var userId = $("#userIdTxt").val();
     var password = $("#passwordTxt").val();
-    login(userId, password);
+    await login(userId, password);
+    hideMainLoader();
 }
 
 async function login(userId, password) {
@@ -24,19 +36,19 @@ async function login(userId, password) {
     var parameters = { userId: userId, password: password };
     try {
         let data = await ajaxPost(methodName, parameters);
-        LoginHandler(data);
+        await LoginHandler(data);
     } catch (ex) {
         console.log(ex);
     }
 }
 
-function LoginHandler(data) {
+async function LoginHandler(data) {
     var result = data.LoginResult;
     if (result === true) {
         sessionStorage.setItem("userId", data.UserId);
         sessionStorage.setItem("timezone", data.Timezone);
         resetConstArrays();
-        GetUserRelatedFleetAndVessels();
+        await GetUserRelatedFleetAndVessels();
     } else {
         customAlert("Error", "Wrong username or password", false, null);
     }
