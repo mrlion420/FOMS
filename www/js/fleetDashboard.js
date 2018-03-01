@@ -331,7 +331,7 @@ function populateDistanceAndAvgConsAndReportingVessels(data) {
     for (var i = 0; i < data.length; i++) {
         var result = data[i];
         if (result.Key === "totalFlowToolTip") {
-            $("#" + result.Key).prop("title", result.Result);
+            $("#" + result.Key).attr("data-title", result.Result);
         } else {
             if (result.Key === "nonReportingHours") {
                 $("#" + result.Key).html(result.Result, 2);

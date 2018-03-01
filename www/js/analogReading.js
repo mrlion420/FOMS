@@ -200,7 +200,6 @@ function populateChartData(data) {
 		
 		for (var i = 0; i < series.length; i++) {
 			var result = series[i];
-			console.log(result);
 			var value;
 			var ticks = parseFloat(result.Ticks);
 			value = round(parseFloat(result.CONVERTED_VALUE), 2);
@@ -223,6 +222,7 @@ function populateChartData(data) {
 		if(analogRefId === 0){
 			averageValue = getAverageValue(totalValue, series.length);
 		}else{
+			console.log(totalRunningMins);
 			averageValue = getAverageValue(totalValue, totalRunningMins / 60);
 		}
 		let chartTitle = getDatatableName(key);
