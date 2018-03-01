@@ -6,6 +6,9 @@ $(document).ready(function () {
 var syncChartArray = [];
 
 async function mainFunction() {
+	isGlobalJSLoaded();
+	showMainLoader();
+
 	hideChartViews();
 	await getUserRelatedFleets();
 	await getUserRelatedVessels();
@@ -18,6 +21,16 @@ async function mainFunction() {
 
 	selectDropdownChangeEvent();
 	submitBtnClickHandler();
+
+	hideMainLoader();
+}
+
+function isGlobalJSLoaded(){
+    try{
+        emptyFunction();
+    }catch(ex){
+        location.reload();
+    }   
 }
 
 async function getUserRelatedFleets() {
@@ -467,10 +480,11 @@ function submitBtnClickHandler() {
 	});
 }
 
-async function submitBtnFunctions() {
+async function guageFunctions() {
 	await getAllEngineTypes();
 	await GetCurrentEngineData();
 	await GetCurrentAnalogData();
+
 }
 
 function selectDropdownChangeEvent() {
@@ -505,11 +519,12 @@ async function fleetSelectChangeFunction() {
 }
 
 async function viewTypeSelectChangeFunction() {
+	showMainLoader();
 	var viewType = $("#viewTypeSelect").val();
 	switch (viewType) {
 		case "gauges":
 			hideChartViews();
-			await submitBtnFunctions();
+			await guageFunctions();
 			break;
 
 		case "chart":
@@ -517,6 +532,7 @@ async function viewTypeSelectChangeFunction() {
 			await GetSynchornizedChartByEngineId();
 			break;
 	}
+	hideMainLoader();
 }
 
 function hideChartViews() {

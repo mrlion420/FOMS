@@ -3,6 +3,9 @@ $(document).ready(function () {
 });
 
 async function mainFunction() {
+	isGlobalJSLoaded();
+	showMainLoader();
+
 	hideChartViews();
 	await getUserRelatedFleets();
 	await getUserRelatedVessels();
@@ -11,6 +14,16 @@ async function mainFunction() {
 
 	selectDropdownChangeEvent();
 	submitBtnClickHandler();
+
+	hideMainLoader();
+}
+
+function isGlobalJSLoaded(){
+    try{
+        emptyFunction();
+    }catch(ex){
+        location.reload();
+    }   
 }
 
 async function getUserRelatedFleets() {
@@ -392,6 +405,7 @@ async function fleetSelectChangeFunction() {
 }
 
 async function viewTypeSelectChangeFunction() {
+	showMainLoader();
 	var viewType = $("#viewTypeSelect").val();
 	switch (viewType) {
 		case "gauges":
@@ -404,6 +418,7 @@ async function viewTypeSelectChangeFunction() {
 			await GetSynchornizedChartByAnalogId();
 			break;
 	}
+	hideMainLoader();
 }
 
 function hideChartViews() {
@@ -437,7 +452,6 @@ function showChartViews() {
 
 function submitBtnClickHandler() {
 	$("#submitBtn").click(function () {
-
 		viewTypeSelectChangeFunction();
 	});
 }

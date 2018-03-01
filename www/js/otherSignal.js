@@ -1,12 +1,15 @@
 $(document).ready(function () {
-    mainfunction();
+	mainfunction();
 
 });
 
 var maxTableRows = 8;
 
-async function mainfunction(){	
-    await getUserRelatedFleets();
+async function mainfunction() {
+	isGlobalJSLoaded();
+	showMainLoader();
+
+	await getUserRelatedFleets();
 	await getUserRelatedVessels();
 	await GetCurrentAlarmStatus();
 	await GetIOAlarmByQuery();
@@ -14,72 +17,88 @@ async function mainfunction(){
 	tablePaginationClickHandler(maxTableRows);
 	selectDropdownChangeEvent();
 	submitBtnClickHandler();
+
+	hideMainLoader();
+}
+
+function isGlobalJSLoaded() {
+	try {
+		emptyFunction();
+	} catch (ex) {
+		location.reload();
+	}
 }
 
 async function getUserRelatedFleets() {
-    let isFirstItem = true;
-    let htmlString = "";
-    let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
-    for (let i = 0; i < fleetObjArray.length; i++) {
-        let resultObj = fleetObjArray[i];
-        let key = resultObj.fleetId;
-        let value = resultObj.fleetName;
+	let isFirstItem = true;
+	let htmlString = "";
+	let fleetObjArray = JSON.parse(sessionStorage.getItem("fleetObj"));
+	for (let i = 0; i < fleetObjArray.length; i++) {
+		let resultObj = fleetObjArray[i];
+		let key = resultObj.fleetId;
+		let value = resultObj.fleetName;
 
-        if (isFirstItem) {
-            htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-            FLEETID = key;
-            isFirstItem = false;
-        } else {
-            htmlString += "<option value='" + key + "'>" + value + "</option>";
-        }
-    }
-    $("#fleetSelect").html(htmlString);
+		if (isFirstItem) {
+			htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+			FLEETID = key;
+			isFirstItem = false;
+		} else {
+			htmlString += "<option value='" + key + "'>" + value + "</option>";
+		}
+	}
+	$("#fleetSelect").html(htmlString);
 }
 
 async function getUserRelatedVessels() {
-    let isFirstItem = true;
-    let htmlString = "";
-    let fleetVesselObjArray = JSON.parse(sessionStorage.getItem("fleetVesselObj"))
-    for (let i = 0; i < fleetVesselObjArray.length; i++) {
-        let resultObj = fleetVesselObjArray[i];
-        if (resultObj.fleetId === FLEETID) {
-            let vesselSplitString = resultObj.vesselList.split(";");
-            
-            for (let j = 0; j < vesselSplitString.length; j++) {
-                let key = vesselSplitString[j].split("-")[0];
-                let value = vesselSplitString[j].split("-")[1];
-                if (isFirstItem) {
-                    htmlString += "<option value='" + key + "' selected>" + value + "</option>";
-                    VESSELID = key;
-                    isFirstItem = false;
-                } else {
-                    htmlString += "<option value='" + key + "'>" + value + "</option>";
-                }
-            }
-            $("#vesselSelect").html(htmlString);
-            try{
-                setConstArrays();
-            }catch(ex){
-                location.reload();
-            }
-            
-            break;
-            
-        }
-    }
+	let isFirstItem = true;
+	let htmlString = "";
+	let fleetVesselObjArray = JSON.parse(sessionStorage.getItem("fleetVesselObj"))
+	for (let i = 0; i < fleetVesselObjArray.length; i++) {
+		let resultObj = fleetVesselObjArray[i];
+		if (resultObj.fleetId === FLEETID) {
+			let vesselSplitString = resultObj.vesselList.split(";");
+
+			for (let j = 0; j < vesselSplitString.length; j++) {
+				let key = vesselSplitString[j].split("-")[0];
+				let value = vesselSplitString[j].split("-")[1];
+				if (isFirstItem) {
+					htmlString += "<option value='" + key + "' selected>" + value + "</option>";
+					VESSELID = key;
+					isFirstItem = false;
+				} else {
+					htmlString += "<option value='" + key + "'>" + value + "</option>";
+				}
+			}
+			$("#vesselSelect").html(htmlString);
+			try {
+				setConstArrays();
+			} catch (ex) {
+				location.reload();
+			}
+
+			break;
+
+		}
+	}
 }
 
-function submitBtnClickHandler(){
-    $("#submitBtn").click(function(){
-		GetCurrentAlarmStatus();
-		GetIOAlarmByQuery();
+function submitBtnClickHandler() {
+	$("#submitBtn").click(function () {
+		submitBtnFunction();
 	});
-	
+
 }
 
-function selectDropdownChangeEvent(){
-	$("#querySelect").change(function(){
-		GetIOAlarmByQuery();
+async function submitBtnFunction() {
+	showMainLoader();
+	await GetCurrentAlarmStatus();
+	await GetIOAlarmByQuery();
+	hideMainLoader();
+}
+
+function selectDropdownChangeEvent() {
+	$("#querySelect").change(function () {
+		querySelectFunction();
 	});
 
 	$("#fleetSelect").change(function () {
@@ -88,56 +107,65 @@ function selectDropdownChangeEvent(){
 
 	$("#vesselSelect").change(function () {
 		VESSELID = $("#vesselSelect").val();
-		// Check if the analogs needed to reloaded or not 
-		// By checking if the vessel Id has changed
-		//reloadAllAnalog();
 		resetConstArrays();
 	});
 }
 
-async function GetCurrentAlarmStatus(){
+async function querySelectFunction(){
+	showMainLoader();
+	await GetIOAlarmByQuery();
+	hideMainLoader();
+}
+
+async function GetCurrentAlarmStatus() {
 	var method = "GetCurrentAlarmStatus";
 	var parameters = PARAMETER_COMBINED;
-	try{
+	try {
 		let data = await ajaxGet(method, parameters);
 		populateCurrentAlarmStatus(data);
-	}catch(ex){
+	} catch (ex) {
 		console.log(ex);
 	}
 }
 
-function populateCurrentAlarmStatus(data){
+function populateCurrentAlarmStatus(data) {
 	$("#signalStatusContainer").html("");
-	for(var i = 0; i < data.length; i++){
-		var result = data[i];
-		var htmlString = "<div>";
-		htmlString += "<p>" + result.Description + "</p>";
-		if(result.AlarmStatus){
-			htmlString += '<i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>';
-		}else{
-			htmlString += '<i class="fa fa-toggle-off fa-2x alarm" aria-hidden="true"></i>';
-		}
-		htmlString += "<p>" + result.AlarmDescription  + "</p>";
-		htmlString += "<p>" + result.AlarmDateTime  + "</p>";
-		htmlString += "</div>";
+	if (data.length < 1) {
+		htmlString = "<div><p>N/A</p></div>";
 		$("#signalStatusContainer").append(htmlString);
+	} else {
+		for (var i = 0; i < data.length; i++) {
+			var result = data[i];
+			var htmlString = "<div>";
+			htmlString += "<p>" + result.Description + "</p>";
+			if (result.AlarmStatus) {
+				htmlString += '<i class="fa fa-toggle-on fa-2x no-alarm" aria-hidden="true"></i>';
+			} else {
+				htmlString += '<i class="fa fa-toggle-off fa-2x alarm" aria-hidden="true"></i>';
+			}
+			htmlString += "<p>" + result.AlarmDescription + "</p>";
+			htmlString += "<p>" + result.AlarmDateTime + "</p>";
+			htmlString += "</div>";
+			$("#signalStatusContainer").append(htmlString);
+		}
 	}
+
 }
 
-async function GetIOAlarmByQuery(){
+async function GetIOAlarmByQuery() {
 	var method = "GetIOAlarmByQuery";
 	var parameters = PARAMETER_COMBINED;
 	parameters.querytime = $("#querySelect").val();
 	// parameters.querytime = 990;
-	try{
+	try {
 		let data = await ajaxGet(method, parameters);
 		populateIOAlarmTable(data);
-	}catch(ex){
+	} catch (ex) {
 		console.log(ex);
 	}
 }
 
-function populateIOAlarmTable(data){
+function populateIOAlarmTable(data) {
 	var htmlString = "<table>";
 	htmlString += "<tr>";
 	htmlString += "<th>Date Time</th>";
@@ -146,15 +174,15 @@ function populateIOAlarmTable(data){
 	htmlString += "</tr>";
 	var currentRowCount = 1;
 	var pageCount = 1;
-	for(var i = 0; i < data.length; i++){
-		if(currentRowCount > maxTableRows){
+	for (var i = 0; i < data.length; i++) {
+		if (currentRowCount > maxTableRows) {
 			pageCount++;
 			currentRowCount = 1;
 		}
-		if(i < maxTableRows){
-			htmlString += "<tr id='table-" + i + "'>";	
-		}else{
-			htmlString += "<tr id='table-" + i + "' style='display:none;'>";	
+		if (i < maxTableRows) {
+			htmlString += "<tr id='table-" + i + "'>";
+		} else {
+			htmlString += "<tr id='table-" + i + "' style='display:none;'>";
 		}
 
 		var result = data[i];

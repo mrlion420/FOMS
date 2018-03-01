@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
@@ -8,7 +9,8 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
 
     <!-- CSS Files import -->
     <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
@@ -16,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
 
     <!--- Localization Imports -->
@@ -27,7 +29,7 @@
     <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../js/external/moment.js"></script> 
+    <script type="text/javascript" src="../js/external/moment.js"></script>
     <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
 
     <!-- <script type="text/javascript" src="../js/global.js"></script>
@@ -35,7 +37,9 @@
     <script type="text/javascript" src="../js/master.js"></script>
     <title>FOMS</title>
 </head>
+
 <body>
+    <div id="mainLoader" class="loader-ripple"></div>
     <div class="header">
         <div>
             <p id="lblHeader">Fuel Oil Management Solutions</p>
@@ -47,13 +51,13 @@
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
-            <img src="../img/logout.png" id="imgLogout"/>
+            <img src="../img/logout.png" id="imgLogout" />
         </div>
     </div>
-    
+
     <div class="body-wrapper">
         <div class="side-menu" id="sideMenu">
-           
+
         </div>
         <div class="main-container main">
             <div class="top-select-container splitter-bottom">
@@ -73,7 +77,7 @@
                 </div>
                 <div>
                     <button id="submitBtn">Submit</button>
-                </div>                
+                </div>
             </div>
             <div class="wrapper other-signal" id="wrapper">
                 <div class="signal-status-container" id="signalStatusContainer">
@@ -115,4 +119,5 @@
         </div>
     </div>
 </body>
+
 </html>

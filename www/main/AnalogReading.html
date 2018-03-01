@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta name="format-detection" content="telephone=no" />
@@ -8,7 +9,8 @@
     <!-- This is a wide open CSP declaration. To lock this down for production, see below. -->
     <!-- <meta http-equiv="Content-Security-Policy" content="script-src 'self' http://xxxx 'unsafe-inline' 'unsafe-eval'; "
     /> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *"
+    />
 
     <!-- CSS Files import -->
     <link rel="stylesheet" type="text/css" href="../css/leaflet.css" />
@@ -16,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="../css/jquery-ui.css">
     <link rel="stylesheet" type="text/css" href="../js/external/css/highcharts.css">
     <link rel="stylesheet" type="text/css" href="../css/stylesheet.css" />
-    
+
     <!-- <link rel="stylesheet" type="text/css" href="css/jquery.datetimepicker.min.css" /> -->
 
     <!--- Localization Imports -->
@@ -27,19 +29,21 @@
     <!-- <script type="text/javascript" src="js/external/l10n.min.js"></script> -->
     <!-- <script type="text/javascript" src="js/external/localizations.js"></script> -->
     <script type="text/javascript" src="../js/external/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="../js/external/moment.js"></script> 
+    <script type="text/javascript" src="../js/external/moment.js"></script>
     <script type="text/javascript" src="../js/external/highcharts.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
     <script type="text/javascript" src="../js/external/gauge.min.js"></script>
     <!-- <script type="text/javascript" src="js/external/jquery.datetimepicker.full.min.js"></script> -->
-    
+
     <script type="text/javascript" src="../js/master.js"></script>
     <!-- <script type="text/javascript" src="../js/global.js"></script>
     <script type="text/javascript" src="../js/analogReading.js"></script>  -->
 
     <title>FOMS</title>
 </head>
+
 <body>
+    <div id="mainLoader" class="loader-ripple"></div>
     <div class="header">
         <div>
             <p id="lblHeader">Fuel Oil Management Solutions</p>
@@ -51,13 +55,13 @@
         </div>
         <div id="accountInfo">
             <p id="lblMyAccount">My Account</p>
-            <img src="../img/logout.png" id="imgLogout"/>
+            <img src="../img/logout.png" id="imgLogout" />
         </div>
     </div>
-    
+
     <div class="body-wrapper">
         <div class="side-menu" id="sideMenu">
-           
+
         </div>
         <div class="main-container main">
             <div class="top-select-container">
@@ -85,7 +89,7 @@
                 </div>
                 <div>
                     <button id="submitBtn">Submit</button>
-                </div>                
+                </div>
             </div>
             <div class="top-select-container splitter-bottom">
                 <div>
@@ -98,7 +102,7 @@
                 <div id="analogIdSelectDiv" class="display-none">
                     <p>Analog : </p>
                     <select id="analogIdSelect">
-                        
+
                     </select>
                 </div>
                 <!-- <div id="checkboxDiv" class="display-none">
@@ -112,7 +116,7 @@
             <div class="wrapper analog-reading" id="wrapper">
                 <h1>Analog Reading</h1>
                 <div class="analog-body" id="analogBody">
-                   
+
                 </div>
             </div>
             <div class="wrapper fuel-cons-chart" id="wrapperChart">
@@ -145,4 +149,5 @@
         </div>
     </div>
 </body>
+
 </html>

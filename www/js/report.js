@@ -11,13 +11,26 @@ let reportId = null;
 let intervalValue = null;
 
 async function mainFunction() {
+    isGlobalJSLoaded();
+    showMainLoader();
+
     await getUserRelatedFleets();
     await getUserRelatedVessels();
 
-    loadSelectMainContainer();
+    await loadSelectMainContainer();
     selectChangeEventHandler();
     buttonClickHandler();
     dynamicTablePaginationClickHandler(maxTableRows, "resultContainer");
+
+    hideMainLoader();
+}
+
+function isGlobalJSLoaded(){
+    try{
+        emptyFunction();
+    }catch(ex){
+        location.reload();
+    }   
 }
 
 async function getUserRelatedFleets() {
@@ -237,32 +250,11 @@ function removeDatetimePickers() {
 
 function buttonClickHandler() {
     $("#selectMainContainer").on("click", "#btnChart", function () {
-        var reportType = $("#selectReportType").val();
-        switch (reportType) {
-            case "FuelCons_Report":
-                btnChart_FuelCons();
-                break;
-
-            case "Loading_Report":
-                method = "GetAllEngineTypes";
-                break;
-
-            case "Analog_Report":
-                btnChart_Analog();
-                break;
-
-            case "Event_Report":
-                method = "GetAllEventTypes";
-                break;
-
-            default:
-                method = undefined;
-                break;
-        }
+        btnChartClickFunction();
     });
 
     $("#selectMainContainer").on("click", "#btnMap", function () {
-        btnMap_Position();
+        btnMapClickFunction();
     });
 
     $("#resultContainer").on("click", "tr", function () {
@@ -283,6 +275,39 @@ function buttonClickHandler() {
         let reportType = $("#selectReportType").val();
         exportFunction(reportType);
     });
+}
+
+async function btnChartClickFunction(){
+    showMainLoader();
+    var reportType = $("#selectReportType").val();
+    switch (reportType) {
+        case "FuelCons_Report":
+            await btnChart_FuelCons();
+            break;
+
+        case "Loading_Report":
+            method = "GetAllEngineTypes";
+            break;
+
+        case "Analog_Report":
+            await btnChart_Analog();
+            break;
+
+        case "Event_Report":
+            method = "GetAllEventTypes";
+            break;
+
+        default:
+            method = undefined;
+            break;
+    }
+    hideMainLoader();
+}
+
+async function btnMapClickFunction(){
+    showMainLoader();
+    await btnMap_Position();
+    hideMainLoader();
 }
 
 async function exportFunction(reportType){

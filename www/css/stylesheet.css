@@ -1177,6 +1177,20 @@ p{
     background-image: url("../img/loader/loader-double-ring-grey.svg"),linear-gradient(transparent, transparent);
 }
 
+.loader-ripple{
+    /* IE Fallback */
+    background-image: url("../img/loader/loader-ripple-grey.gif");
+    /* Modern Browser Support Only */
+    background-image: url("../img/loader/loader-ripple-grey.svg"),linear-gradient(transparent, transparent);
+}
+
+.loader-wedges{
+    /* IE Fallback */
+    background-image: url("../img/loader/loader-wedges.gif");
+    /* Modern Browser Support Only */
+    background-image: url("../img/loader/loader-wedges.svg"),linear-gradient(transparent, transparent);
+}
+
 .map-popup{
     display: flex;
     flex-direction: column;
