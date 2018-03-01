@@ -262,6 +262,8 @@ function populateChartData(data) {
 		var totalValue = 0;
 		var lastValue = 0;
 		let totalRunningMins = 0;
+		let analogRefId = -1;
+
 		for (var i = 0; i < series.length; i++) {
 			var result = series[i];
 			var value;
@@ -271,6 +273,7 @@ function populateChartData(data) {
 				value = round(parseFloat(result.EST_FLOW_RATE), 2);
 			} else {
 				value = round(parseFloat(result.CONVERTED_VALUE), 2);
+				analogRefId = parseFloat(result.ANALOG_REF_ID);
 			}
 
 			var unit = result.Unit;
@@ -284,8 +287,14 @@ function populateChartData(data) {
 			}
 			seriesArray.push({ x: ticks, y: value, unit: unit });
 		}
+		let averageValue = "";
 
-		var averageValue = getAverageValue(totalValue, totalRunningMins);
+		if(analogRefId === 0){
+			averageValue = getAverageValue(totalValue, series.length);
+		}else{
+			console.log(totalRunningMins);
+			averageValue = getAverageValue(totalValue, totalRunningMins / 60);
+		}
 		let chartTitle = getDatatableName(key);
 		createChart(chartTitle, uniqueId);
 		addSingleSeriesIntoChart(seriesArray, key, chartType, uniqueId);
@@ -377,8 +386,8 @@ function getMinValue(minValue, currentValue) {
 	}
 }
 
-function getAverageValue(totalValue, totalRunningMins) {
-	return round(parseFloat(totalValue / (totalRunningMins / 60)), 2);
+function getAverageValue(totalValue, divider) {
+	return round(parseFloat(totalValue / divider), 2);
 }
 
 function createChart(chartTitle, uniqueId) {

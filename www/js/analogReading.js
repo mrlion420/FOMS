@@ -196,26 +196,35 @@ function populateChartData(data) {
 		var totalValue = 0;
 		var lastValue = 0;
 		let totalRunningMins = 0;
+		let analogRefId = 0;
+		
 		for (var i = 0; i < series.length; i++) {
 			var result = series[i];
+			console.log(result);
 			var value;
 			var ticks = parseFloat(result.Ticks);
 			value = round(parseFloat(result.CONVERTED_VALUE), 2);
+			analogRefId = parseFloat(result.ANALOG_REF_ID);
 
 			var unit = result.Unit;
 			maxValue = getMaxValue(maxValue, value);
 			minValue = getMinValue(minValue, value);
 			totalValue += value;
 			totalRunningMins += parseFloat(result.RUNNING_MINS);
-			console.log(result);
 
 			if (i === series.length - 1) {
 				lastValue = value;
 			}
 			seriesArray.push({ x: ticks, y: value, unit: unit });
 		}
-
-		var averageValue = getAverageValue(totalValue, totalRunningMins);
+		let averageValue = "";
+		
+		// Check if analogRefId is zero. If it is zero, there is no running mins.
+		if(analogRefId === 0){
+			averageValue = getAverageValue(totalValue, series.length);
+		}else{
+			averageValue = getAverageValue(totalValue, totalRunningMins / 60);
+		}
 		let chartTitle = getDatatableName(key);
 		createChart(chartTitle, uniqueId);
 		addSingleSeriesIntoChart(seriesArray, key, chartType, uniqueId);
@@ -252,15 +261,15 @@ function insertChartItemValues(uniqueId, minValue, maxValue, averageValue, lastV
 	var maxMinHeader = "Peak / Lowest Reading (" + unit + ")";
 
 	htmlString += "<p>" + lastValueHeader + "</p>";
-	htmlString += "<p>" + lastValue + "</p>";
+	htmlString += "<p>" + numberWithCommas(lastValue) + "</p>";
 	htmlString += "</div>"; // Close Main value
 	htmlString += "<div class='normal-value'>";
 	htmlString += "<p>" + averageValueHeader + "</p>";
-	htmlString += "<p>" + averageValue + "</p>";
+	htmlString += "<p>" + numberWithCommas(averageValue) + "</p>";
 	htmlString += "</div>"; // Close normal value
 	htmlString += "<div class='normal-value'>";
 	htmlString += "<p>" + maxMinHeader + "</p>";
-	htmlString += "<p>" + maxValue + " / " + minValue + "</p>";
+	htmlString += "<p>" + numberWithCommas(maxValue) + " / " + numberWithCommas(minValue) + "</p>";
 	htmlString += "</div>"; // Close normal value
 	htmlString += "</div>"; // Close chart item
 
@@ -283,8 +292,8 @@ function getMinValue(minValue, currentValue) {
 	}
 }
 
-function getAverageValue(totalValue, totalRunningMins) {
-	return round(parseFloat(totalValue / (totalRunningMins / 60)), 2);
+function getAverageValue(totalValue, divider) {
+	return round(parseFloat(totalValue / divider), 2);
 }
 
 function createChart(chartTitle, uniqueId) {

@@ -633,13 +633,6 @@ namespace FOMSWebService
                     foreach (DataRow positionRow in positionTable.Rows)
                     {
                         PositionData positionData = new PositionData();
-                        ////latitude = position.Latitude;
-                        ////longitude = position.Longitude;
-                        ////positionData.Latitude = latitude.ToString();
-                        ////positionData.Longitude = longitude.ToString();
-                        //positionData.Latitude = Convert.ToDecimal(positionRow["LATITUDE"].ToString());
-                        //positionData.Longitude = Convert.ToDecimal(positionRow["LONGITUDE"].ToString());
-
                         positionData.Wgs84Lat = positionRow["WGS84_LONGITUDE"].ToString();
                         positionData.Wgs84Lon = positionRow["WGS84_LONGITUDE"].ToString();
                         positionData.EventDesc = positionRow["EVENT_DETAIL"].ToString();
