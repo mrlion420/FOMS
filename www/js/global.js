@@ -222,6 +222,28 @@ function customAlert(title, message, redirect, redirectUrl) {
 	}
 }
 
+function showMainLoader(){
+	// Show main loader
+	$("#mainLoader").show();
+	// Darken the body wrapper, doesn't include header
+	$("body").css("overflow" , "hidden");
+}
+
+function hideMainLoader(){
+	// Hide main loader
+	$("#mainLoader").hide();
+	// Remove opacity for body wrapper	
+	$("body").css("overflow" , "auto");
+}
+
+function showLeftLoader(){
+	$("#leftLoader").show();
+}
+
+function hideLeftLoader(){
+	$("#leftLoader").hide();
+}
+
 function redirectPageWithoutReturn(url) {
 	window.location.replace(url);
 }
@@ -689,6 +711,10 @@ function createMarker(latlon, map, iwContent, icon) {
 	google.maps.event.addListener(marker, 'mouseout', function () {
 		INFO_WINDOW.close();
 	});
+}
+
+function emptyFunction(){
+	console.log("Global JS Loaded");
 }
 
 // Set high chart thousand separator in global

@@ -9,28 +9,35 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
+    isGlobalJSLoaded();
+    showMainLoader();
+        
     await getUserRelatedFleets();
     await getUserRelatedVessels();
 
     await getAllEngineTypes();
-    setLabels();
     await initMap("map");
+    getLastOperationMode();
+    generateStaticMapFromQueryTime();
+    setLabels();
+    getRecentEventList();
+    getRecentDistance();
+    getRecentPosition();
+    getEngineTotalAndEstConsumption();
+    await createEngineChartByEngineType();
+
     selectDropdownChangeEvent();
     submitBtnClickHandler();
-    getLastOperationMode();
-    createEngineChartByEngineType();
-    generateStaticMapFromQueryTime();
 
-    getRecentEventList();
-    // setInterval(getRecentEventList, 1000 * 10);
+    hideMainLoader();
+}
 
-    getRecentDistance();
-    // setInterval(getRecentDistance, 1000 * 3);
-
-    getRecentPosition();
-
-    getEngineTotalAndEstConsumption();
-
+function isGlobalJSLoaded(){
+    try{
+        emptyFunction();
+    }catch(ex){
+        location.reload();
+    }   
 }
 
 function setLabels() {
@@ -470,27 +477,33 @@ function selectDropdownChangeEvent() {
     });
 
     $("#engineTypeSelect").change(function () {
-        SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
-        var htmlString = "";
-        switch (SELECTED_ENGINE_TYPE) {
-            case "4":
-                htmlString = "Daily Flow Rate";
-                break;
-
-            default:
-                htmlString = "Daily Fuel Consumption";
-                break;
-        }
-        $("#chartTitle").html(htmlString);
-        createEngineChartByEngineType();
-        getEngineTotalAndEstConsumption();
-        setLabels();
+        selectDropdownFunction();
     });
 
     $("#vesselSelect").change(function () {
         VESSELID = $("#vesselSelect").val();
         resetConstArrays();
     });
+}
+
+async function selectDropdownFunction(){
+    showLeftLoader();
+    SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
+    var htmlString = "";
+    switch (SELECTED_ENGINE_TYPE) {
+        case "4":
+            htmlString = "Daily Flow Rate";
+            break;
+
+        default:
+            htmlString = "Daily Fuel Consumption";
+            break;
+    }
+    $("#chartTitle").html(htmlString);
+    await createEngineChartByEngineType();
+    getEngineTotalAndEstConsumption();
+    setLabels();
+    hideLeftLoader();
 }
 
 function submitBtnClickHandler() {
@@ -500,12 +513,14 @@ function submitBtnClickHandler() {
 }
 
 async function submitFunction(){
+    showMainLoader();
     await getAllEngineTypes();
     getLastOperationMode();
-    createEngineChartByEngineType();
     getRecentEventList();
     getRecentDistance();
     getRecentPosition();
     getEngineTotalAndEstConsumption();
     generateStaticMapFromQueryTime();
+    await createEngineChartByEngineType();
+    hideMainLoader();
 }

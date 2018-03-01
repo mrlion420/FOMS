@@ -9,21 +9,32 @@ var CHART_INTERVAL = null;
 var MAP_INTERVAL = null;
 
 async function mainFunction() {
+    isGlobalJSLoaded();
+    showMainLoader();
 
     await getUserRelatedFleets();
     await getAllEngineTypesByFleet();
-
     setLabels();
     getEngineTotalAndEstConsumptionByFleet();
     getBunkeringByFleet();
-    createEngineChartByFleet();
     getLatestEventListByFleet();
     GetDistanceAndAvgConsAndReportingVessels();
     GetFleetCurrentPosition();
+    await createEngineChartByFleet();
 
     // Handlers
     submitBtnClickHandler();
     selectDropdownChangeEvent();
+
+    hideMainLoader();
+}
+
+function isGlobalJSLoaded(){
+    try{
+        emptyFunction();
+    }catch(ex){
+        location.reload();
+    }   
 }
 
 function setLabels() {
@@ -259,13 +270,19 @@ function selectDropdownChangeEvent() {
     });
 
     $("#engineTypeSelect").change(function () {
-        let engineUnit = sessionStorage.getItem("engineUnit");
-        SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
-        let engineTypeText = $("#engineTypeSelect option:selected").text();
-        setLabels();
-        createEngineChartByFleet();
-        getEngineTotalAndEstConsumptionByFleet();
+       selectDropdownFunction();
     });
+}
+
+async function selectDropdownFunction(){
+    showLeftLoader();
+    let engineUnit = sessionStorage.getItem("engineUnit");
+    SELECTED_ENGINE_TYPE = $("#engineTypeSelect").val();
+    let engineTypeText = $("#engineTypeSelect option:selected").text();
+    setLabels();
+    await createEngineChartByFleet();
+    getEngineTotalAndEstConsumptionByFleet();
+    hideLeftLoader();
 }
 
 async function getLatestEventListByFleet() {
@@ -352,12 +369,14 @@ function submitBtnClickHandler() {
 }
 
 async function buttonClickFunctions() {
+    showMainLoader();
     await getAllEngineTypesByFleet();
     setLabels();
-    createEngineChartByFleet();
     getEngineTotalAndEstConsumptionByFleet();
     getBunkeringByFleet();
     getLatestEventListByFleet();
     GetDistanceAndAvgConsAndReportingVessels();
     GetFleetCurrentPosition();
+    await createEngineChartByFleet();
+    hideMainLoader();
 }
