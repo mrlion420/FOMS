@@ -292,7 +292,7 @@ function populateChartData(data) {
 		if(analogRefId === 0){
 			averageValue = getAverageValue(totalValue, series.length);
 		}else{
-			console.log(totalRunningMins);
+			
 			averageValue = getAverageValue(totalValue, totalRunningMins / 60);
 		}
 		let chartTitle = getDatatableName(key);

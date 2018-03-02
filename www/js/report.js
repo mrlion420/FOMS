@@ -704,11 +704,17 @@ function addSingleSeriesIntoChart(seriesArray, seriesName, chartType) {
 }
 
 function tooltipFormatter(chart, chartType) {
+    let engineType = $("#selectMainType").val();
     var dateFormatHC = '%d-%b-%y %H:%M:%S';
     var rateText = "";
     var formatter = "";
     if (chartType === "Engine") {
-        rateText = "Total Consumption : ";
+        if(engineType === "4"){
+            rateText = "Total Flow : ";
+        }else{
+            rateText = "Total Consumption : ";
+        }
+        
 
         formatter = "<b>" + chart.series.name + "</b><br>" +
             Highcharts.dateFormat(dateFormatHC, chart.x) + "<br>" +
