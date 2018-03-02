@@ -1,4 +1,3 @@
-C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csprojResolveAssemblyReference.cache
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csproj.CoreCompileInputs.cache
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\FOMSWebService.dll.config
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\FOMSWebService.dll
@@ -7,6 +6,6 @@ C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\CommonHelper.dll
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\Newtonsoft.Json.dll
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\CommonHelper.pdb
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\Newtonsoft.Json.xml
+C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.csprojResolveAssemblyReference.cache
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.dll
 C:\Samuel\FOMS\FOMSWebService\FOMSWebService\obj\Debug\FOMSWebService.pdb
-C:\Samuel\FOMS\FOMSWebService\FOMSWebService\bin\BLL.xml

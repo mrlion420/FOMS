@@ -366,7 +366,7 @@ async function btnChart_FuelCons() {
 
         if (engineType === "4") {
             // Bunker
-            chartTitle = "Fuel Flow ";
+            chartTitle = "Fuel Flow (" + $("#selectInterval option:selected").text() + ")";
             htmlString = createTableHeaders("Bunker");
         } else {
             chartTitle = "Fuel Consumption (" + $("#selectInterval option:selected").text() + ")";

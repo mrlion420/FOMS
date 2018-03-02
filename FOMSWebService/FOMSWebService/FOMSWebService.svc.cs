@@ -1500,21 +1500,24 @@ namespace FOMSWebService
             return new MemoryStream(Encoding.UTF8.GetBytes(returnString));
         }
 
-        public Stream GetEngineChartByQueryTime(int vesselId, double timezone, int querytime, string startDatetimeStr, string endDatetimeStr, string engineType)
+        public Stream GetEngineChartByQueryTime(int vesselId, double timezone, double querytime, string startDatetimeStr, string endDatetimeStr, string engineType)
         {
             string returnString = string.Empty;
             try
             {
                 int noOfPoints = 0;
-                string unit = "ℓ";
+                Vessel vessel = Vessel.GetByVesselId(vesselId);
+                short measurementUnitId = vessel.MeasurementUnitId;
+                string unit = KeyValueExtension.GetEngineUnitFromMeasurementUnit(measurementUnitId);
 
-                querytime = querytime * 3600; // Change hours querytime to seconds
-                BLL_Enum._VIEW_INTERVAL viewIntervalEnum = Helper.ViewIntervalMapping(querytime);
+                int querytimeInt = Convert.ToInt32(querytime * 3600); // Change hours querytime to seconds
+
+                BLL_Enum._VIEW_INTERVAL viewIntervalEnum = Helper.ViewIntervalMapping(querytimeInt);
                 BLL_Enum._ENGINE engineTypeEnum = EnumExtension.GetEngineEnum_FromEngineType(engineType);
 
                 DateTime startDatetime = DateTime.Parse(startDatetimeStr).AddHours(-timezone);
                 DateTime endDatetime = DateTime.Parse(endDatetimeStr).AddHours(-timezone);
-                noOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytime, startDatetime, endDatetime);
+                noOfPoints = ChartExtension.GetNumOfPointsByPeriod(querytimeInt, startDatetime, endDatetime);
                 DataSet resultDs = new DataSet();
 
                 if (!engineType.Equals("99"))
