@@ -8,8 +8,8 @@ sessionStorage.setItem("engineUnit", "ℓ");
 // sessionStorage.setItem("userId", 3);
 
 // GLOBAL VARIABLES
-const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
-// const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
+// const WEBSERVICEHOST = "http://122.11.177.14:1800/Webservice/FOMSWebService.svc/"; // For web service
+const WEBSERVICEHOST = "http://localhost:53777/FOMSWebService.svc/";
 // const WEBSERVICEHOST = "http://localhost:8099/Webservice/FOMSWebService.svc/";
 
 const MENU_ID = [
@@ -609,6 +609,7 @@ function insertMapMarkersWithDetails(data, map){
 function insertMapMarkersWithEvents(data, map) {
 	var bounds = new google.maps.LatLngBounds();
 	$.each(data, function (key, value) {
+		console.log(value.EventDesc);
 		var icon = setDirectionIcon(value);
 		var lat = parseFloat(value.Latitude);
 		var lon = parseFloat(value.Longitude);

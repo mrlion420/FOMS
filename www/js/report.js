@@ -3,7 +3,7 @@ $(document).ready(function () {
 
 });
 
-let maxTableRows = 12;
+let maxTableRows = 15;
 let globalPositionData = null;
 let globalStartDatetime = null;
 let globalEndDatetime = null;
@@ -257,8 +257,8 @@ function buttonClickHandler() {
         btnMapClickFunction();
     });
 
-    $("#resultContainer").on("click", "tr", function () {
-        let firstColumn = $(this).find("td:first").text();
+    $("#resultContainer").on("click", "tr img", function () {
+        let firstColumn = $(this).parent().parent().find("td:first").text();
         let id = parseInt(firstColumn);
         let splitString = globalPositionData[id].EventDesc.split("|");
         let eventDetails = "";
@@ -554,6 +554,7 @@ async function btnMap_Position() {
     try {
         let data = await ajaxGet(method, parameters);
         globalPositionData = data;
+        console.log(globalPositionData);
         await initMap("map");
         insertMapMarkersWithEvents(data, MAP);
         addPolylinesToMap(data);

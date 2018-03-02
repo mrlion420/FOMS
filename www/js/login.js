@@ -63,7 +63,6 @@ async function GetUserRelatedFleetAndVessels() {
     } catch (ex) {
         console.log(ex);
     }
-
 }
 
 function storeFleetAndVesselsForDropDownList(data) {

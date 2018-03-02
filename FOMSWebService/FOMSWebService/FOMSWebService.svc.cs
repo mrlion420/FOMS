@@ -1344,6 +1344,10 @@ namespace FOMSWebService
                 querytime = querytime * 3600; // Change hours querytime to seconds
                 BLL_Enum._VIEW_INTERVAL viewIntervalEnum = Helper.ViewIntervalMapping(querytime);
                 BLL_Enum._EVENT_TYPE eventTypeEnum = BLL_Enum._EVENT_TYPE.All;
+                if(querytime == 0)
+                {
+                    viewIntervalEnum = BLL_Enum._VIEW_INTERVAL.Live;
+                }
 
                 DateTime startDatetime = DateTime.Parse(startDatetimeStr).AddHours(-timezone);
                 DateTime endDatetime = DateTime.Parse(endDatetimeStr).AddHours(-timezone);
@@ -1353,16 +1357,16 @@ namespace FOMSWebService
                 }
 
                 DataTable holderTable = new DataTable();
-                if (querytime != 99)
-                {
+                //if (querytime != 99)
+                //{
                     DataSet resultDs = Position.GetView(vesselId, eventTypeEnum, viewIntervalEnum, startDatetime, endDatetime);
                     holderTable = resultDs.Tables[0].Copy();
-                }
-                else
-                {
-                    DataTable resultTable = Position.GetAll(vesselId, startDatetime, endDatetime, BLL_Enum._SORT_ORDER.ASC, eventTypeEnum);
-                    holderTable = resultTable.Copy();
-                }
+                //}
+                //else
+                //{
+                //    DataTable resultTable = Position.GetAll(vesselId, startDatetime, endDatetime, BLL_Enum._SORT_ORDER.ASC, eventTypeEnum);
+                //    holderTable = resultTable.Copy();
+                //}
 
                 foreach (DataRow positionRow in holderTable.Rows)
                 {
